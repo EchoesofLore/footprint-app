@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Footprint</title>
+    <style>
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: 16px;
+        width: 340px;
+        background: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+      }
+
+      h1 {
+        margin: 0 0 4px 0;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        margin: 0 0 14px 0;
+        opacity: 0.4;
+        font-size: 12px;
+      }
+
+      .card {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 10px;
+      }
+
+      .card-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        opacity: 0.4;
+        margin-bottom: 8px;
+      }
+
+      #site {
+        font-size: 13px;
+        opacity: 0.75;
+        margin: 0 0 10px 0;
+      }
+
+      /* Open Vault button */
+      #openVault {
+        width: 100%;
+        padding: 9px 12px;
+        background: #fff;
+        color: #000;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      #openVault:hover { opacity: 0.88; }
+
+      /* Match cards */
+      #matches { display: flex; flex-direction: column; gap: 8px; }
+
+      .match-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        padding: 10px 12px;
+      }
+
+      .match-info { flex: 1; min-width: 0; }
+
+      .match-site {
+        font-weight: 600;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .match-user {
+        font-size: 12px;
+        opacity: 0.5;
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .autofill-btn {
+        flex-shrink: 0;
+        padding: 6px 12px;
+        background: transparent;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+        white-space: nowrap;
+      }
+      .autofill-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+      .autofill-btn.success {
+        background: #16a34a;
+        border-color: #16a34a;
+        color: #fff;
+      }
+      .autofill-btn.error {
+        border-color: rgba(239, 68, 68, 0.6);
+        color: rgb(239, 68, 68);
+      }
+
+      .status-msg {
+        font-size: 12px;
+        opacity: 0.5;
+        padding: 4px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔐 Footprint</h1>
+    <p class="subtitle">Encrypted vault helper</p>
+
+    <div class="card">
+      <div class="card-label">Current site</div>
+      <p id="site">Detecting…</p>
+      <button id="openVault">Open Vault</button>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Matches</div>
+      <div id="matches"><p class="status-msg">Looking…</p></div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
