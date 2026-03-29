@@ -1,26 +1,235 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
+/* ── Design tokens ───────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:           #030912;
+  --surface:      #060f1e;
+  --surface-2:    #0b1828;
+  --accent:       #00d4ff;
+  --accent-dim:   rgba(0, 212, 255, 0.12);
+  --accent-glow:  rgba(0, 212, 255, 0.35);
+  --border:       rgba(0, 212, 255, 0.2);
+  --border-subtle:rgba(0, 212, 255, 0.07);
+  --text-primary: #dff4fa;
+  --text-secondary: rgba(223, 244, 250, 0.45);
+  --text-muted:   rgba(223, 244, 250, 0.22);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground:  var(--text-primary);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ── Reset & base ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ── Typography helpers ──────────────────────────────────────────── */
+.font-orbitron { font-family: "Orbitron", sans-serif !important; }
+.text-accent   { color: var(--accent) !important; }
+
+/* ── Cyber grid background ───────────────────────────────────────── */
+.cyber-grid {
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.022) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* ── Navigation ──────────────────────────────────────────────────── */
+.nav-cyber {
+  background: rgba(3, 9, 18, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+.btn-cyber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.65rem 1.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.22s, color 0.22s, box-shadow 0.22s;
+}
+.btn-cyber:hover {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 28px var(--accent-glow);
+}
+
+.btn-cyber-solid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: var(--bg);
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.65rem 1.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.22s, color 0.22s, box-shadow 0.22s;
+}
+.btn-cyber-solid:hover {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: 0 0 28px var(--accent-glow);
+}
+
+/* ── Cards ───────────────────────────────────────────────────────── */
+.card-cyber {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  transition: border-color 0.28s, box-shadow 0.28s, background 0.28s;
+}
+.card-cyber:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+  box-shadow: 0 0 22px var(--accent-dim), inset 0 0 18px rgba(0, 212, 255, 0.025);
+}
+
+/* ── Stat row ────────────────────────────────────────────────────── */
+.stat-card {
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--accent);
+}
+
+/* ── Category number label ───────────────────────────────────────── */
+.cat-number {
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  opacity: 0.55;
+}
+
+/* ── Particles ───────────────────────────────────────────────────── */
+.particles-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--accent), 0 0 14px var(--accent);
+  animation: float-particle linear infinite;
+}
+
+@keyframes float-particle {
+  0%   { transform: translateY(0)     translateX(0);    opacity: 0; }
+  6%   { opacity: 0.75; }
+  94%  { opacity: 0.75; }
+  100% { transform: translateY(-105vh) translateX(36px); opacity: 0; }
+}
+
+/* ── Pulse ring (logo decoration) ────────────────────────────────── */
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.18; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(1.035); }
+}
+.pulse-ring { animation: pulse-ring 3.2s ease-in-out infinite; }
+
+/* ── Onboarding progress bar ─────────────────────────────────────── */
+.progress-cyber {
+  height: 2px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+.progress-cyber-fill {
+  height: 100%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  transition: width 0.35s ease;
+}
+
+/* ── Clerk appearance overrides ──────────────────────────────────── */
+.cl-rootBox,
+.cl-signIn-root,
+.cl-signUp-root {
+  background: transparent !important;
+}
+.cl-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 0 48px rgba(0, 212, 255, 0.07) !important;
+  border-radius: 2px !important;
+}
+.cl-headerTitle {
+  font-family: "Orbitron", sans-serif !important;
+  color: var(--text-primary) !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.1em !important;
+}
+.cl-headerSubtitle { color: var(--text-secondary) !important; }
+.cl-formButtonPrimary {
+  background: var(--accent) !important;
+  color: var(--bg) !important;
+  border-radius: 2px !important;
+  font-family: "Orbitron", sans-serif !important;
+  font-size: 0.67rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  transition: box-shadow 0.22s !important;
+}
+.cl-formButtonPrimary:hover {
+  box-shadow: 0 0 22px var(--accent-glow) !important;
+}
+.cl-formFieldInput {
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  border-radius: 2px !important;
+}
+.cl-formFieldInput:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent) !important;
+  outline: none !important;
+}
+.cl-socialButtonsBlockButton {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  border-radius: 2px !important;
+}
+.cl-dividerText,
+.cl-footerActionText   { color: var(--text-secondary) !important; }
+.cl-footerActionLink   { color: var(--accent) !important; }
+.cl-dividerLine        { background: var(--border-subtle) !important; }
+.cl-identityPreviewText { color: var(--text-primary) !important; }

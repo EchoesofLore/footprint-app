@@ -38,96 +38,338 @@ export default function DashboardPage() {
 
   if (!isLoaded || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <p className="text-white/40 text-sm">Loading your vault…</p>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "var(--bg)",
+        }}
+      >
+        <p
+          className="font-orbitron"
+          style={{
+            color: "rgba(0,212,255,0.3)",
+            fontSize: "0.62rem",
+            letterSpacing: "0.32em",
+          }}
+        >
+          INITIALIZING VAULT…
+        </p>
       </div>
     )
   }
 
-  // Group selected services by category, preserving category order
   const grouped = CATEGORIES.map((cat) => ({
     ...cat,
     selected: services.filter((s) => s.category === cat.name),
   })).filter((cat) => cat.selected.length > 0)
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Header */}
-      <header className="bg-black border-b border-white/10 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xl">🔐</span>
-            <span className="text-lg font-bold text-white">Footprint</span>
-          </div>
-          <div className="flex items-center gap-4">
+    <div
+      className="cyber-grid"
+      style={{ minHeight: "100vh", background: "var(--bg)" }}
+    >
+      {/* ── Header ──────────────────────────────────────────────── */}
+      <header className="nav-cyber" style={{ position: "sticky", top: 0, zIndex: 10 }}>
+        <div
+          style={{
+            maxWidth: "1120px",
+            margin: "0 auto",
+            padding: "1.1rem 1.75rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span
+            className="font-orbitron"
+            style={{
+              fontWeight: 900,
+              fontSize: "0.95rem",
+              letterSpacing: "0.26em",
+              color: "var(--accent)",
+            }}
+          >
+            FOOTPRINT
+          </span>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "1.75rem" }}>
             <a
               href="/vault"
-              className="text-sm text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+              className="font-orbitron"
+              style={{
+                fontSize: "0.58rem",
+                letterSpacing: "0.18em",
+                color: "var(--accent)",
+                textTransform: "uppercase",
+                textDecoration: "none",
+                opacity: 0.7,
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.opacity = "1")
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLAnchorElement).style.opacity = "0.7")
+              }
             >
-              Full vault →
+              Full Vault →
             </a>
             <UserButton />
           </div>
         </div>
       </header>
 
-      {/* Content */}
-      <main className="max-w-5xl mx-auto px-6 py-10">
+      {/* ── Main content ─────────────────────────────────────────── */}
+      <main
+        style={{
+          maxWidth: "1120px",
+          margin: "0 auto",
+          padding: "3.5rem 1.75rem",
+        }}
+      >
         {/* Page title row */}
-        <div className="flex items-start justify-between mb-10">
-          <div>
-            <h1 className="text-2xl font-bold text-white">Your accounts</h1>
-            <p className="text-sm text-white/40 mt-1">
-              Click a tile to open that entry in your vault.
-            </p>
-          </div>
-          <a
-            href="/onboarding"
-            className="mt-1 text-sm text-white/50 hover:text-white/80 border border-white/20 hover:border-white/40 rounded-lg px-3 py-1.5 transition-all whitespace-nowrap"
+        <div style={{ marginBottom: "3rem" }}>
+          <p
+            className="font-orbitron"
+            style={{
+              fontSize: "0.58rem",
+              letterSpacing: "0.34em",
+              color: "rgba(0,212,255,0.38)",
+              marginBottom: "0.6rem",
+              textTransform: "uppercase",
+            }}
           >
-            Edit my services
-          </a>
-        </div>
-
-        {grouped.length === 0 ? (
-          <div className="text-center py-24">
-            <p className="text-white/30 mb-4">No services selected.</p>
+            Dashboard
+          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "1rem",
+            }}
+          >
+            <h1
+              className="font-orbitron"
+              style={{
+                fontSize: "clamp(1.6rem, 4vw, 2.6rem)",
+                fontWeight: 900,
+                letterSpacing: "0.07em",
+                textTransform: "uppercase",
+                color: "var(--text-primary)",
+                lineHeight: 1,
+              }}
+            >
+              YOUR ACCOUNTS
+            </h1>
             <a
               href="/onboarding"
-              className="text-sm text-indigo-400 hover:text-indigo-300 font-medium"
+              className="btn-cyber"
+              style={{ fontSize: "0.58rem", padding: "0.5rem 1rem" }}
             >
-              ← Go back to setup
+              Edit Services
+            </a>
+          </div>
+        </div>
+
+        {/* Stats row */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "1.75rem",
+            marginBottom: "3.75rem",
+          }}
+        >
+          {[
+            { label: "Services", value: services.length },
+            { label: "Categories", value: grouped.length },
+            { label: "Encryption", value: "AES-256" },
+          ].map((stat) => (
+            <div key={stat.label} className="stat-card">
+              <div
+                className="font-orbitron"
+                style={{
+                  fontSize: "1.6rem",
+                  fontWeight: 700,
+                  color: "var(--accent)",
+                  letterSpacing: "0.04em",
+                  lineHeight: 1,
+                }}
+              >
+                {stat.value}
+              </div>
+              <div
+                style={{
+                  fontSize: "0.62rem",
+                  color: "var(--text-secondary)",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  marginTop: "0.4rem",
+                }}
+              >
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Categories */}
+        {grouped.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "6rem 0" }}>
+            <p
+              style={{
+                color: "var(--text-muted)",
+                marginBottom: "1.5rem",
+                fontSize: "0.9rem",
+              }}
+            >
+              No services selected yet.
+            </p>
+            <a href="/onboarding" className="btn-cyber">
+              ← Go to Setup
             </a>
           </div>
         ) : (
-          <div className="space-y-10">
-            {grouped.map((cat) => (
-              <section key={cat.id}>
-                {/* Category label */}
-                <div className="flex items-center gap-3 mb-4">
-                  <h2 className="text-xs font-semibold text-white/40 uppercase tracking-widest">
-                    {cat.name}
-                  </h2>
-                  <div className="flex-1 h-px bg-white/10" />
-                </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "3.25rem" }}>
+            {grouped.map((cat, catIdx) => {
+              const catNum = String(catIdx + 1).padStart(2, "0")
+              const [featured, ...rest] = cat.selected
 
-                {/* Tile grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {cat.selected.map((service) => (
-                    <a
-                      key={service.id}
-                      href={`/vault?service=${service.id}`}
-                      className="group bg-white/5 border border-white/20 rounded-xl p-5 flex flex-col items-center gap-3 hover:bg-white/10 hover:border-white/40 transition-all cursor-pointer"
+              return (
+                <section key={cat.id}>
+                  {/* Category header */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.875rem",
+                      marginBottom: "1.25rem",
+                    }}
+                  >
+                    <span className="cat-number">{catNum}</span>
+                    <span
+                      className="font-orbitron"
+                      style={{
+                        fontSize: "0.62rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.22em",
+                        color: "var(--text-secondary)",
+                        textTransform: "uppercase",
+                      }}
                     >
-                      <span className="text-4xl leading-none">{service.emoji}</span>
-                      <span className="text-sm font-semibold text-white/80 text-center group-hover:text-white transition-colors">
-                        {service.name}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </section>
-            ))}
+                      {cat.name}
+                    </span>
+                    <div
+                      style={{
+                        flex: 1,
+                        height: "1px",
+                        background: "rgba(0,212,255,0.08)",
+                      }}
+                    />
+                  </div>
+
+                  {/* Cards */}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(155px, 1fr))",
+                      gap: "1rem",
+                    }}
+                  >
+                    {/* Featured card (spans 2 cols when there are siblings) */}
+                    {featured && (
+                      <a
+                        href={`/vault?service=${featured.id}`}
+                        className="card-cyber"
+                        style={{
+                          gridColumn:
+                            cat.selected.length > 1 ? "span 2" : "span 1",
+                          padding: "1.75rem",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "1rem",
+                          textDecoration: "none",
+                          borderRadius: "2px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <span style={{ fontSize: "2.6rem", lineHeight: 1 }}>
+                          {featured.emoji}
+                        </span>
+                        <div>
+                          <div
+                            className="font-orbitron"
+                            style={{
+                              fontSize: "0.72rem",
+                              fontWeight: 700,
+                              letterSpacing: "0.12em",
+                              color: "var(--text-primary)",
+                              textTransform: "uppercase",
+                            }}
+                          >
+                            {featured.name}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: "0.6rem",
+                              color: "var(--accent)",
+                              opacity: 0.55,
+                              marginTop: "0.3rem",
+                              letterSpacing: "0.1em",
+                            }}
+                          >
+                            OPEN VAULT →
+                          </div>
+                        </div>
+                      </a>
+                    )}
+
+                    {/* Smaller cards */}
+                    {rest.map((service) => (
+                      <a
+                        key={service.id}
+                        href={`/vault?service=${service.id}`}
+                        className="card-cyber"
+                        style={{
+                          padding: "1.25rem 1rem",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          gap: "0.75rem",
+                          textDecoration: "none",
+                          borderRadius: "2px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <span style={{ fontSize: "1.8rem", lineHeight: 1 }}>
+                          {service.emoji}
+                        </span>
+                        <span
+                          className="font-orbitron"
+                          style={{
+                            fontSize: "0.58rem",
+                            fontWeight: 700,
+                            letterSpacing: "0.1em",
+                            color: "var(--text-secondary)",
+                            textTransform: "uppercase",
+                            textAlign: "center",
+                          }}
+                        >
+                          {service.name}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )
+            })}
           </div>
         )}
       </main>

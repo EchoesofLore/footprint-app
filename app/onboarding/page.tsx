@@ -25,7 +25,6 @@ export default function OnboardingPage() {
       .then((r) => r.json())
       .then((data) => {
         if (data.completed) {
-          // Returning user — pre-load their existing selections for editing
           setSelected(new Set(data.services as string[]))
           setIsEditing(true)
         }
@@ -59,8 +58,25 @@ export default function OnboardingPage() {
 
   if (!isLoaded || checking) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-400 text-sm">Loading…</p>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "var(--bg)",
+        }}
+      >
+        <p
+          className="font-orbitron"
+          style={{
+            color: "rgba(0,212,255,0.3)",
+            fontSize: "0.62rem",
+            letterSpacing: "0.32em",
+          }}
+        >
+          LOADING…
+        </p>
       </div>
     )
   }
@@ -68,55 +84,153 @@ export default function OnboardingPage() {
   const category = CATEGORIES[step]
   const isLastStep = step === CATEGORIES.length - 1
   const progress = ((step + 1) / CATEGORIES.length) * 100
+  const catNum = String(step + 1).padStart(2, "0")
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+    <div
+      className="cyber-grid"
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2rem 1rem",
+      }}
+    >
       {/* Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 w-full max-w-lg p-8">
-
-        {/* Top: logo + step count */}
-        <div className="flex items-center justify-between mb-6">
-          <span className="text-base font-bold text-gray-900">🔐 Footprint</span>
-          <span className="text-xs font-medium text-gray-400">
-            {step + 1} / {CATEGORIES.length}
+      <div
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          width: "100%",
+          maxWidth: "520px",
+          padding: "2.5rem",
+          boxShadow: "0 0 48px rgba(0,212,255,0.06)",
+        }}
+      >
+        {/* Top row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <span
+            className="font-orbitron"
+            style={{
+              fontWeight: 900,
+              fontSize: "0.8rem",
+              letterSpacing: "0.22em",
+              color: "var(--accent)",
+            }}
+          >
+            FOOTPRINT
+          </span>
+          <span
+            className="font-orbitron"
+            style={{
+              fontSize: "0.6rem",
+              letterSpacing: "0.14em",
+              color: "var(--text-secondary)",
+            }}
+          >
+            {catNum} / {String(CATEGORIES.length).padStart(2, "0")}
           </span>
         </div>
 
         {/* Progress bar */}
-        <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-8">
+        <div className="progress-cyber" style={{ marginBottom: "2.25rem" }}>
           <div
-            className="h-full bg-indigo-500 rounded-full transition-all duration-300"
+            className="progress-cyber-fill"
             style={{ width: `${progress}%` }}
           />
         </div>
 
         {/* Category header */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-900">{category.name}</h2>
-          <p className="text-sm text-gray-500 mt-0.5">{category.description}</p>
+        <div style={{ marginBottom: "1.75rem" }}>
+          <p
+            className="font-orbitron"
+            style={{
+              fontSize: "0.58rem",
+              letterSpacing: "0.3em",
+              color: "rgba(0,212,255,0.4)",
+              marginBottom: "0.5rem",
+              textTransform: "uppercase",
+            }}
+          >
+            Select services
+          </p>
+          <h2
+            className="font-orbitron"
+            style={{
+              fontSize: "1.2rem",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--text-primary)",
+              marginBottom: "0.3rem",
+            }}
+          >
+            {category.name}
+          </h2>
+          <p
+            style={{
+              fontSize: "0.8rem",
+              color: "var(--text-secondary)",
+              lineHeight: 1.6,
+            }}
+          >
+            {category.description}
+          </p>
         </div>
 
         {/* Service grid */}
-        <div className="grid grid-cols-2 gap-3 mb-8">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "0.75rem",
+            marginBottom: "2.25rem",
+          }}
+        >
           {category.services.map((service) => {
             const isChecked = selected.has(service.id)
             return (
               <button
                 key={service.id}
                 onClick={() => toggle(service.id)}
-                className={[
-                  "flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all",
-                  isChecked
-                    ? "border-indigo-500 bg-indigo-50"
-                    : "border-gray-200 bg-white hover:border-gray-300",
-                ].join(" ")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                  padding: "1rem",
+                  background: isChecked ? "rgba(0,212,255,0.08)" : "var(--bg)",
+                  border: `1px solid ${isChecked ? "var(--accent)" : "var(--border-subtle)"}`,
+                  cursor: "pointer",
+                  textAlign: "left",
+                  transition: "background 0.2s, border-color 0.2s, box-shadow 0.2s",
+                  boxShadow: isChecked
+                    ? "0 0 12px rgba(0,212,255,0.15)"
+                    : "none",
+                }}
               >
-                <span className="text-2xl leading-none">{service.emoji}</span>
+                <span style={{ fontSize: "1.5rem", lineHeight: 1 }}>
+                  {service.emoji}
+                </span>
                 <span
-                  className={[
-                    "text-sm font-medium leading-tight",
-                    isChecked ? "text-indigo-700" : "text-gray-700",
-                  ].join(" ")}
+                  className={isChecked ? "font-orbitron" : ""}
+                  style={{
+                    fontSize: isChecked ? "0.62rem" : "0.82rem",
+                    fontWeight: isChecked ? 700 : 500,
+                    letterSpacing: isChecked ? "0.08em" : "0",
+                    color: isChecked ? "var(--accent)" : "var(--text-primary)",
+                    textTransform: isChecked ? "uppercase" : "none",
+                    lineHeight: 1.3,
+                  }}
                 >
                   {service.name}
                 </span>
@@ -126,27 +240,51 @@ export default function OnboardingPage() {
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-between">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <button
             onClick={() => setStep((s) => s - 1)}
             disabled={step === 0}
-            className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
+            className="font-orbitron"
+            style={{
+              background: "none",
+              border: "none",
+              fontSize: "0.6rem",
+              letterSpacing: "0.14em",
+              color: "var(--text-secondary)",
+              cursor: step === 0 ? "not-allowed" : "pointer",
+              opacity: step === 0 ? 0.3 : 1,
+              textTransform: "uppercase",
+              padding: "0.5rem 0",
+            }}
           >
             ← Back
           </button>
 
-          <div className="flex items-center gap-1.5">
+          {/* Step dots */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
             {CATEGORIES.map((_, i) => (
               <span
                 key={i}
-                className={[
-                  "block h-1.5 rounded-full transition-all",
-                  i === step
-                    ? "w-5 bg-indigo-500"
-                    : i < step
-                    ? "w-1.5 bg-indigo-300"
-                    : "w-1.5 bg-gray-200",
-                ].join(" ")}
+                style={{
+                  display: "block",
+                  height: "3px",
+                  borderRadius: "2px",
+                  background:
+                    i === step
+                      ? "var(--accent)"
+                      : i < step
+                      ? "rgba(0,212,255,0.35)"
+                      : "rgba(0,212,255,0.1)",
+                  width: i === step ? "20px" : "6px",
+                  boxShadow: i === step ? "0 0 6px var(--accent)" : "none",
+                  transition: "width 0.3s, background 0.3s",
+                }}
               />
             ))}
           </div>
@@ -155,14 +293,20 @@ export default function OnboardingPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="px-5 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              className="btn-cyber-solid"
+              style={{
+                fontSize: "0.6rem",
+                padding: "0.55rem 1.25rem",
+                opacity: submitting ? 0.5 : 1,
+              }}
             >
-              {submitting ? "Saving…" : isEditing ? "Save changes →" : "Finish →"}
+              {submitting ? "Saving…" : isEditing ? "Save →" : "Finish →"}
             </button>
           ) : (
             <button
               onClick={() => setStep((s) => s + 1)}
-              className="px-5 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
+              className="btn-cyber-solid"
+              style={{ fontSize: "0.6rem", padding: "0.55rem 1.25rem" }}
             >
               Next →
             </button>
@@ -170,21 +314,41 @@ export default function OnboardingPage() {
         </div>
       </div>
 
-      {/* Skip / cancel link */}
+      {/* Skip / cancel */}
       {isEditing ? (
         <a
           href="/dashboard"
-          className="mt-4 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+          className="font-orbitron"
+          style={{
+            marginTop: "1.25rem",
+            fontSize: "0.58rem",
+            letterSpacing: "0.14em",
+            color: "var(--text-muted)",
+            textTransform: "uppercase",
+            textDecoration: "none",
+            transition: "color 0.2s",
+          }}
         >
-          ← Back to dashboard
+          ← Back to Dashboard
         </a>
       ) : (
         <button
           onClick={handleSubmit}
           disabled={submitting}
-          className="mt-4 text-xs text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-40"
+          className="font-orbitron"
+          style={{
+            marginTop: "1.25rem",
+            background: "none",
+            border: "none",
+            fontSize: "0.58rem",
+            letterSpacing: "0.14em",
+            color: "var(--text-muted)",
+            textTransform: "uppercase",
+            cursor: "pointer",
+            opacity: submitting ? 0.4 : 1,
+          }}
         >
-          Skip and set up later
+          Skip for now
         </button>
       )}
     </div>
