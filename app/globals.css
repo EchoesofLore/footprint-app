@@ -23,9 +23,7 @@
 
 /* ── Reset & base ────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
-
 body {
   background: var(--bg);
   color: var(--text-primary);
@@ -109,12 +107,15 @@ body {
 .card-cyber {
   background: var(--surface);
   border: 1px solid var(--border-subtle);
-  transition: border-color 0.28s, box-shadow 0.28s, background 0.28s;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
 }
 .card-cyber:hover {
   border-color: var(--accent);
   background: var(--surface-2);
-  box-shadow: 0 0 22px var(--accent-dim), inset 0 0 18px rgba(0, 212, 255, 0.025);
+  box-shadow:
+    0 0 28px rgba(0, 212, 255, 0.18),
+    0 0 60px rgba(0, 212, 255, 0.06),
+    inset 0 0 20px rgba(0, 212, 255, 0.03);
 }
 
 /* ── Stat row ────────────────────────────────────────────────────── */
@@ -141,7 +142,6 @@ body {
   pointer-events: none;
   z-index: 0;
 }
-
 .particle {
   position: absolute;
   width: 2px;
@@ -151,7 +151,6 @@ body {
   box-shadow: 0 0 6px var(--accent), 0 0 14px var(--accent);
   animation: float-particle linear infinite;
 }
-
 @keyframes float-particle {
   0%   { transform: translateY(0)     translateX(0);    opacity: 0; }
   6%   { opacity: 0.75; }
@@ -159,12 +158,51 @@ body {
   100% { transform: translateY(-105vh) translateX(36px); opacity: 0; }
 }
 
-/* ── Pulse ring (logo decoration) ────────────────────────────────── */
-@keyframes pulse-ring {
-  0%, 100% { opacity: 0.18; transform: scale(1); }
-  50%       { opacity: 0.45; transform: scale(1.035); }
+/* ── Hero background image layer (Ken Burns) ─────────────────────── */
+.hero-bg-img {
+  position: absolute;
+  inset: -5%;
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  animation: hero-kenburns 22s ease-in-out infinite alternate;
+  z-index: 0;
+  pointer-events: none;
 }
-.pulse-ring { animation: pulse-ring 3.2s ease-in-out infinite; }
+@keyframes hero-kenburns {
+  from { transform: scale(1)    translateX(0); }
+  to   { transform: scale(1.07) translateX(-1.5%); }
+}
+
+/* ── Hero gradient overlays (above image, below content) ─────────── */
+.hero-overlays {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(3,9,18,0.92) 0%, rgba(3,9,18,0.75) 30%, rgba(3,9,18,0.3) 50%, transparent 65%),
+    linear-gradient(rgba(3,9,18,0.1), rgba(3,9,18,0.1));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Cyan glow pulse over the lock area ──────────────────────────── */
+.hero-glow-pulse {
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  width: 560px;
+  height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,255,0.11) 0%, transparent 65%);
+  transform: translate(50%, -50%);
+  animation: hero-glow-breathe 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+@keyframes hero-glow-breathe {
+  0%, 100% { opacity: 0.45; transform: translate(50%, -50%) scale(0.92); }
+  50%       { opacity: 1;    transform: translate(50%, -50%) scale(1.08); }
+}
 
 /* ── Onboarding progress bar ─────────────────────────────────────── */
 .progress-cyber {

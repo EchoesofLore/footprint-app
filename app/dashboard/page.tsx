@@ -71,29 +71,41 @@ export default function DashboardPage() {
       className="cyber-grid"
       style={{ minHeight: "100vh", background: "var(--bg)" }}
     >
-      {/* ── Header ──────────────────────────────────────────────── */}
+      {/* ── Sticky nav ──────────────────────────────────────────── */}
       <header className="nav-cyber" style={{ position: "sticky", top: 0, zIndex: 10 }}>
         <div
           style={{
             maxWidth: "1120px",
             margin: "0 auto",
-            padding: "1.1rem 1.75rem",
+            padding: "1rem 1.75rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
           }}
         >
-          <span
-            className="font-orbitron"
-            style={{
-              fontWeight: 900,
-              fontSize: "0.95rem",
-              letterSpacing: "0.26em",
-              color: "var(--accent)",
-            }}
-          >
-            FOOTPRINT
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Footprint"
+              style={{
+                height: "36px",
+                width: "auto",
+                filter: "drop-shadow(0 0 8px rgba(0,212,255,0.65))",
+              }}
+            />
+            <span
+              className="font-orbitron"
+              style={{
+                fontWeight: 900,
+                fontSize: "0.95rem",
+                letterSpacing: "0.26em",
+                color: "var(--accent)",
+              }}
+            >
+              FOOTPRINT
+            </span>
+          </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1.75rem" }}>
             <a
@@ -122,23 +134,64 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* ── Main content ─────────────────────────────────────────── */}
-      <main
+      {/* ── Hero banner ─────────────────────────────────────────── */}
+      <div
         style={{
-          maxWidth: "1120px",
-          margin: "0 auto",
-          padding: "3.5rem 1.75rem",
+          position: "relative",
+          height: "220px",
+          overflow: "hidden",
+          borderBottom: "1px solid rgba(0,212,255,0.1)",
         }}
       >
-        {/* Page title row */}
-        <div style={{ marginBottom: "3rem" }}>
+        {/* Ken Burns background image */}
+        <div
+          className="hero-bg-img"
+          style={{
+            backgroundImage: "url(/logo.png)",
+            backgroundPosition: "60% center",
+            animationDuration: "30s",
+          }}
+        />
+        {/* Gradient overlays */}
+        <div className="hero-overlays" />
+        {/* Glow pulse */}
+        <div
+          style={{
+            position: "absolute",
+            right: "10%",
+            top: "50%",
+            width: "380px",
+            height: "380px",
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 65%)",
+            transform: "translate(50%, -50%)",
+            animation: "hero-glow-breathe 3s ease-in-out infinite",
+            pointerEvents: "none",
+            zIndex: 2,
+          }}
+        />
+        {/* Banner content */}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 3,
+            height: "100%",
+            maxWidth: "1120px",
+            margin: "0 auto",
+            padding: "0 1.75rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
           <p
             className="font-orbitron"
             style={{
               fontSize: "0.58rem",
               letterSpacing: "0.34em",
               color: "rgba(0,212,255,0.38)",
-              marginBottom: "0.6rem",
+              marginBottom: "0.5rem",
               textTransform: "uppercase",
             }}
           >
@@ -147,7 +200,7 @@ export default function DashboardPage() {
           <div
             style={{
               display: "flex",
-              alignItems: "flex-end",
+              alignItems: "center",
               justifyContent: "space-between",
               flexWrap: "wrap",
               gap: "1rem",
@@ -175,7 +228,16 @@ export default function DashboardPage() {
             </a>
           </div>
         </div>
+      </div>
 
+      {/* ── Main content ─────────────────────────────────────────── */}
+      <main
+        style={{
+          maxWidth: "1120px",
+          margin: "0 auto",
+          padding: "3rem 1.75rem",
+        }}
+      >
         {/* Stats row */}
         <div
           style={{
@@ -282,7 +344,7 @@ export default function DashboardPage() {
                       gap: "1rem",
                     }}
                   >
-                    {/* Featured card (spans 2 cols when there are siblings) */}
+                    {/* Featured card */}
                     {featured && (
                       <a
                         href={`/vault?service=${featured.id}`}

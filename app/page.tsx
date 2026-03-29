@@ -20,9 +20,11 @@ export default async function Home() {
     <div
       style={{
         background: "var(--bg)",
-        minHeight: "100vh",
+        height: "100vh",
         position: "relative",
         overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Particles />
@@ -31,25 +33,38 @@ export default async function Home() {
       <nav
         className="nav-cyber"
         style={{
+          flexShrink: 0,
           position: "relative",
           zIndex: 10,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "1.25rem 2.5rem",
+          padding: "1rem 2.5rem",
         }}
       >
-        <span
-          className="font-orbitron"
-          style={{
-            fontWeight: 900,
-            fontSize: "1rem",
-            letterSpacing: "0.28em",
-            color: "var(--accent)",
-          }}
-        >
-          FOOTPRINT
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Footprint"
+            style={{
+              height: "36px",
+              width: "auto",
+              filter: "drop-shadow(0 0 8px rgba(0,212,255,0.65))",
+            }}
+          />
+          <span
+            className="font-orbitron"
+            style={{
+              fontWeight: 900,
+              fontSize: "1rem",
+              letterSpacing: "0.28em",
+              color: "var(--accent)",
+            }}
+          >
+            FOOTPRINT
+          </span>
+        </div>
 
         <a href="/sign-in" className="btn-cyber">
           Sign In
@@ -59,174 +74,118 @@ export default async function Home() {
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section
         style={{
+          flex: 1,
           position: "relative",
-          zIndex: 10,
           display: "flex",
           alignItems: "center",
-          minHeight: "calc(100vh - 76px)",
-          padding: "4rem 2.5rem",
+          overflow: "hidden",
         }}
       >
+        {/* Animated Ken Burns background image */}
+        <div
+          className="hero-bg-img"
+          style={{ backgroundImage: "url(/logo.png)" }}
+        />
+
+        {/* Gradient overlays: left fade + global dim */}
+        <div className="hero-overlays" />
+
+        {/* Breathing cyan glow over the lock */}
+        <div className="hero-glow-pulse" />
+
+        {/* Left content */}
         <div
           style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            gap: "5rem",
+            position: "relative",
+            zIndex: 3,
+            maxWidth: "600px",
+            paddingLeft: "56px",
           }}
         >
-          {/* Left content */}
-          <div style={{ flex: "1 1 0", minWidth: 0 }}>
-            <p
-              className="font-orbitron"
-              style={{
-                fontSize: "0.62rem",
-                letterSpacing: "0.38em",
-                color: "rgba(0,212,255,0.45)",
-                marginBottom: "1.5rem",
-                textTransform: "uppercase",
-              }}
-            >
-              Encrypted Password Manager
-            </p>
+          <p
+            className="font-orbitron"
+            style={{
+              fontSize: "0.62rem",
+              letterSpacing: "0.38em",
+              color: "rgba(0,212,255,0.45)",
+              marginBottom: "1.5rem",
+              textTransform: "uppercase",
+            }}
+          >
+            Encrypted Password Manager
+          </p>
 
-            <h1
-              className="font-orbitron"
-              style={{
-                fontSize: "clamp(2.6rem, 6vw, 5.25rem)",
-                fontWeight: 900,
-                lineHeight: 1.04,
-                letterSpacing: "0.02em",
-                textTransform: "uppercase",
-                color: "var(--text-primary)",
-                marginBottom: "1.5rem",
-              }}
-            >
-              EVERY ACCOUNT.
-              <br />
-              <span style={{ color: "var(--accent)" }}>SECURED.</span>
-            </h1>
+          <h1
+            className="font-orbitron"
+            style={{
+              fontSize: "clamp(2.6rem, 6vw, 5.25rem)",
+              fontWeight: 900,
+              lineHeight: 1.04,
+              letterSpacing: "0.02em",
+              textTransform: "uppercase",
+              color: "var(--text-primary)",
+              marginBottom: "1.5rem",
+            }}
+          >
+            EVERY ACCOUNT.
+            <br />
+            <span style={{ color: "var(--accent)" }}>SECURED.</span>
+          </h1>
 
-            <p
-              style={{
-                fontSize: "1.05rem",
-                color: "var(--text-secondary)",
-                lineHeight: 1.8,
-                maxWidth: "430px",
-                marginBottom: "2.75rem",
-              }}
-            >
-              End-to-end encrypted. Zero knowledge architecture.
-              Your master password never leaves your device.
-            </p>
+          <p
+            style={{
+              fontSize: "1.05rem",
+              color: "var(--text-secondary)",
+              lineHeight: 1.8,
+              maxWidth: "430px",
+              marginBottom: "2.75rem",
+            }}
+          >
+            End-to-end encrypted. Zero knowledge architecture.
+            Your master password never leaves your device.
+          </p>
 
-            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <a
-                href="/sign-in"
-                className="btn-cyber-solid"
-                style={{ padding: "0.8rem 2.25rem" }}
-              >
-                Get Started
-              </a>
-              <a
-                href="/sign-in"
-                className="btn-cyber"
-                style={{ padding: "0.8rem 2.25rem" }}
-              >
-                Sign In →
-              </a>
-            </div>
-
-            {/* Tech pills */}
-            <div
-              style={{
-                display: "flex",
-                gap: "2rem",
-                marginTop: "3.25rem",
-                flexWrap: "wrap",
-              }}
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <a
+              href="/sign-in"
+              className="btn-cyber-solid"
+              style={{ padding: "0.8rem 2.25rem" }}
             >
-              {["AES-256-GCM", "PBKDF2 100K", "Zero Knowledge"].map((tag) => (
-                <span
-                  key={tag}
-                  className="font-orbitron"
-                  style={{
-                    fontSize: "0.57rem",
-                    letterSpacing: "0.14em",
-                    color: "rgba(0,212,255,0.42)",
-                    borderBottom: "1px solid rgba(0,212,255,0.18)",
-                    paddingBottom: "0.3rem",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+              Get Started
+            </a>
+            <a
+              href="/sign-in"
+              className="btn-cyber"
+              style={{ padding: "0.8rem 2.25rem" }}
+            >
+              Sign In →
+            </a>
           </div>
 
-          {/* Right — logo */}
+          {/* Tech pills */}
           <div
             style={{
-              flex: "0 0 360px",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              gap: "2rem",
+              marginTop: "3.25rem",
+              flexWrap: "wrap",
             }}
-            className="hidden lg:flex"
           >
-            <div
-              style={{ position: "relative", width: "320px", height: "320px" }}
-            >
-              {/* Decorative rings */}
-              <div
-                className="pulse-ring"
+            {["AES-256-GCM", "PBKDF2 100K", "Zero Knowledge"].map((tag) => (
+              <span
+                key={tag}
+                className="font-orbitron"
                 style={{
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: "50%",
-                  border: "1px solid rgba(0,212,255,0.18)",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  inset: "28px",
-                  borderRadius: "50%",
-                  border: "1px solid rgba(0,212,255,0.09)",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  inset: "56px",
-                  borderRadius: "50%",
-                  border: "1px solid rgba(0,212,255,0.05)",
-                }}
-              />
-              {/* Logo image */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  fontSize: "0.57rem",
+                  letterSpacing: "0.14em",
+                  color: "rgba(0,212,255,0.42)",
+                  borderBottom: "1px solid rgba(0,212,255,0.18)",
+                  paddingBottom: "0.3rem",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/logo.png"
-                  alt="Footprint"
-                  style={{
-                    width: "200px",
-                    height: "200px",
-                    objectFit: "contain",
-                  }}
-                />
-              </div>
-            </div>
+                {tag}
+              </span>
+            ))}
           </div>
         </div>
       </section>

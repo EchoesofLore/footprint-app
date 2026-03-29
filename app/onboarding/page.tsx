@@ -97,11 +97,25 @@ export default function OnboardingPage() {
         alignItems: "center",
         justifyContent: "center",
         padding: "2rem 1rem",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* Subtle background image */}
+      <div
+        className="hero-bg-img"
+        style={{
+          backgroundImage: "url(/logo.png)",
+          backgroundPosition: "center center",
+          opacity: 0.18,
+          animationDuration: "35s",
+        }}
+      />
       {/* Card */}
       <div
         style={{
+          position: "relative",
+          zIndex: 1,
           background: "var(--surface)",
           border: "1px solid var(--border)",
           width: "100%",
@@ -119,17 +133,29 @@ export default function OnboardingPage() {
             marginBottom: "1.5rem",
           }}
         >
-          <span
-            className="font-orbitron"
-            style={{
-              fontWeight: 900,
-              fontSize: "0.8rem",
-              letterSpacing: "0.22em",
-              color: "var(--accent)",
-            }}
-          >
-            FOOTPRINT
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Footprint"
+              style={{
+                height: "28px",
+                width: "auto",
+                filter: "drop-shadow(0 0 6px rgba(0,212,255,0.55))",
+              }}
+            />
+            <span
+              className="font-orbitron"
+              style={{
+                fontWeight: 900,
+                fontSize: "0.8rem",
+                letterSpacing: "0.22em",
+                color: "var(--accent)",
+              }}
+            >
+              FOOTPRINT
+            </span>
+          </div>
           <span
             className="font-orbitron"
             style={{
@@ -320,6 +346,8 @@ export default function OnboardingPage() {
           href="/dashboard"
           className="font-orbitron"
           style={{
+            position: "relative",
+            zIndex: 1,
             marginTop: "1.25rem",
             fontSize: "0.58rem",
             letterSpacing: "0.14em",
@@ -337,6 +365,8 @@ export default function OnboardingPage() {
           disabled={submitting}
           className="font-orbitron"
           style={{
+            position: "relative",
+            zIndex: 1,
             marginTop: "1.25rem",
             background: "none",
             border: "none",
