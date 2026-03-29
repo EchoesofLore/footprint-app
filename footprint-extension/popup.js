@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (openVaultBtn) {
     openVaultBtn.addEventListener("click", async () => {
-      await chrome.tabs.create({ url: "http://localhost:3000/vault" });
+      await chrome.tabs.create({ url: "https://footprint-app-gbag.vercel.app/vault" });
     });
   }
 
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const tabs = await chrome.tabs.query({});
       const vaultTab = tabs.find(
-        (tab) => tab.url && tab.url.startsWith("http://localhost:3000/vault")
+        (tab) => tab.url && tab.url.startsWith("https://footprint-app-gbag.vercel.app/vault")
       );
 
       if (!vaultTab?.id) return null;
