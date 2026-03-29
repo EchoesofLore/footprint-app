@@ -68,14 +68,14 @@ export default function OnboardingPage() {
         }}
       >
         <p
-          className="font-orbitron"
+          className="font-cinzel"
           style={{
-            color: "rgba(0,212,255,0.3)",
-            fontSize: "0.62rem",
-            letterSpacing: "0.32em",
+            color: "rgba(200,146,42,0.4)",
+            fontSize: "0.65rem",
+            letterSpacing: "0.28em",
           }}
         >
-          LOADING…
+          Loading…
         </p>
       </div>
     )
@@ -88,40 +88,45 @@ export default function OnboardingPage() {
 
   return (
     <div
-      className="cyber-grid"
       style={{
         minHeight: "100vh",
-        background: "var(--bg)",
+        backgroundImage: "url(/bg-onboarding.png)",
+        backgroundColor: "#1a1208",
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+        backgroundAttachment: "fixed",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: "2rem 1rem",
         position: "relative",
-        overflow: "hidden",
       }}
     >
-      {/* Subtle background image */}
+      {/* Full-page dark overlay */}
       <div
-        className="hero-bg-img"
         style={{
-          backgroundImage: "url(/logo.png)",
-          backgroundPosition: "center center",
-          opacity: 0.18,
-          animationDuration: "35s",
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.68)",
+          zIndex: 0,
+          pointerEvents: "none",
         }}
       />
+
       {/* Card */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
-          background: "var(--surface)",
+          backgroundImage: "linear-gradient(rgba(17,16,8,0.86), rgba(17,16,8,0.86)), url(/texture-panel.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           border: "1px solid var(--border)",
           width: "100%",
           maxWidth: "520px",
           padding: "2.5rem",
-          boxShadow: "0 0 48px rgba(0,212,255,0.06)",
+          boxShadow: "0 0 48px rgba(200,146,42,0.1)",
         }}
       >
         {/* Top row */}
@@ -141,26 +146,26 @@ export default function OnboardingPage() {
               style={{
                 height: "28px",
                 width: "auto",
-                filter: "drop-shadow(0 0 6px rgba(0,212,255,0.55))",
+                filter: "drop-shadow(0 0 6px rgba(200,146,42,0.55))",
               }}
             />
             <span
-              className="font-orbitron"
+              className="font-cinzel"
               style={{
                 fontWeight: 900,
                 fontSize: "0.8rem",
-                letterSpacing: "0.22em",
+                letterSpacing: "0.18em",
                 color: "var(--accent)",
               }}
             >
-              FOOTPRINT
+              Footprint
             </span>
           </div>
           <span
-            className="font-orbitron"
+            className="font-cinzel"
             style={{
-              fontSize: "0.6rem",
-              letterSpacing: "0.14em",
+              fontSize: "0.62rem",
+              letterSpacing: "0.12em",
               color: "var(--text-secondary)",
             }}
           >
@@ -169,9 +174,9 @@ export default function OnboardingPage() {
         </div>
 
         {/* Progress bar */}
-        <div className="progress-cyber" style={{ marginBottom: "2.25rem" }}>
+        <div className="progress-stone" style={{ marginBottom: "2.25rem" }}>
           <div
-            className="progress-cyber-fill"
+            className="progress-stone-fill"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -179,23 +184,23 @@ export default function OnboardingPage() {
         {/* Category header */}
         <div style={{ marginBottom: "1.75rem" }}>
           <p
-            className="font-orbitron"
+            className="font-cinzel"
             style={{
               fontSize: "0.58rem",
-              letterSpacing: "0.3em",
-              color: "rgba(0,212,255,0.4)",
+              letterSpacing: "0.26em",
+              color: "rgba(200,146,42,0.45)",
               marginBottom: "0.5rem",
               textTransform: "uppercase",
             }}
           >
-            Select services
+            Select Services
           </p>
           <h2
-            className="font-orbitron"
+            className="font-cinzel"
             style={{
               fontSize: "1.2rem",
               fontWeight: 700,
-              letterSpacing: "0.08em",
+              letterSpacing: "0.06em",
               textTransform: "uppercase",
               color: "var(--text-primary)",
               marginBottom: "0.3rem",
@@ -234,13 +239,13 @@ export default function OnboardingPage() {
                   alignItems: "center",
                   gap: "0.75rem",
                   padding: "1rem",
-                  background: isChecked ? "rgba(0,212,255,0.08)" : "var(--bg)",
+                  background: isChecked ? "rgba(200,146,42,0.1)" : "var(--bg)",
                   border: `1px solid ${isChecked ? "var(--accent)" : "var(--border-subtle)"}`,
                   cursor: "pointer",
                   textAlign: "left",
                   transition: "background 0.2s, border-color 0.2s, box-shadow 0.2s",
                   boxShadow: isChecked
-                    ? "0 0 12px rgba(0,212,255,0.15)"
+                    ? "0 0 12px rgba(200,146,42,0.15)"
                     : "none",
                 }}
               >
@@ -248,11 +253,11 @@ export default function OnboardingPage() {
                   {service.emoji}
                 </span>
                 <span
-                  className={isChecked ? "font-orbitron" : ""}
+                  className={isChecked ? "font-cinzel" : ""}
                   style={{
                     fontSize: isChecked ? "0.62rem" : "0.82rem",
                     fontWeight: isChecked ? 700 : 500,
-                    letterSpacing: isChecked ? "0.08em" : "0",
+                    letterSpacing: isChecked ? "0.07em" : "0",
                     color: isChecked ? "var(--accent)" : "var(--text-primary)",
                     textTransform: isChecked ? "uppercase" : "none",
                     lineHeight: 1.3,
@@ -276,12 +281,12 @@ export default function OnboardingPage() {
           <button
             onClick={() => setStep((s) => s - 1)}
             disabled={step === 0}
-            className="font-orbitron"
+            className="font-cinzel"
             style={{
               background: "none",
               border: "none",
-              fontSize: "0.6rem",
-              letterSpacing: "0.14em",
+              fontSize: "0.62rem",
+              letterSpacing: "0.12em",
               color: "var(--text-secondary)",
               cursor: step === 0 ? "not-allowed" : "pointer",
               opacity: step === 0 ? 0.3 : 1,
@@ -300,13 +305,13 @@ export default function OnboardingPage() {
                 style={{
                   display: "block",
                   height: "3px",
-                  borderRadius: "2px",
+                  borderRadius: "1px",
                   background:
                     i === step
                       ? "var(--accent)"
                       : i < step
-                      ? "rgba(0,212,255,0.35)"
-                      : "rgba(0,212,255,0.1)",
+                      ? "rgba(200,146,42,0.4)"
+                      : "rgba(200,146,42,0.12)",
                   width: i === step ? "20px" : "6px",
                   boxShadow: i === step ? "0 0 6px var(--accent)" : "none",
                   transition: "width 0.3s, background 0.3s",
@@ -319,9 +324,9 @@ export default function OnboardingPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="btn-cyber-solid"
+              className="btn-iron-solid"
               style={{
-                fontSize: "0.6rem",
+                fontSize: "0.62rem",
                 padding: "0.55rem 1.25rem",
                 opacity: submitting ? 0.5 : 1,
               }}
@@ -331,8 +336,8 @@ export default function OnboardingPage() {
           ) : (
             <button
               onClick={() => setStep((s) => s + 1)}
-              className="btn-cyber-solid"
-              style={{ fontSize: "0.6rem", padding: "0.55rem 1.25rem" }}
+              className="btn-iron-solid"
+              style={{ fontSize: "0.62rem", padding: "0.55rem 1.25rem" }}
             >
               Next →
             </button>
@@ -344,13 +349,13 @@ export default function OnboardingPage() {
       {isEditing ? (
         <a
           href="/dashboard"
-          className="font-orbitron"
+          className="font-cinzel"
           style={{
             position: "relative",
             zIndex: 1,
             marginTop: "1.25rem",
             fontSize: "0.58rem",
-            letterSpacing: "0.14em",
+            letterSpacing: "0.12em",
             color: "var(--text-muted)",
             textTransform: "uppercase",
             textDecoration: "none",
@@ -363,7 +368,7 @@ export default function OnboardingPage() {
         <button
           onClick={handleSubmit}
           disabled={submitting}
-          className="font-orbitron"
+          className="font-cinzel"
           style={{
             position: "relative",
             zIndex: 1,
@@ -371,7 +376,7 @@ export default function OnboardingPage() {
             background: "none",
             border: "none",
             fontSize: "0.58rem",
-            letterSpacing: "0.14em",
+            letterSpacing: "0.12em",
             color: "var(--text-muted)",
             textTransform: "uppercase",
             cursor: "pointer",

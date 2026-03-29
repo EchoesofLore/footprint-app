@@ -12,6 +12,7 @@ export default function DashboardPage() {
 
   const [services, setServices] = useState<Service[]>([])
   const [loading, setLoading] = useState(true)
+  const [activeCards, setActiveCards] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (!isLoaded) return
@@ -31,6 +32,13 @@ export default function DashboardPage() {
           .map((id) => ALL_SERVICES.find((s) => s.id === id))
           .filter((s): s is Service => !!s)
         setServices(matched)
+        // Default the first card in each category to active
+        const defaults: Record<string, string> = {}
+        CATEGORIES.forEach((cat) => {
+          const first = matched.find((s) => s.category === cat.name)
+          if (first) defaults[cat.id] = first.id
+        })
+        setActiveCards(defaults)
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -48,14 +56,14 @@ export default function DashboardPage() {
         }}
       >
         <p
-          className="font-orbitron"
+          className="font-cinzel"
           style={{
-            color: "rgba(0,212,255,0.3)",
-            fontSize: "0.62rem",
-            letterSpacing: "0.32em",
+            color: "rgba(200,146,42,0.4)",
+            fontSize: "0.65rem",
+            letterSpacing: "0.28em",
           }}
         >
-          INITIALIZING VAULT…
+          Opening the Vault…
         </p>
       </div>
     )
@@ -68,11 +76,28 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="cyber-grid"
-      style={{ minHeight: "100vh", background: "var(--bg)" }}
+      style={{
+        minHeight: "100vh",
+        position: "relative",
+        backgroundImage: "url(/bg-dashboard.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
     >
+      {/* Full-page dark overlay */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.55)",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      />
+
       {/* ── Sticky nav ──────────────────────────────────────────── */}
-      <header className="nav-cyber" style={{ position: "sticky", top: 0, zIndex: 10 }}>
+      <header className="nav-stone" style={{ position: "sticky", top: 0, zIndex: 10 }}>
         <div
           style={{
             maxWidth: "1120px",
@@ -91,29 +116,29 @@ export default function DashboardPage() {
               style={{
                 height: "36px",
                 width: "auto",
-                filter: "drop-shadow(0 0 8px rgba(0,212,255,0.65))",
+                filter: "drop-shadow(0 0 8px rgba(200,146,42,0.6))",
               }}
             />
             <span
-              className="font-orbitron"
+              className="font-cinzel"
               style={{
                 fontWeight: 900,
                 fontSize: "0.95rem",
-                letterSpacing: "0.26em",
+                letterSpacing: "0.2em",
                 color: "var(--accent)",
               }}
             >
-              FOOTPRINT
+              Footprint
             </span>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1.75rem" }}>
             <a
               href="/vault"
-              className="font-orbitron"
+              className="font-cinzel"
               style={{
-                fontSize: "0.58rem",
-                letterSpacing: "0.18em",
+                fontSize: "0.62rem",
+                letterSpacing: "0.14em",
                 color: "var(--accent)",
                 textTransform: "uppercase",
                 textDecoration: "none",
@@ -138,44 +163,14 @@ export default function DashboardPage() {
       <div
         style={{
           position: "relative",
+          zIndex: 1,
           height: "220px",
-          overflow: "hidden",
-          borderBottom: "1px solid rgba(0,212,255,0.1)",
+          borderBottom: "1px solid rgba(200,146,42,0.12)",
         }}
       >
-        {/* Ken Burns background image */}
-        <div
-          className="hero-bg-img"
-          style={{
-            backgroundImage: "url(/logo.png)",
-            backgroundPosition: "60% center",
-            animationDuration: "30s",
-          }}
-        />
-        {/* Gradient overlays */}
-        <div className="hero-overlays" />
-        {/* Glow pulse */}
-        <div
-          style={{
-            position: "absolute",
-            right: "10%",
-            top: "50%",
-            width: "380px",
-            height: "380px",
-            borderRadius: "50%",
-            background:
-              "radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 65%)",
-            transform: "translate(50%, -50%)",
-            animation: "hero-glow-breathe 3s ease-in-out infinite",
-            pointerEvents: "none",
-            zIndex: 2,
-          }}
-        />
         {/* Banner content */}
         <div
           style={{
-            position: "relative",
-            zIndex: 3,
             height: "100%",
             maxWidth: "1120px",
             margin: "0 auto",
@@ -186,11 +181,11 @@ export default function DashboardPage() {
           }}
         >
           <p
-            className="font-orbitron"
+            className="font-cinzel"
             style={{
-              fontSize: "0.58rem",
-              letterSpacing: "0.34em",
-              color: "rgba(0,212,255,0.38)",
+              fontSize: "0.6rem",
+              letterSpacing: "0.28em",
+              color: "rgba(200,146,42,0.45)",
               marginBottom: "0.5rem",
               textTransform: "uppercase",
             }}
@@ -207,22 +202,22 @@ export default function DashboardPage() {
             }}
           >
             <h1
-              className="font-orbitron"
+              className="font-cinzel"
               style={{
                 fontSize: "clamp(1.6rem, 4vw, 2.6rem)",
                 fontWeight: 900,
-                letterSpacing: "0.07em",
+                letterSpacing: "0.06em",
                 textTransform: "uppercase",
                 color: "var(--text-primary)",
                 lineHeight: 1,
               }}
             >
-              YOUR ACCOUNTS
+              Your Accounts
             </h1>
             <a
               href="/onboarding"
-              className="btn-cyber"
-              style={{ fontSize: "0.58rem", padding: "0.5rem 1rem" }}
+              className="btn-iron"
+              style={{ fontSize: "0.6rem", padding: "0.5rem 1rem" }}
             >
               Edit Services
             </a>
@@ -233,6 +228,8 @@ export default function DashboardPage() {
       {/* ── Main content ─────────────────────────────────────────── */}
       <main
         style={{
+          position: "relative",
+          zIndex: 1,
           maxWidth: "1120px",
           margin: "0 auto",
           padding: "3rem 1.75rem",
@@ -254,7 +251,7 @@ export default function DashboardPage() {
           ].map((stat) => (
             <div key={stat.label} className="stat-card">
               <div
-                className="font-orbitron"
+                className="font-cinzel"
                 style={{
                   fontSize: "1.6rem",
                   fontWeight: 700,
@@ -267,9 +264,9 @@ export default function DashboardPage() {
               </div>
               <div
                 style={{
-                  fontSize: "0.62rem",
+                  fontSize: "0.65rem",
                   color: "var(--text-secondary)",
-                  letterSpacing: "0.12em",
+                  letterSpacing: "0.1em",
                   textTransform: "uppercase",
                   marginTop: "0.4rem",
                 }}
@@ -292,7 +289,7 @@ export default function DashboardPage() {
             >
               No services selected yet.
             </p>
-            <a href="/onboarding" className="btn-cyber">
+            <a href="/onboarding" className="btn-iron">
               ← Go to Setup
             </a>
           </div>
@@ -300,7 +297,7 @@ export default function DashboardPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: "3.25rem" }}>
             {grouped.map((cat, catIdx) => {
               const catNum = String(catIdx + 1).padStart(2, "0")
-              const [featured, ...rest] = cat.selected
+              const catActiveId = activeCards[cat.id] ?? ""
 
               return (
                 <section key={cat.id}>
@@ -315,11 +312,11 @@ export default function DashboardPage() {
                   >
                     <span className="cat-number">{catNum}</span>
                     <span
-                      className="font-orbitron"
+                      className="font-cinzel"
                       style={{
-                        fontSize: "0.62rem",
+                        fontSize: "0.65rem",
                         fontWeight: 700,
-                        letterSpacing: "0.22em",
+                        letterSpacing: "0.18em",
                         color: "var(--text-secondary)",
                         textTransform: "uppercase",
                       }}
@@ -330,7 +327,7 @@ export default function DashboardPage() {
                       style={{
                         flex: 1,
                         height: "1px",
-                        background: "rgba(0,212,255,0.08)",
+                        background: "rgba(200,146,42,0.1)",
                       }}
                     />
                   </div>
@@ -339,95 +336,81 @@ export default function DashboardPage() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns:
-                        "repeat(auto-fill, minmax(155px, 1fr))",
+                      gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))",
                       gap: "1rem",
+                      overflow: "visible",
                     }}
                   >
-                    {/* Featured card */}
-                    {featured && (
-                      <a
-                        href={`/vault?service=${featured.id}`}
-                        className="card-cyber"
-                        style={{
-                          gridColumn:
-                            cat.selected.length > 1 ? "span 2" : "span 1",
-                          padding: "1.75rem",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                          gap: "1rem",
-                          textDecoration: "none",
-                          borderRadius: "2px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <span style={{ fontSize: "2.6rem", lineHeight: 1 }}>
-                          {featured.emoji}
-                        </span>
-                        <div>
-                          <div
-                            className="font-orbitron"
-                            style={{
-                              fontSize: "0.72rem",
-                              fontWeight: 700,
-                              letterSpacing: "0.12em",
-                              color: "var(--text-primary)",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            {featured.name}
-                          </div>
-                          <div
-                            style={{
-                              fontSize: "0.6rem",
-                              color: "var(--accent)",
-                              opacity: 0.55,
-                              marginTop: "0.3rem",
-                              letterSpacing: "0.1em",
-                            }}
-                          >
-                            OPEN VAULT →
-                          </div>
-                        </div>
-                      </a>
-                    )}
-
-                    {/* Smaller cards */}
-                    {rest.map((service) => (
-                      <a
-                        key={service.id}
-                        href={`/vault?service=${service.id}`}
-                        className="card-cyber"
-                        style={{
-                          padding: "1.25rem 1rem",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          gap: "0.75rem",
-                          textDecoration: "none",
-                          borderRadius: "2px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <span style={{ fontSize: "1.8rem", lineHeight: 1 }}>
-                          {service.emoji}
-                        </span>
-                        <span
-                          className="font-orbitron"
+                    {cat.selected.map((service) => {
+                      const isActive = catActiveId === service.id
+                      const isDimmed = !!catActiveId && !isActive
+                      return (
+                        <div
+                          key={service.id}
+                          onClick={() =>
+                            setActiveCards((prev) => ({
+                              ...prev,
+                              [cat.id]: isActive ? "" : service.id,
+                            }))
+                          }
+                          className="card-stone"
                           style={{
-                            fontSize: "0.58rem",
-                            fontWeight: 700,
-                            letterSpacing: "0.1em",
-                            color: "var(--text-secondary)",
-                            textTransform: "uppercase",
-                            textAlign: "center",
+                            padding: "1.5rem 1.25rem",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "0.75rem",
+                            cursor: "pointer",
+                            position: "relative",
+                            zIndex: isActive ? 2 : 1,
+                            boxShadow: isActive
+                              ? "0 0 36px rgba(200,146,42,0.35), 0 8px 40px rgba(0,0,0,0.55)"
+                              : "none",
+                            borderColor: isActive ? "var(--accent)" : undefined,
+                            transition: "box-shadow 0.35s ease, border-color 0.35s ease",
                           }}
                         >
-                          {service.name}
-                        </span>
-                      </a>
-                    ))}
+                          <span
+                            style={{
+                              fontSize: isActive ? "2.4rem" : "1.85rem",
+                              lineHeight: 1,
+                              transition: "font-size 0.35s ease",
+                            }}
+                          >
+                            {service.emoji}
+                          </span>
+                          <span
+                            className="font-cinzel"
+                            style={{
+                              fontSize: isActive ? "0.7rem" : "0.64rem",
+                              fontWeight: 700,
+                              letterSpacing: "0.08em",
+                              color: isActive ? "var(--accent)" : "var(--text-primary)",
+                              textTransform: "uppercase",
+                              textAlign: "center",
+                              transition: "font-size 0.35s ease, color 0.35s ease",
+                            }}
+                          >
+                            {service.name}
+                          </span>
+                          {isActive && (
+                            <a
+                              href={`/vault?service=${service.id}`}
+                              onClick={(e) => e.stopPropagation()}
+                              className="btn-iron"
+                              style={{
+                                fontSize: "0.55rem",
+                                padding: "0.3rem 0.75rem",
+                                marginTop: "0.25rem",
+                              }}
+                            >
+                              Open →
+                            </a>
+                          )}
+                        </div>
+                      )
+                    })}
                   </div>
                 </section>
               )

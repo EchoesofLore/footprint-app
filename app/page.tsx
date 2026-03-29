@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { supabaseServer } from "@/lib/supabaseServer"
-import Particles from "@/app/components/Particles"
 
 export default async function Home() {
   const { userId } = await auth()
@@ -27,11 +26,9 @@ export default async function Home() {
         flexDirection: "column",
       }}
     >
-      <Particles />
-
       {/* ── Nav ─────────────────────────────────────────────────── */}
       <nav
-        className="nav-cyber"
+        className="nav-stone"
         style={{
           flexShrink: 0,
           position: "relative",
@@ -50,23 +47,23 @@ export default async function Home() {
             style={{
               height: "36px",
               width: "auto",
-              filter: "drop-shadow(0 0 8px rgba(0,212,255,0.65))",
+              filter: "drop-shadow(0 0 8px rgba(200,146,42,0.65))",
             }}
           />
           <span
-            className="font-orbitron"
+            className="font-cinzel"
             style={{
               fontWeight: 900,
               fontSize: "1rem",
-              letterSpacing: "0.28em",
+              letterSpacing: "0.22em",
               color: "var(--accent)",
             }}
           >
-            FOOTPRINT
+            Footprint
           </span>
         </div>
 
-        <a href="/sign-in" className="btn-cyber">
+        <a href="/sign-in" className="btn-iron">
           Sign In
         </a>
       </nav>
@@ -81,16 +78,16 @@ export default async function Home() {
           overflow: "hidden",
         }}
       >
-        {/* Animated Ken Burns background image */}
+        {/* Ken Burns background image */}
         <div
           className="hero-bg-img"
-          style={{ backgroundImage: "url(/logo.png)" }}
+          style={{ backgroundImage: "url(/hero-vault.png)" }}
         />
 
-        {/* Gradient overlays: left fade + global dim */}
+        {/* Gradient overlays */}
         <div className="hero-overlays" />
 
-        {/* Breathing cyan glow over the lock */}
+        {/* Amber glow */}
         <div className="hero-glow-pulse" />
 
         {/* Left content */}
@@ -103,11 +100,11 @@ export default async function Home() {
           }}
         >
           <p
-            className="font-orbitron"
+            className="font-cinzel"
             style={{
-              fontSize: "0.62rem",
-              letterSpacing: "0.38em",
-              color: "rgba(0,212,255,0.45)",
+              fontSize: "0.65rem",
+              letterSpacing: "0.3em",
+              color: "rgba(200,146,42,0.55)",
               marginBottom: "1.5rem",
               textTransform: "uppercase",
             }}
@@ -116,20 +113,20 @@ export default async function Home() {
           </p>
 
           <h1
-            className="font-orbitron"
+            className="font-cinzel"
             style={{
               fontSize: "clamp(2.6rem, 6vw, 5.25rem)",
               fontWeight: 900,
-              lineHeight: 1.04,
-              letterSpacing: "0.02em",
+              lineHeight: 1.08,
+              letterSpacing: "0.04em",
               textTransform: "uppercase",
               color: "var(--text-primary)",
               marginBottom: "1.5rem",
             }}
           >
-            EVERY ACCOUNT.
+            Every Account.
             <br />
-            <span style={{ color: "var(--accent)" }}>SECURED.</span>
+            <span style={{ color: "var(--accent)" }}>Secured.</span>
           </h1>
 
           <p
@@ -148,21 +145,21 @@ export default async function Home() {
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
             <a
               href="/sign-in"
-              className="btn-cyber-solid"
+              className="btn-iron-solid"
               style={{ padding: "0.8rem 2.25rem" }}
             >
               Get Started
             </a>
             <a
               href="/sign-in"
-              className="btn-cyber"
+              className="btn-iron"
               style={{ padding: "0.8rem 2.25rem" }}
             >
-              Sign In →
+              Sign In
             </a>
           </div>
 
-          {/* Tech pills */}
+          {/* Security badges */}
           <div
             style={{
               display: "flex",
@@ -174,12 +171,12 @@ export default async function Home() {
             {["AES-256-GCM", "PBKDF2 100K", "Zero Knowledge"].map((tag) => (
               <span
                 key={tag}
-                className="font-orbitron"
+                className="font-cinzel"
                 style={{
-                  fontSize: "0.57rem",
-                  letterSpacing: "0.14em",
-                  color: "rgba(0,212,255,0.42)",
-                  borderBottom: "1px solid rgba(0,212,255,0.18)",
+                  fontSize: "0.58rem",
+                  letterSpacing: "0.12em",
+                  color: "rgba(200,146,42,0.5)",
+                  borderBottom: "1px solid rgba(200,146,42,0.2)",
                   paddingBottom: "0.3rem",
                 }}
               >

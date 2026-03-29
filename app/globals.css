@@ -1,19 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
 /* ── Design tokens ───────────────────────────────────────────────── */
 :root {
-  --bg:           #030912;
-  --surface:      #060f1e;
-  --surface-2:    #0b1828;
-  --accent:       #00d4ff;
-  --accent-dim:   rgba(0, 212, 255, 0.12);
-  --accent-glow:  rgba(0, 212, 255, 0.35);
-  --border:       rgba(0, 212, 255, 0.2);
-  --border-subtle:rgba(0, 212, 255, 0.07);
-  --text-primary: #dff4fa;
-  --text-secondary: rgba(223, 244, 250, 0.45);
-  --text-muted:   rgba(223, 244, 250, 0.22);
+  --bg:              #0a0a0a;
+  --surface:         #111008;
+  --surface-2:       #1c1a13;
+  --accent:          #c8922a;
+  --accent-dim:      rgba(200, 146, 42, 0.12);
+  --accent-glow:     rgba(200, 146, 42, 0.4);
+  --border:          rgba(200, 146, 42, 0.28);
+  --border-subtle:   rgba(200, 146, 42, 0.1);
+  --text-primary:    #e8e0d0;
+  --text-secondary:  rgba(232, 224, 208, 0.55);
+  --text-muted:      rgba(232, 224, 208, 0.28);
 }
 
 @theme inline {
@@ -33,27 +33,24 @@ body {
 }
 
 /* ── Typography helpers ──────────────────────────────────────────── */
-.font-orbitron { font-family: "Orbitron", sans-serif !important; }
-.text-accent   { color: var(--accent) !important; }
+.font-cinzel { font-family: "Cinzel", serif !important; }
+.text-accent  { color: var(--accent) !important; }
 
-/* ── Cyber grid background ───────────────────────────────────────── */
-.cyber-grid {
-  background-image:
-    linear-gradient(rgba(0, 212, 255, 0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 212, 255, 0.022) 1px, transparent 1px);
-  background-size: 64px 64px;
+/* ── Stone vault page background ─────────────────────────────────── */
+.stone-vault {
+  background: var(--bg);
 }
 
 /* ── Navigation ──────────────────────────────────────────────────── */
-.nav-cyber {
-  background: rgba(3, 9, 18, 0.82);
+.nav-stone {
+  background: rgba(10, 10, 10, 0.88);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 /* ── Buttons ─────────────────────────────────────────────────────── */
-.btn-cyber {
+.btn-iron {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -61,10 +58,10 @@ body {
   background: transparent;
   border: 1px solid var(--accent);
   color: var(--accent);
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.68rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 0.65rem 1.5rem;
   cursor: pointer;
@@ -72,13 +69,13 @@ body {
   white-space: nowrap;
   transition: background 0.22s, color 0.22s, box-shadow 0.22s;
 }
-.btn-cyber:hover {
+.btn-iron:hover {
   background: var(--accent);
   color: var(--bg);
-  box-shadow: 0 0 28px var(--accent-glow);
+  box-shadow: 0 0 24px var(--accent-glow);
 }
 
-.btn-cyber-solid {
+.btn-iron-solid {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -86,10 +83,10 @@ body {
   background: var(--accent);
   border: 1px solid var(--accent);
   color: var(--bg);
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.68rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 0.65rem 1.5rem;
   cursor: pointer;
@@ -97,25 +94,25 @@ body {
   white-space: nowrap;
   transition: background 0.22s, color 0.22s, box-shadow 0.22s;
 }
-.btn-cyber-solid:hover {
+.btn-iron-solid:hover {
   background: transparent;
   color: var(--accent);
-  box-shadow: 0 0 28px var(--accent-glow);
+  box-shadow: 0 0 24px var(--accent-glow);
 }
 
 /* ── Cards ───────────────────────────────────────────────────────── */
-.card-cyber {
-  background: var(--surface);
+.card-stone {
+  background-image: url(/texture-panel.png);
+  background-size: cover;
+  background-position: center;
   border: 1px solid var(--border-subtle);
-  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
-.card-cyber:hover {
+.card-stone:hover {
   border-color: var(--accent);
-  background: var(--surface-2);
   box-shadow:
-    0 0 28px rgba(0, 212, 255, 0.18),
-    0 0 60px rgba(0, 212, 255, 0.06),
-    inset 0 0 20px rgba(0, 212, 255, 0.03);
+    0 0 24px rgba(200, 146, 42, 0.14),
+    0 0 56px rgba(200, 146, 42, 0.05);
 }
 
 /* ── Stat row ────────────────────────────────────────────────────── */
@@ -126,36 +123,12 @@ body {
 
 /* ── Category number label ───────────────────────────────────────── */
 .cat-number {
-  font-family: "Orbitron", sans-serif;
-  font-size: 0.62rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   color: var(--accent);
-  opacity: 0.55;
-}
-
-/* ── Particles ───────────────────────────────────────────────────── */
-.particles-container {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-.particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 50%;
-  box-shadow: 0 0 6px var(--accent), 0 0 14px var(--accent);
-  animation: float-particle linear infinite;
-}
-@keyframes float-particle {
-  0%   { transform: translateY(0)     translateX(0);    opacity: 0; }
-  6%   { opacity: 0.75; }
-  94%  { opacity: 0.75; }
-  100% { transform: translateY(-105vh) translateX(36px); opacity: 0; }
+  opacity: 0.6;
 }
 
 /* ── Hero background image layer (Ken Burns) ─────────────────────── */
@@ -163,15 +136,15 @@ body {
   position: absolute;
   inset: -5%;
   background-size: cover;
-  background-position: center right;
+  background-position: center;
   background-repeat: no-repeat;
-  animation: hero-kenburns 22s ease-in-out infinite alternate;
+  animation: hero-kenburns 26s ease-in-out infinite alternate;
   z-index: 0;
   pointer-events: none;
 }
 @keyframes hero-kenburns {
   from { transform: scale(1)    translateX(0); }
-  to   { transform: scale(1.07) translateX(-1.5%); }
+  to   { transform: scale(1.06) translateX(-1.2%); }
 }
 
 /* ── Hero gradient overlays (above image, below content) ─────────── */
@@ -179,13 +152,13 @@ body {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to right, rgba(3,9,18,0.92) 0%, rgba(3,9,18,0.75) 30%, rgba(3,9,18,0.3) 50%, transparent 65%),
-    linear-gradient(rgba(3,9,18,0.1), rgba(3,9,18,0.1));
+    linear-gradient(to right, rgba(10,10,10,0.96) 0%, rgba(10,10,10,0.82) 32%, rgba(10,10,10,0.4) 56%, transparent 70%),
+    linear-gradient(rgba(10,10,10,0.15), rgba(10,10,10,0.15));
   pointer-events: none;
   z-index: 1;
 }
 
-/* ── Cyan glow pulse over the lock area ──────────────────────────── */
+/* ── Amber glow pulse ────────────────────────────────────────────── */
 .hero-glow-pulse {
   position: absolute;
   right: 10%;
@@ -193,27 +166,27 @@ body {
   width: 560px;
   height: 560px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,212,255,0.11) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(200,146,42,0.1) 0%, transparent 65%);
   transform: translate(50%, -50%);
-  animation: hero-glow-breathe 3s ease-in-out infinite;
+  animation: hero-glow-breathe 4s ease-in-out infinite;
   pointer-events: none;
   z-index: 2;
 }
 @keyframes hero-glow-breathe {
-  0%, 100% { opacity: 0.45; transform: translate(50%, -50%) scale(0.92); }
-  50%       { opacity: 1;    transform: translate(50%, -50%) scale(1.08); }
+  0%, 100% { opacity: 0.5; transform: translate(50%, -50%) scale(0.92); }
+  50%       { opacity: 1;   transform: translate(50%, -50%) scale(1.08); }
 }
 
 /* ── Onboarding progress bar ─────────────────────────────────────── */
-.progress-cyber {
+.progress-stone {
   height: 2px;
   background: var(--border-subtle);
   overflow: hidden;
 }
-.progress-cyber-fill {
+.progress-stone-fill {
   height: 100%;
   background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
   transition: width 0.35s ease;
 }
 
@@ -226,28 +199,30 @@ body {
 .cl-card {
   background: var(--surface) !important;
   border: 1px solid var(--border) !important;
-  box-shadow: 0 0 48px rgba(0, 212, 255, 0.07) !important;
+  box-shadow: 0 0 40px rgba(200, 146, 42, 0.06) !important;
   border-radius: 2px !important;
+  margin-top: 0 !important;
 }
 .cl-headerTitle {
-  font-family: "Orbitron", sans-serif !important;
+  font-family: "Cinzel", serif !important;
   color: var(--text-primary) !important;
-  font-size: 0.95rem !important;
-  letter-spacing: 0.1em !important;
+  font-size: 1rem !important;
+  letter-spacing: 0.08em !important;
 }
 .cl-headerSubtitle { color: var(--text-secondary) !important; }
 .cl-formButtonPrimary {
-  background: var(--accent) !important;
-  color: var(--bg) !important;
+  background: #c8922a !important;
+  color: #0a0a0a !important;
   border-radius: 2px !important;
-  font-family: "Orbitron", sans-serif !important;
-  font-size: 0.67rem !important;
-  letter-spacing: 0.12em !important;
+  font-family: "Cinzel", serif !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.1em !important;
   text-transform: uppercase !important;
   transition: box-shadow 0.22s !important;
 }
 .cl-formButtonPrimary:hover {
-  box-shadow: 0 0 22px var(--accent-glow) !important;
+  background: #c8922a !important;
+  box-shadow: 0 0 20px rgba(200,146,42,0.5) !important;
 }
 .cl-formFieldInput {
   background: var(--bg) !important;
