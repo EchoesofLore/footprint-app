@@ -7,6 +7,9 @@ import { useUser } from "@clerk/nextjs";
 import { decryptData, deriveKey, encryptData } from "@/lib/crypto";
 import type { VaultData, VaultEntry } from "@/lib/types";
 import { getServiceById } from "@/lib/services";
+import { passwordStrength, maskPassword, daysAgo, normKey } from "@/lib/vaultUtils";
+import VaultRow from "@/src/components/vault/VaultRow";
+import VaultSection from "@/src/components/vault/VaultSection";
 
 function sendVaultToExtension(vault: VaultData) {
   if (typeof window === "undefined") return;
@@ -107,44 +110,6 @@ function tagsToInput(tags?: string[]) {
 
 type SortMode = "newest" | "oldest" | "az" | "za";
 
-function passwordStrength(pw: string): { score: number; label: string } {
-  const p = pw ?? "";
-  if (!p) return { score: 0, label: "Empty" };
-
-  let score = 0;
-  const len = p.length;
-  const hasLower = /[a-z]/.test(p);
-  const hasUpper = /[A-Z]/.test(p);
-  const hasNum = /\d/.test(p);
-  const hasSym = /[^a-zA-Z0-9]/.test(p);
-
-  if (len >= 8) score++;
-  if (len >= 12) score++;
-  if (hasLower && hasUpper) score++;
-  if (hasNum) score++;
-  if (hasSym) score++;
-
-  score = Math.min(4, score);
-
-  const label =
-    score <= 1 ? "Weak" : score === 2 ? "Fair" : score === 3 ? "Good" : "Strong";
-
-  return { score, label };
-}
-
-function maskPassword(pw: string) {
-  const n = Math.min(Math.max(pw?.length ?? 0, 8), 18);
-  return "•".repeat(n);
-}
-
-function daysAgo(ts?: number) {
-  if (!ts) return "unknown";
-  const d = Math.floor((Date.now() - ts) / (1000 * 60 * 60 * 24));
-  if (d <= 0) return "today";
-  if (d === 1) return "1 day ago";
-  return `${d} days ago`;
-}
-
 function randomInt(maxExclusive: number) {
   const arr = new Uint32Array(1);
   crypto.getRandomValues(arr);
@@ -190,10 +155,6 @@ function safeFileName() {
   return `footprint_backup_${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(
     d.getHours()
   )}${pad(d.getMinutes())}.json`;
-}
-
-function normKey(site: string, username: string) {
-  return `${(site ?? "").trim().toLowerCase()}|${(username ?? "").trim().toLowerCase()}`;
 }
 
 function parseCsvRows(text: string): string[][] {
@@ -1531,437 +1492,420 @@ export default function VaultPage() {
   if (!isLoaded) return null;
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-3xl mx-auto p-4 space-y-4">
-        <h1 className="text-3xl font-bold">Vault</h1>
+    <div
+      className="min-h-screen text-[#e8e0d0]"
+      style={{
+        backgroundImage: "url(/bg-dashboard.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        backgroundColor: "#0a0a0a",
+      }}
+    >
+      {/* Scrim so panels read as embedded, not floating */}
+      <div className="min-h-screen" style={{ background: "rgba(10,10,10,0.75)" }}>
 
-        {/* Unlock/Controls */}
-        {!unlocked ? (
-          <div className="space-y-2">
-            <input
-              type="password"
-              placeholder="Master password"
-              autoFocus
-              value={masterPassword}
-              onChange={(e) => setMasterPassword(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleUnlock();
-              }}
-              className="w-full p-2 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white focus:ring-1 focus:ring-white/40 transition"
-            />
-            <div className="text-xs opacity-70">pw length: {masterPassword.length}</div>
-            <button
-              type="button"
-              onClick={() => { setUnlockClicks(c => c + 1); handleUnlock(); }}
-              className="px-4 py-2 bg-white text-black rounded font-semibold"
-            >
-              Unlock ({unlockClicks})
-            </button>
-          </div>
-        ) : (
-          <div className="px-4 py-2 border border-white/20 rounded-lg flex flex-wrap gap-2 items-center">
-            <button onClick={() => saveVault(vault)} className="px-4 py-2 border border-white/20 rounded">
-              Save
-            </button>
-            <button onClick={handleLock} className="px-4 py-2 border border-white/20 rounded">
-              Lock
-            </button>
+        {/* ── Control bar ─────────────────────────────────────────────── */}
+        <div className="border-b border-white/5 px-6 py-3" style={{ background: "rgba(10,10,10,0.6)", backdropFilter: "blur(12px)" }}>
+          <div className="max-w-[1400px] mx-auto flex flex-wrap gap-3 items-center">
+            <span className="font-cinzel text-[#c8922a] text-xs tracking-[0.2em] uppercase mr-2">Footprint</span>
 
-            <div className="ml-auto flex gap-2 flex-wrap items-center">
-              <button
-                onClick={copyAutofillJson}
-                className="px-4 py-2 border border-white/20 rounded-lg hover:bg-white/10 active:scale-[0.98] transition cursor-pointer"
-              >
-                Copy Autofill JSON
-              </button>
-
-              <label className="text-sm flex items-center gap-2 border border-white/20 rounded px-3 py-2">
+            {!unlocked ? (
+              <>
                 <input
-                  type="checkbox"
-                  checked={idleLockEnabled}
-                  onChange={(e) => setIdleLockEnabled(e.target.checked)}
+                  type="password"
+                  placeholder="Master password"
+                  autoFocus
+                  value={masterPassword}
+                  onChange={(e) => setMasterPassword(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") { setUnlockClicks(c => c + 1); handleUnlock(); } }}
+                  className="px-3 py-1.5 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/30 border border-white/10 focus:outline-none focus:border-white/20"
+                  style={{ background: "rgba(255,255,255,0.04)", minWidth: "220px" }}
                 />
-                auto-lock
-              </label>
-              <label className="text-sm flex items-center gap-2 border border-white/20 rounded px-3 py-2">
-                minutes
-                <input
-                  type="number"
-                  min={1}
-                  max={120}
-                  value={idleMinutes}
-                  onChange={(e) => setIdleMinutes(Number(e.target.value))}
-                  className="w-20 p-1 bg-black border border-white/20 rounded"
-                  disabled={!idleLockEnabled}
-                />
-              </label>
-            </div>
-          </div>
-        )}
-
-        {/* Status */}
-        <div className="text-sm opacity-80">
-          {unlocked ? "Unlocked ✅" : "Locked 🔒"}
-          {status && <span className="text-green-400 ml-2">{status}</span>}
-        </div>
-
-        {/* Health Dashboard */}
-        {unlocked && (
-          <div className="p-3 border border-white/20 rounded bg-white/5 space-y-2">
-            <div className="font-semibold">Vault Health</div>
-
-            <div className="text-sm opacity-90 flex flex-wrap gap-3">
-              <span>Active: <span className="font-semibold">{activeEntries.length}</span></span>
-              <span>Favorites: <span className="font-semibold">{favoritesCount}</span></span>
-              <span>Weak: <span className="font-semibold">{weakCount}</span></span>
-              <span>Reused: <span className="font-semibold">{reusedEntriesCount}</span></span>
-              <span>Duplicates: <span className="font-semibold">{duplicateCount}</span></span>
-              <span>Trash: <span className="font-semibold">{trashEntries.length}</span></span>
-            </div>
-
-            <div className="flex gap-2 flex-wrap">
-              <button onClick={() => { setView("active"); setShowWeakOnly(true); setShowReusedOnly(false); setShowDuplicatesOnly(false); setStatus("Showing weak passwords"); }} className="px-4 py-2 border border-white/20 rounded">Show Weak</button>
-              <button onClick={() => { setView("active"); setShowReusedOnly(true); setShowWeakOnly(false); setShowDuplicatesOnly(false); setStatus("Showing reused passwords"); }} className="px-4 py-2 border border-white/20 rounded">Show Reused</button>
-              <button onClick={() => { setView("active"); setShowDuplicatesOnly(true); setShowWeakOnly(false); setShowReusedOnly(false); setStatus("Showing duplicates (site+username)"); }} className="px-4 py-2 border border-white/20 rounded">Show Duplicates</button>
-              <button onClick={() => { setView("trash"); setStatus("Viewing trash"); }} className="px-4 py-2 border border-white/20 rounded">View Trash</button>
-              <button onClick={() => { clearFilters(); setStatus("Filters cleared"); }} className="px-4 py-2 border border-white/20 rounded">Clear Filters</button>
-              <button onClick={() => setShowReusedGroups((v) => !v)} className="px-4 py-2 border border-white/20 rounded" disabled={reusedEntriesCount === 0}>
-                {showReusedGroups ? "Hide reused groups" : "Show reused groups"}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Reused groups */}
-        {unlocked && view === "active" && showReusedGroups && reusedGroups.length > 0 && (
-          <div className="p-3 border border-white/20 rounded bg-white/5 space-y-2">
-            <div className="font-semibold">Reused groups</div>
-            <div className="text-sm opacity-80">Groups are based on identical passwords. Best practice: edit each entry and generate a unique password.</div>
-            <div className="space-y-2">
-              {reusedGroups.map((g, idx) => (
-                <div key={idx} className="p-3 border border-white/20 rounded bg-black/30">
-                  <div className="text-sm opacity-80 mb-2">Group size: <span className="font-semibold">{g.entries.length}</span></div>
-                  <div className="space-y-2">
-                    {g.entries.map((e) => (
-                      <div key={e.id} className="flex items-center justify-between gap-2">
-                        <div>
-                          <div className="font-semibold">{e.site}</div>
-                          <div className="text-sm opacity-80">{e.username}</div>
-                        </div>
-                        <div className="flex gap-2 flex-wrap justify-end">
-                          <button onClick={() => startEdit(e)} className="px-3 py-2 rounded border border-white/20">Edit</button>
-                          <button onClick={() => duplicateEntry(e)} className="px-3 py-2 rounded border border-white/20">Duplicate</button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* View Toggle */}
-        {unlocked && (
-          <div className="px-4 py-2 border border-white/20 rounded-lg flex flex-wrap gap-2 items-center">
-            <button onClick={() => setView("active")} className={`px-4 py-2 rounded border border-white/20 ${view === "active" ? "bg-white text-black font-semibold" : ""}`}>
-              Active ({activeEntries.length})
-            </button>
-            <button onClick={() => setView("trash")} className={`px-4 py-2 rounded border border-white/20 ${view === "trash" ? "bg-white text-black font-semibold" : ""}`}>
-              Trash ({trashEntries.length})
-            </button>
-            {view === "trash" && trashEntries.length > 0 && (
-              <button onClick={emptyTrash} className="px-4 py-2 rounded border border-white/20">Empty Trash</button>
-            )}
-            <div className="ml-auto flex gap-2 flex-wrap items-center">
-              <button onClick={() => selectAll(listToRender.map((e) => e.id))} className="px-4 py-2 rounded border border-white/20" disabled={!listToRender.length}>Select all</button>
-              <button onClick={deselectAll} className="px-4 py-2 rounded border border-white/20" disabled={selectedIds.size === 0}>Clear selection</button>
-            </div>
-          </div>
-        )}
-
-        {/* Bulk actions */}
-        {unlocked && selectedIds.size > 0 && (
-          <div className="p-3 border border-white/20 rounded bg-white/5 space-y-2">
-            <div className="font-semibold">Bulk actions — {selectedIds.size} selected ({view})</div>
-            {view === "active" ? (
-              <div className="flex flex-wrap gap-2">
-                <button onClick={bulkTrashSelected} className="px-4 py-2 rounded border border-white/20">Trash selected</button>
-                <button onClick={() => bulkSetFavorite(true)} className="px-4 py-2 rounded border border-white/20">Favorite</button>
-                <button onClick={() => bulkSetFavorite(false)} className="px-4 py-2 rounded border border-white/20">Unfavorite</button>
-                <input placeholder="Set category..." value={bulkCategory} onChange={(e) => setBulkCategory(e.target.value)} className="p-2 bg-black border border-white/20 rounded" />
-                <button onClick={bulkSetCategory} className="px-4 py-2 rounded border border-white/20">Apply category</button>
-                <input placeholder="Add tags (comma separated)" value={bulkTagsInput} onChange={(e) => setBulkTagsInput(e.target.value)} className="p-2 bg-black border border-white/20 rounded" />
-                <button onClick={bulkAddTags} className="px-4 py-2 rounded border border-white/20">Add tags</button>
-              </div>
+                <button
+                  type="button"
+                  onClick={() => { setUnlockClicks(c => c + 1); handleUnlock(); }}
+                  className="font-cinzel px-4 py-1.5 text-xs tracking-widest uppercase border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]"
+                >
+                  Unlock
+                </button>
+              </>
             ) : (
-              <div className="flex flex-wrap gap-2">
-                <button onClick={bulkRestoreSelected} className="px-4 py-2 rounded border border-white/20">Restore selected</button>
-                <button onClick={() => deletePermanentlySelected(Array.from(selectedIds))} className="px-4 py-2 rounded border border-white/20">Delete permanently</button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Backup */}
-        <div className="p-3 border border-white/20 rounded bg-white/5 space-y-3">
-          <div className="font-semibold">Backup</div>
-          <div className="flex gap-2 flex-wrap">
-            <button onClick={exportEncryptedBackup} className="px-4 py-2 border border-white/20 rounded" disabled={!unlocked}>Export encrypted backup</button>
-            <button onClick={() => fileInputRef.current?.click()} className="px-4 py-2 border border-white/20 rounded" disabled={!unlocked}>Choose import file</button>
-            <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImportFile(f); }} />
-          </div>
-
-          {importError && <div className="text-sm p-2 border border-white/20 rounded bg-black/30">{importError}</div>}
-
-          {importPreview && (
-            <div className="p-3 border border-white/20 rounded bg-black/30 space-y-2">
-              <div className="font-semibold">Import preview</div>
-              <div className="text-sm opacity-90">
-                Entries: <span className="font-semibold">{importPreview.entriesCount}</span> • Tags: <span className="font-semibold">{importPreview.tagsCount}</span> • Categories: <span className="font-semibold">{importPreview.categoriesCount}</span>
-              </div>
-              <div className="text-sm opacity-90">
-                Reused: <span className="font-semibold">{importPreview.reusedCount}</span> • Weak: <span className="font-semibold">{importPreview.weakCount}</span>
-                {importPreview.dupSiteUserCount > 0 && <span className="ml-2">• Collisions: <span className="font-semibold">{importPreview.dupSiteUserCount}</span></span>}
-              </div>
-              <div className="flex gap-2 flex-wrap items-center pt-1">
-                <label className="text-sm opacity-80">Mode</label>
-                <select value={importMode} onChange={(e) => setImportMode(e.target.value as any)} className="p-2 bg-black text-white border border-white/20 rounded" disabled={!unlocked}>
-                  <option value="merge">Merge (recommended)</option>
-                  <option value="overwrite">Overwrite</option>
-                </select>
-                <button onClick={confirmImport} className="px-4 py-2 bg-white text-black rounded font-semibold" disabled={!unlocked || !importDecryptedVault}>Confirm import</button>
-                <button onClick={resetImportState} className="px-4 py-2 border border-white/20 rounded">Cancel</button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* CSV Import */}
-        <div className="p-3 border border-white/20 rounded bg-white/5 space-y-2">
-          <div className="font-semibold">CSV Import Helper</div>
-          <div className="text-sm opacity-80">Format: <span className="font-mono">site,username,password,notes,category,tags</span></div>
-          <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} placeholder={`Example:\nexample.com,robbie@email.com,MyPassword123!,my note,Finance,bank,personal`} className="w-full h-36 p-2 bg-black border border-white/20 rounded font-mono text-sm" disabled={!unlocked} />
-          {csvPreview && <div className="text-sm opacity-90">Rows: <span className="font-semibold">{csvPreview.rows}</span> • OK: <span className="font-semibold">{csvPreview.ok}</span> • Bad: <span className="font-semibold">{csvPreview.bad}</span></div>}
-          <div className="flex gap-2 flex-wrap">
-            <button onClick={importCsvIntoVault} className="px-4 py-2 bg-white text-black rounded font-semibold" disabled={!unlocked || !csvText.trim()}>Import CSV</button>
-            <button onClick={() => { setCsvText(""); setCsvPreview(null); }} className="px-4 py-2 border border-white/20 rounded" disabled={!unlocked || (!csvText.trim() && !csvPreview)}>Clear</button>
-          </div>
-        </div>
-
-        {/* Password Generator */}
-        <div className="p-3 border border-white/20 rounded bg-white/5 space-y-2">
-          <div className="font-semibold">Password Generator</div>
-          <div className="flex flex-wrap gap-4 items-center border border-white/20 rounded px-4 py-2">
-            <label className="text-sm opacity-80">Length</label>
-            <input type="range" min={8} max={40} value={genLength} onChange={(e) => setGenLength(Number(e.target.value))} disabled={!unlocked} />
-            <div className="text-sm w-10">{genLength}</div>
-            {[["lower", genLower, setGenLower, "lower"], ["upper", genUpper, setGenUpper, "UPPER"], ["numbers", genNumbers, setGenNumbers, "123"], ["symbols", genSymbols, setGenSymbols, "!@#"]].map(([, val, setter, label]: any) => (
-              <label key={label} className="text-sm flex items-center gap-2">
-                <input type="checkbox" checked={val} onChange={(e) => setter(e.target.checked)} disabled={!unlocked} />
-                {label}
-              </label>
-            ))}
-          </div>
-          <input value={genValue} readOnly className="w-full p-2 bg-black border border-white/20 rounded font-mono" placeholder="Click Generate…" />
-          <div className="flex gap-2 flex-wrap">
-            <button onClick={regenerate} className="px-4 py-2 border border-white/20 rounded" disabled={!unlocked}>Generate</button>
-            <button onClick={async () => { if (!genValue) return; await navigator.clipboard.writeText(genValue); setStatus("Generated password copied ✅"); }} className="px-4 py-2 border border-white/20 rounded" disabled={!unlocked || !genValue}>Copy</button>
-            <button onClick={() => setPassword(genValue)} className="px-4 py-2 bg-white text-black rounded font-semibold" disabled={!unlocked || !genValue}>Use in form</button>
-          </div>
-        </div>
-
-        {/* Add/Edit Entry */}
-        <div ref={addEntryRef} className="p-3 border border-white/20 rounded bg-white/5 space-y-2">
-          <div className="font-semibold">{editingId ? "Edit entry" : "Add entry"}</div>
-          <input placeholder="Site (or URL)" value={site} onChange={(e) => setSite(e.target.value)} className="w-full p-2 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white focus:ring-1 focus:ring-white/40 transition" disabled={!unlocked} />
-          <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full p-2 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white focus:ring-1 focus:ring-white/40 transition" disabled={!unlocked} />
-
-          <div className="space-y-2">
-            <div className="flex gap-2 items-center">
-              <input placeholder="Password" type={showFormPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-2 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white focus:ring-1 focus:ring-white/40 transition" disabled={!unlocked} />
-              <button type="button" onClick={() => setShowFormPassword((v) => !v)} className="px-3 py-2 border border-white/20 rounded" disabled={!unlocked}>{showFormPassword ? "Hide" : "Show"}</button>
-            </div>
-            {unlocked && password.length > 0 && (
-              <div className="text-sm opacity-90">
-                Strength: <span className="font-semibold">{strengthTyped.label}</span> <span className="opacity-70">({strengthTyped.score}/4)</span>
-                {strengthTyped.score <= 1 && <span className="ml-2">⚠ weak</span>}
-              </div>
-            )}
-            {unlocked && password.length > 0 && reuseForTypedPassword > 0 && (
-              <div className="text-sm">⚠ This password is already used in <span className="font-semibold">{reuseForTypedPassword}</span> other entr{reuseForTypedPassword === 1 ? "y" : "ies"}.</div>
-            )}
-            {unlocked && typedDupCount > 0 && (
-              <div className="text-sm">⚠ Duplicate detected: an entry with the same <span className="font-semibold">site + username</span> already exists.</div>
-            )}
-            {unlocked && site.trim() && (
-              <div className="text-sm opacity-80">Domain detected: <span className="font-semibold">{extractDomain(site.trim()) ?? "none"}</span></div>
-            )}
-          </div>
-
-          <input placeholder="Category (e.g., Finance, Work, Gaming)" value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)} className="w-full p-2 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white focus:ring-1 focus:ring-white/40 transition" disabled={!unlocked} />
-          <input placeholder="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full p-2 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white focus:ring-1 focus:ring-white/40 transition" disabled={!unlocked} />
-          <input placeholder="Tags (comma separated)" value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} className="w-full p-2 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white focus:ring-1 focus:ring-white/40 transition" disabled={!unlocked} />
-
-          <div className="flex gap-2 flex-wrap pt-1">
-            <button onClick={addOrUpdateEntry} className={`px-4 py-2 rounded font-semibold ${unlocked ? "bg-white text-black" : "bg-white/20 text-white/60 cursor-not-allowed"}`} disabled={!unlocked}>
-              {editingId ? "Save changes" : "Add entry"}
-            </button>
-            {editingId && <button onClick={cancelEdit} className="px-4 py-2 border border-white/20 rounded">Cancel</button>}
-          </div>
-        </div>
-
-        {/* Search + Filters */}
-        <div className="p-3 border border-white/20 rounded bg-white/5 space-y-2">
-          <input placeholder={view === "trash" ? "Search Trash..." : "Search..."} value={search} onChange={(e) => setSearch(e.target.value)} className="w-full p-2 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white focus:ring-1 focus:ring-white/40 transition" disabled={!unlocked} />
-
-          {view === "active" ? (
-            <div className="flex flex-wrap gap-2">
-              <select value={sortMode} onChange={(e) => setSortMode(e.target.value as SortMode)} className="p-2 bg-black text-white border border-white/20 rounded" disabled={!unlocked}>
-                <option value="newest">Sort: Newest</option>
-                <option value="oldest">Sort: Oldest</option>
-                <option value="az">Sort: A → Z</option>
-                <option value="za">Sort: Z → A</option>
-              </select>
-              <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="p-2 bg-black text-white border border-white/20 rounded" disabled={!unlocked}>
-                <option value="__all__">Category: All</option>
-                {allCategories.map((c) => <option key={c} value={c}>Category: {c}</option>)}
-              </select>
-              <select value={tagFilter} onChange={(e) => setTagFilter(e.target.value)} className="p-2 bg-black text-white border border-white/20 rounded" disabled={!unlocked}>
-                <option value="__all__">Tag: All</option>
-                {allTags.map((t) => <option key={t} value={t}>Tag: {t}</option>)}
-              </select>
-              {[["favoritesOnly", favoritesOnly, setFavoritesOnly, "favorites only"], ["showReusedOnly", showReusedOnly, setShowReusedOnly, "reused only"], ["showWeakOnly", showWeakOnly, setShowWeakOnly, "weak only"], ["showDuplicatesOnly", showDuplicatesOnly, setShowDuplicatesOnly, "duplicates only"]].map(([key, val, setter, label]: any) => (
-                <label key={key} className="text-sm flex items-center gap-2 border border-white/20 rounded px-3 py-2">
-                  <input type="checkbox" checked={val} onChange={(e) => setter(e.target.checked)} disabled={!unlocked} />
-                  {label}
+              <>
+                <button onClick={() => saveVault(vault)} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/60 hover:brightness-125 transition-[filter]">Save</button>
+                <button onClick={handleLock} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/60 hover:brightness-125 transition-[filter]">Lock</button>
+                <button onClick={copyAutofillJson} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/60 hover:brightness-125 transition-[filter]">Copy Autofill JSON</button>
+                <label className="text-xs flex items-center gap-2 border border-white/10 px-3 py-1.5 text-[#e8e0d0]/60">
+                  <input type="checkbox" checked={idleLockEnabled} onChange={(e) => setIdleLockEnabled(e.target.checked)} />
+                  auto-lock
                 </label>
-              ))}
-              {(search || tagFilter !== "__all__" || categoryFilter !== "__all__" || favoritesOnly || showReusedOnly || showWeakOnly || showDuplicatesOnly) && (
-                <button onClick={clearFilters} className="px-4 py-2 border border-white/20 rounded" disabled={!unlocked}>Clear</button>
+                <label className="text-xs flex items-center gap-2 border border-white/10 px-3 py-1.5 text-[#e8e0d0]/60">
+                  min
+                  <input type="number" min={1} max={120} value={idleMinutes} onChange={(e) => setIdleMinutes(Number(e.target.value))} className="w-12 bg-transparent text-center border border-white/10 px-1" disabled={!idleLockEnabled} />
+                </label>
+              </>
+            )}
+
+            <span className="ml-auto text-xs text-[#e8e0d0]/35">
+              {unlocked ? "Unlocked" : "Locked"}
+              {status && <span className="ml-2 text-[#c8922a]/60">{status}</span>}
+            </span>
+          </div>
+        </div>
+
+        {/* ── Panel grid ──────────────────────────────────────────────── */}
+        <div className="max-w-[1400px] mx-auto p-6 space-y-4">
+
+          {/* ── Primary panel: Vault ────────────────────────────────── */}
+          <section
+            className="border border-white/5 hover:brightness-[1.03] transition-[filter] duration-300"
+            style={{ background: "rgba(255,255,255,0.03)" }}
+          >
+            {/* Panel header */}
+            <div className="px-6 py-4 border-b border-white/5 flex flex-wrap gap-3 items-center justify-between">
+              <h2 className="font-cinzel text-[#e8e0d0] text-xs tracking-[0.22em] uppercase">Vault</h2>
+              {unlocked && (
+                <div className="flex flex-wrap gap-2 items-center">
+                  <button onClick={() => setView("active")} className={`px-3 py-1 text-xs border ${view === "active" ? "border-[#c8922a]/40 text-[#c8922a]" : "border-white/10 text-[#e8e0d0]/40"} hover:brightness-125 transition-[filter]`}>
+                    Active ({activeEntries.length})
+                  </button>
+                  <button onClick={() => setView("trash")} className={`px-3 py-1 text-xs border ${view === "trash" ? "border-[#c8922a]/40 text-[#c8922a]" : "border-white/10 text-[#e8e0d0]/40"} hover:brightness-125 transition-[filter]`}>
+                    Trash ({trashEntries.length})
+                  </button>
+                  {view === "trash" && trashEntries.length > 0 && (
+                    <button onClick={emptyTrash} className="px-3 py-1 text-xs border border-white/10 text-[#e8e0d0]/40 hover:brightness-125 transition-[filter]">Empty Trash</button>
+                  )}
+                  <button onClick={() => selectAll(listToRender.map((e) => e.id))} className="px-3 py-1 text-xs border border-white/10 text-[#e8e0d0]/40 hover:brightness-125 transition-[filter]" disabled={!listToRender.length}>Select all</button>
+                  <button onClick={deselectAll} className="px-3 py-1 text-xs border border-white/10 text-[#e8e0d0]/40 hover:brightness-125 transition-[filter]" disabled={selectedIds.size === 0}>Deselect</button>
+                </div>
               )}
             </div>
-          ) : (
-            <div className="text-sm opacity-80">Trash is searchable. Restore items you want to bring back.</div>
-          )}
 
-          <div className="text-sm opacity-80">
-            {view === "active" ? `Showing ${filteredActiveEntries.length} of ${activeEntries.length} active entries` : `Showing ${filteredTrashEntries.length} of ${trashEntries.length} trashed entries`}
-          </div>
-        </div>
+            <div className="p-6 space-y-4">
 
-        {/* Entries */}
-        <div className="space-y-3">
-          {!unlocked ? (
-            <div className="opacity-80">Unlock to view entries.</div>
-          ) : listToRender.length === 0 ? (
-            <div className="p-3 border border-white/20 rounded bg-white/5">{view === "trash" ? "Trash is empty." : "No results."}</div>
-          ) : (
-            listToRender.map((e) => {
-              const userKey = `${e.id}:username`;
-              const passKey = `${e.id}:password`;
-              const userCd = copyCountdown[userKey] ?? 0;
-              const passCd = copyCountdown[passKey] ?? 0;
-
-              const entryStrength = passwordStrength(e.password ?? "");
-              const isWeak = entryStrength.score <= 1;
-              const revealed = Boolean(revealMap[e.id]);
-              const ageLabel = daysAgo(e.updatedAt ?? e.createdAt);
-
-              const reuseCount = view === "active" ? (passwordCounts.get(e.password ?? "") ?? 0) : 0;
-              const isReused = view === "active" ? reuseCount > 1 : false;
-              const dupCount = view === "active" ? (dupSiteUserCounts.get(normKey(e.site, e.username)) ?? 0) : 0;
-              const isExpanded = expandedId === e.id;
-
-              return (
-                <div key={e.id} className="p-3 border border-white/20 rounded bg-white/5 space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex gap-3 items-start">
-                      <input type="checkbox" checked={isSelected(e.id)} onChange={() => toggleSelected(e.id)} className="mt-2" />
-                      <button type="button" onClick={() => setExpandedId((cur) => (cur === e.id ? null : e.id))} className="text-left">
-                        <div className="font-semibold text-lg">
-                          {view === "active" && e.favorite ? "⭐ " : ""}
-                          {e.site}
-                          {view === "active" && dupCount > 1 && <span className="ml-2 text-sm px-2 py-1 rounded border border-white/20 bg-black/30">Duplicate</span>}
-                        </div>
-                        <div className="text-sm opacity-80">{e.username}</div>
-                        <div className="text-sm opacity-80 mt-1">
-                          Strength: <span className="font-semibold">{entryStrength.label}</span>
-                          {isWeak && <span className="ml-2">⚠ weak</span>}
-                          <span className="ml-2">• updated {ageLabel}</span>
-                          {e.category && (
-                            <span className="ml-2">• <span className="inline-block px-2 py-1 rounded border border-white/20 bg-black/30 cursor-pointer" onClick={(ev) => { ev.preventDefault(); ev.stopPropagation(); clickCategoryChip(e.category!); }}>{e.category}</span></span>
-                          )}
-                          {e.domain && <span className="ml-2">• domain {e.domain}</span>}
-                        </div>
-                        {view === "active" && isReused && (
-                          <div className="text-sm mt-2">⚠ Reused password (used in <span className="font-semibold">{reuseCount}</span> entries)</div>
-                        )}
-                        <div className="text-sm opacity-70 mt-1">{isExpanded ? "▼ Details" : "▶ Details"}</div>
-                      </button>
-                    </div>
-
-                    <div className="flex gap-2 flex-wrap justify-end">
-                      {view === "active" ? (
-                        <>
-                          <button onClick={() => toggleFavorite(e.id)} className="px-3 py-2 rounded border border-white/20">{e.favorite ? "Unfavorite" : "Favorite"}</button>
-                          <button onClick={() => startEdit(e)} className="px-3 py-2 rounded border border-white/20">Edit</button>
-                          <button onClick={() => duplicateEntry(e)} className="px-3 py-2 rounded border border-white/20">Duplicate</button>
-                          <button onClick={() => moveToTrash(e.id)} className="px-3 py-2 rounded border border-white/20">Trash</button>
-                        </>
-                      ) : (
-                        <>
-                          <button onClick={() => restoreFromTrash(e.id)} className="px-3 py-2 rounded border border-white/20">Restore</button>
-                          <button onClick={() => deletePermanentlySelected([e.id])} className="px-3 py-2 rounded border border-white/20">Delete permanently</button>
-                        </>
-                      )}
-                    </div>
+              {/* Bulk actions */}
+              {unlocked && selectedIds.size > 0 && (
+                <div className="p-3 border border-white/5 space-y-2" style={{ background: "rgba(255,255,255,0.02)" }}>
+                  <div className="text-[10px] font-cinzel tracking-widest uppercase text-[#e8e0d0]/35">
+                    Bulk — {selectedIds.size} selected
                   </div>
-
-                  {isExpanded && (
-                    <div className="p-3 border border-white/20 rounded bg-black/30 space-y-2">
-                      {view === "active" ? (
-                        <>
-                          <div className="text-sm">
-                            <span className="opacity-80">Password: </span>
-                            <span className="font-mono">{revealed ? e.password : maskPassword(e.password)}</span>
-                            {revealed && <span className="opacity-70 ml-2">(auto-hides in 10s)</span>}
-                          </div>
-                          <div className="flex gap-2 flex-wrap">
-                            <button onClick={() => handleCopy(e.id, "username", e.username)} className="px-3 py-2 rounded border border-white/20">Copy Username{userCd > 0 ? ` (clearing in ${userCd}s)` : ""}</button>
-                            <button onClick={() => handleCopy(e.id, "password", e.password)} className="px-3 py-2 rounded border border-white/20">Copy Password{passCd > 0 ? ` (clearing in ${passCd}s)` : ""}</button>
-                            <button onClick={() => toggleReveal(e.id)} className="px-3 py-2 rounded border border-white/20">{revealed ? "Hide password" : "Reveal password"}</button>
-                            <button onClick={() => copyText("Site", e.site)} className="px-3 py-2 rounded border border-white/20">Copy Site</button>
-                            <button onClick={() => copyText("Site + Username", `${e.site} • ${e.username}`)} className="px-3 py-2 rounded border border-white/20">Copy Site+User</button>
-                          </div>
-                          {(e.tags?.length ?? 0) > 0 && (
-                            <div className="text-sm mt-1 flex flex-wrap gap-2">
-                              {e.tags!.map((t) => <button type="button" key={t} onClick={() => clickTagChip(t)} className="px-2 py-1 rounded border border-white/20 bg-black/30">{t}</button>)}
-                            </div>
-                          )}
-                          {e.notes && <div className="text-sm opacity-90 whitespace-pre-wrap mt-2">{e.notes}</div>}
-                          <div className="text-sm opacity-80">Created: <span className="font-semibold">{daysAgo(e.createdAt)}</span> • Updated: <span className="font-semibold">{daysAgo(e.updatedAt)}</span></div>
-                        </>
-                      ) : (
-                        <div className="text-sm opacity-80">Trashed: {daysAgo(e.deletedAt)}</div>
-                      )}
+                  {view === "active" ? (
+                    <div className="flex flex-wrap gap-2">
+                      <button onClick={bulkTrashSelected} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Trash</button>
+                      <button onClick={() => bulkSetFavorite(true)} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Favorite</button>
+                      <button onClick={() => bulkSetFavorite(false)} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Unfavorite</button>
+                      <input placeholder="Set category…" value={bulkCategory} onChange={(e) => setBulkCategory(e.target.value)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0] placeholder-[#e8e0d0]/25" style={{ background: "rgba(255,255,255,0.04)" }} />
+                      <button onClick={bulkSetCategory} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Apply category</button>
+                      <input placeholder="Add tags (comma separated)" value={bulkTagsInput} onChange={(e) => setBulkTagsInput(e.target.value)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0] placeholder-[#e8e0d0]/25" style={{ background: "rgba(255,255,255,0.04)" }} />
+                      <button onClick={bulkAddTags} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Add tags</button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      <button onClick={bulkRestoreSelected} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Restore</button>
+                      <button onClick={() => deletePermanentlySelected(Array.from(selectedIds))} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Delete permanently</button>
                     </div>
                   )}
                 </div>
-              );
-            })
-          )}
+              )}
+
+              {/* Search + Filters */}
+              <div className="space-y-2">
+                <input
+                  placeholder={view === "trash" ? "Search trash…" : "Search vault…"}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20"
+                  style={{ background: "rgba(255,255,255,0.04)" }}
+                  disabled={!unlocked}
+                />
+                {view === "active" && (
+                  <div className="flex flex-wrap gap-2">
+                    <select value={sortMode} onChange={(e) => setSortMode(e.target.value as SortMode)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0]/55 bg-transparent" disabled={!unlocked}>
+                      <option value="newest">Newest</option>
+                      <option value="oldest">Oldest</option>
+                      <option value="az">A → Z</option>
+                      <option value="za">Z → A</option>
+                    </select>
+                    <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0]/55 bg-transparent" disabled={!unlocked}>
+                      <option value="__all__">All Categories</option>
+                      {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                    <select value={tagFilter} onChange={(e) => setTagFilter(e.target.value)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0]/55 bg-transparent" disabled={!unlocked}>
+                      <option value="__all__">All Tags</option>
+                      {allTags.map((t) => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                    {[["favoritesOnly", favoritesOnly, setFavoritesOnly, "Favorites"], ["showReusedOnly", showReusedOnly, setShowReusedOnly, "Reused"], ["showWeakOnly", showWeakOnly, setShowWeakOnly, "Weak"], ["showDuplicatesOnly", showDuplicatesOnly, setShowDuplicatesOnly, "Duplicates"]].map(([key, val, setter, label]: any) => (
+                      <label key={key} className="text-xs flex items-center gap-1.5 border border-white/10 px-2 py-1 text-[#e8e0d0]/50">
+                        <input type="checkbox" checked={val} onChange={(e) => setter(e.target.checked)} disabled={!unlocked} />
+                        {label}
+                      </label>
+                    ))}
+                    {(search || tagFilter !== "__all__" || categoryFilter !== "__all__" || favoritesOnly || showReusedOnly || showWeakOnly || showDuplicatesOnly) && (
+                      <button onClick={clearFilters} className="px-3 py-1 text-xs border border-white/10 text-[#e8e0d0]/40 hover:brightness-125 transition-[filter]" disabled={!unlocked}>Clear</button>
+                    )}
+                  </div>
+                )}
+                <div className="text-[10px] text-[#e8e0d0]/25 tracking-wider">
+                  {view === "active"
+                    ? `${filteredActiveEntries.length} of ${activeEntries.length} entries`
+                    : `${filteredTrashEntries.length} of ${trashEntries.length} trashed`}
+                </div>
+              </div>
+
+              {/* Add/Edit Entry */}
+              <div ref={addEntryRef} className="border border-white/5 p-4 space-y-2" style={{ background: "rgba(255,255,255,0.02)" }}>
+                <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">
+                  {editingId ? "Edit entry" : "Add entry"}
+                </div>
+                <input placeholder="Site (or URL)" value={site} onChange={(e) => setSite(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
+                <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
+                <div className="space-y-1.5">
+                  <div className="flex gap-2 items-center">
+                    <input placeholder="Password" type={showFormPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
+                    <button type="button" onClick={() => setShowFormPassword((v) => !v)} className="px-3 py-2 text-xs border border-white/10 text-[#e8e0d0]/50 hover:brightness-125 transition-[filter]" disabled={!unlocked}>{showFormPassword ? "Hide" : "Show"}</button>
+                  </div>
+                  {unlocked && password.length > 0 && (
+                    <div className="text-xs text-[#e8e0d0]/50">
+                      Strength: <span className="text-[#e8e0d0]/80">{strengthTyped.label}</span> ({strengthTyped.score}/4)
+                      {strengthTyped.score <= 1 && <span className="ml-2 text-amber-400/70">⚠ weak</span>}
+                    </div>
+                  )}
+                  {unlocked && password.length > 0 && reuseForTypedPassword > 0 && (
+                    <div className="text-xs text-amber-400/70">⚠ Reused in {reuseForTypedPassword} other entr{reuseForTypedPassword === 1 ? "y" : "ies"}.</div>
+                  )}
+                  {unlocked && typedDupCount > 0 && (
+                    <div className="text-xs text-amber-400/70">⚠ Duplicate site + username exists.</div>
+                  )}
+                  {unlocked && site.trim() && (
+                    <div className="text-xs text-[#e8e0d0]/30">Domain: {extractDomain(site.trim()) ?? "none"}</div>
+                  )}
+                </div>
+                <input placeholder="Category" value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
+                <input placeholder="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
+                <input placeholder="Tags (comma separated)" value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
+                <div className="flex gap-2 pt-1">
+                  <button onClick={addOrUpdateEntry} className={`font-cinzel px-4 py-2 text-xs tracking-wider uppercase ${unlocked ? "border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]" : "border border-white/10 text-[#e8e0d0]/25 cursor-not-allowed"}`} disabled={!unlocked}>
+                    {editingId ? "Save changes" : "Add entry"}
+                  </button>
+                  {editingId && <button onClick={cancelEdit} className="px-4 py-2 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Cancel</button>}
+                </div>
+              </div>
+
+              {/* Entries */}
+              <div className="space-y-2">
+                {!unlocked ? (
+                  <div className="py-12 text-center text-xs font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/20">
+                    Enter master password to unlock
+                  </div>
+                ) : listToRender.length === 0 ? (
+                  <div className="py-8 text-center text-xs text-[#e8e0d0]/30">
+                    {view === "trash" ? "Trash is empty." : "No results."}
+                  </div>
+                ) : (
+                  (() => {
+                    const sectionMap = new Map<string, typeof listToRender>();
+                    for (const e of listToRender) {
+                      const key = e.category || "Uncategorized";
+                      if (!sectionMap.has(key)) sectionMap.set(key, []);
+                      sectionMap.get(key)!.push(e);
+                    }
+                    return [...sectionMap.entries()].map(([cat, entries]) => (
+                      <VaultSection key={cat} title={cat}>
+                        {entries.map((e) => (
+                          <VaultRow
+                            key={e.id}
+                            entry={e}
+                            view={view}
+                            expandedId={expandedId}
+                            setExpandedId={setExpandedId}
+                            isSelected={isSelected}
+                            toggleSelected={toggleSelected}
+                            toggleFavorite={toggleFavorite}
+                            startEdit={startEdit}
+                            duplicateEntry={duplicateEntry}
+                            moveToTrash={moveToTrash}
+                            restoreFromTrash={restoreFromTrash}
+                            deletePermanentlySelected={deletePermanentlySelected}
+                            handleCopy={handleCopy}
+                            copyText={copyText}
+                            toggleReveal={toggleReveal}
+                            clickTagChip={clickTagChip}
+                            clickCategoryChip={clickCategoryChip}
+                            copyCountdown={copyCountdown}
+                            revealMap={revealMap}
+                            passwordCounts={passwordCounts}
+                            dupSiteUserCounts={dupSiteUserCounts}
+                          />
+                        ))}
+                      </VaultSection>
+                    ));
+                  })()
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* ── Secondary panels ────────────────────────────────────── */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {/* ── Footprints panel ──────────────────────────────── */}
+            <section
+              className="border border-white/5 hover:brightness-[1.03] transition-[filter] duration-300"
+              style={{ background: "rgba(255,255,255,0.03)" }}
+            >
+              <div className="px-6 py-4 border-b border-white/5">
+                <h2 className="font-cinzel text-[#e8e0d0] text-xs tracking-[0.22em] uppercase">Footprints</h2>
+              </div>
+              <div className="p-6 space-y-6">
+
+                {/* Backup */}
+                <div className="space-y-3">
+                  <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">Backup</div>
+                  <div className="flex gap-2 flex-wrap">
+                    <button onClick={exportEncryptedBackup} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]" disabled={!unlocked}>Export encrypted backup</button>
+                    <button onClick={() => fileInputRef.current?.click()} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]" disabled={!unlocked}>Import file</button>
+                    <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImportFile(f); }} />
+                  </div>
+                  {importError && <div className="text-xs text-red-400/65 p-2 border border-white/5">{importError}</div>}
+                  {importPreview && (
+                    <div className="p-3 border border-white/5 space-y-2" style={{ background: "rgba(255,255,255,0.02)" }}>
+                      <div className="text-[10px] font-cinzel tracking-wider uppercase text-[#e8e0d0]/35">Import preview</div>
+                      <div className="text-xs text-[#e8e0d0]/55">
+                        {importPreview.entriesCount} entries · {importPreview.tagsCount} tags · {importPreview.categoriesCount} categories
+                      </div>
+                      <div className="text-xs text-[#e8e0d0]/45">
+                        Reused: {importPreview.reusedCount} · Weak: {importPreview.weakCount}
+                        {importPreview.dupSiteUserCount > 0 && ` · Collisions: ${importPreview.dupSiteUserCount}`}
+                      </div>
+                      <div className="flex gap-2 flex-wrap items-center pt-1">
+                        <select value={importMode} onChange={(e) => setImportMode(e.target.value as any)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0]/55 bg-transparent" disabled={!unlocked}>
+                          <option value="merge">Merge</option>
+                          <option value="overwrite">Overwrite</option>
+                        </select>
+                        <button onClick={confirmImport} className="font-cinzel px-3 py-1.5 text-xs border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]" disabled={!unlocked || !importDecryptedVault}>Confirm</button>
+                        <button onClick={resetImportState} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Cancel</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* CSV Import */}
+                <div className="space-y-2">
+                  <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">CSV Import</div>
+                  <div className="text-xs text-[#e8e0d0]/30">Format: <span className="font-mono">site,username,password,notes,category,tags</span></div>
+                  <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} placeholder={`example.com,user@email.com,Password123!,note,Finance,bank`} className="w-full h-28 px-3 py-2 text-xs font-mono text-[#e8e0d0]/70 placeholder-[#e8e0d0]/20 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
+                  {csvPreview && <div className="text-xs text-[#e8e0d0]/45">Rows: {csvPreview.rows} · OK: {csvPreview.ok} · Bad: {csvPreview.bad}</div>}
+                  <div className="flex gap-2">
+                    <button onClick={importCsvIntoVault} className="font-cinzel px-3 py-1.5 text-xs border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]" disabled={!unlocked || !csvText.trim()}>Import CSV</button>
+                    <button onClick={() => { setCsvText(""); setCsvPreview(null); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]" disabled={!unlocked || (!csvText.trim() && !csvPreview)}>Clear</button>
+                  </div>
+                </div>
+
+                {/* Reused groups (shown here when active) */}
+                {unlocked && view === "active" && showReusedGroups && reusedGroups.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">Reused groups</div>
+                    <div className="text-xs text-[#e8e0d0]/30">Entries sharing identical passwords. Edit each to generate unique ones.</div>
+                    <div className="space-y-2">
+                      {reusedGroups.map((g, idx) => (
+                        <div key={idx} className="p-3 border border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
+                          <div className="text-[10px] text-[#e8e0d0]/30 mb-2">Group size: {g.entries.length}</div>
+                          <div className="space-y-2">
+                            {g.entries.map((e) => (
+                              <div key={e.id} className="flex items-center justify-between gap-2">
+                                <div>
+                                  <div className="text-sm text-[#e8e0d0]/75">{e.site}</div>
+                                  <div className="text-xs text-[#e8e0d0]/40">{e.username}</div>
+                                </div>
+                                <div className="flex gap-1.5">
+                                  <button onClick={() => startEdit(e)} className="px-2.5 py-1 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Edit</button>
+                                  <button onClick={() => duplicateEntry(e)} className="px-2.5 py-1 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Duplicate</button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* ── Security panel ────────────────────────────────── */}
+            <section
+              className="border border-white/5 hover:brightness-[1.03] transition-[filter] duration-300"
+              style={{ background: "rgba(255,255,255,0.03)" }}
+            >
+              <div className="px-6 py-4 border-b border-white/5">
+                <h2 className="font-cinzel text-[#e8e0d0] text-xs tracking-[0.22em] uppercase">Security</h2>
+              </div>
+              <div className="p-6 space-y-6">
+
+                {/* Vault Health */}
+                {unlocked && (
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">Vault Health</div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {([["Active", activeEntries.length], ["Favorites", favoritesCount], ["Weak", weakCount], ["Reused", reusedEntriesCount], ["Duplicates", duplicateCount], ["Trash", trashEntries.length]] as [string, number][]).map(([label, val]) => (
+                        <div key={label} className="p-2 border border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
+                          <div className="text-[9px] text-[#e8e0d0]/25 uppercase tracking-widest">{label}</div>
+                          <div className="text-xl font-cinzel text-[#e8e0d0]/65 mt-0.5">{val}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <button onClick={() => { setView("active"); setShowWeakOnly(true); setShowReusedOnly(false); setShowDuplicatesOnly(false); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Weak</button>
+                      <button onClick={() => { setView("active"); setShowReusedOnly(true); setShowWeakOnly(false); setShowDuplicatesOnly(false); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Reused</button>
+                      <button onClick={() => { setView("active"); setShowDuplicatesOnly(true); setShowWeakOnly(false); setShowReusedOnly(false); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Duplicates</button>
+                      <button onClick={() => setView("trash")} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Trash</button>
+                      <button onClick={clearFilters} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Clear filters</button>
+                      <button onClick={() => setShowReusedGroups((v) => !v)} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]" disabled={reusedEntriesCount === 0}>
+                        {showReusedGroups ? "Hide reused groups" : "Reused groups"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Password Generator */}
+                <div className="space-y-3">
+                  <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">Password Generator</div>
+                  <div className="border border-white/5 px-4 py-3 space-y-3" style={{ background: "rgba(255,255,255,0.02)" }}>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-[#e8e0d0]/40">Length</span>
+                      <input type="range" min={8} max={40} value={genLength} onChange={(e) => setGenLength(Number(e.target.value))} className="flex-1 accent-[#c8922a]" disabled={!unlocked} />
+                      <span className="text-xs text-[#e8e0d0]/55 w-6 text-right">{genLength}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-4">
+                      {[["lower", genLower, setGenLower, "lower"], ["upper", genUpper, setGenUpper, "UPPER"], ["numbers", genNumbers, setGenNumbers, "123"], ["symbols", genSymbols, setGenSymbols, "!@#"]].map(([key, val, setter, label]: any) => (
+                        <label key={key} className="text-xs flex items-center gap-1.5 text-[#e8e0d0]/45">
+                          <input type="checkbox" checked={val} onChange={(e) => setter(e.target.checked)} disabled={!unlocked} className="accent-[#c8922a]" />
+                          {label}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <input value={genValue} readOnly className="w-full px-3 py-2 text-sm font-mono text-[#e8e0d0]/75 border border-white/10 focus:outline-none" style={{ background: "rgba(255,255,255,0.04)" }} placeholder="Click Generate…" />
+                  <div className="flex gap-2">
+                    <button onClick={regenerate} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]" disabled={!unlocked}>Generate</button>
+                    <button onClick={async () => { if (!genValue) return; await navigator.clipboard.writeText(genValue); setStatus("Generated password copied ✅"); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]" disabled={!unlocked || !genValue}>Copy</button>
+                    <button onClick={() => setPassword(genValue)} className="font-cinzel px-3 py-1.5 text-xs border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]" disabled={!unlocked || !genValue}>Use in form</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
 
-        {/* Undo Toast */}
+        {/* ── Undo Toast ──────────────────────────────────────────────── */}
         {unlocked && undoToast?.active && (
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[min(700px,calc(100%-24px))] p-3 border border-white/20 rounded bg-black/80 backdrop-blur">
+          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[min(700px,calc(100%-24px))] p-3 border border-white/10 backdrop-blur" style={{ background: "rgba(10,10,10,0.92)" }}>
             <div className="flex items-center justify-between gap-2">
-              <div className="text-sm">
-                Moved <span className="font-semibold">{undoToast.count}</span> item{undoToast.count === 1 ? "" : "s"} to Trash.
-                <span className="opacity-70 ml-2">(Undo available for 10s)</span>
+              <div className="text-xs text-[#e8e0d0]/60">
+                Moved <span className="text-[#e8e0d0]">{undoToast.count}</span> item{undoToast.count === 1 ? "" : "s"} to Trash.
+                <span className="text-[#e8e0d0]/30 ml-2">(Undo in 10s)</span>
               </div>
-              <button onClick={undoLastTrash} className="px-4 py-2 bg-white text-black rounded font-semibold">Undo</button>
+              <button onClick={undoLastTrash} className="font-cinzel px-3 py-1.5 text-xs border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]">Undo</button>
             </div>
           </div>
         )}

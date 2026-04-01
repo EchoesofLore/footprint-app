@@ -6,6 +6,28 @@ import { useAuth, UserButton } from "@clerk/nextjs"
 import { ALL_SERVICES, CATEGORIES } from "@/lib/services"
 import type { Service } from "@/lib/services"
 
+const panel: React.CSSProperties = {
+  background: "none",
+  border: "1px solid #3a3a3a",
+  boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.08)",
+}
+
+const btn: React.CSSProperties = {
+  fontFamily: "Inter, sans-serif",
+  fontSize: "0.68rem",
+  fontWeight: 500,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  color: "#e8e0d0",
+  background: "#1a1a1a",
+  border: "1px solid #333",
+  padding: "0.45rem 1rem",
+  textDecoration: "none",
+  display: "inline-block",
+  cursor: "pointer",
+  transition: "filter 0.2s",
+}
+
 export default function DashboardPage() {
   const router = useRouter()
   const { isLoaded, isSignedIn } = useAuth()
@@ -32,7 +54,6 @@ export default function DashboardPage() {
           .map((id) => ALL_SERVICES.find((s) => s.id === id))
           .filter((s): s is Service => !!s)
         setServices(matched)
-        // Default the first card in each category to active
         const defaults: Record<string, string> = {}
         CATEGORIES.forEach((cat) => {
           const first = matched.find((s) => s.category === cat.name)
@@ -52,18 +73,19 @@ export default function DashboardPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "var(--bg)",
+          background: "#0a0a0a",
         }}
       >
         <p
-          className="font-cinzel"
           style={{
-            color: "rgba(200,146,42,0.4)",
+            fontFamily: "Inter, sans-serif",
+            color: "#444",
             fontSize: "0.65rem",
-            letterSpacing: "0.28em",
+            letterSpacing: "0.25em",
+            textTransform: "uppercase",
           }}
         >
-          Opening the Vault…
+          Loading…
         </p>
       </div>
     )
@@ -83,26 +105,27 @@ export default function DashboardPage() {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
+        backgroundColor: "#0a0a0a",
       }}
     >
-      {/* Full-page dark overlay */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(0,0,0,0.55)",
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
-      />
 
-      {/* ── Sticky nav ──────────────────────────────────────────── */}
-      <header className="nav-stone" style={{ position: "sticky", top: 0, zIndex: 10 }}>
+      {/* ── Nav ─────────────────────────────────────────────────── */}
+      <header
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+          background: "rgba(10,10,10,0.72)",
+          backdropFilter: "blur(18px)",
+          WebkitBackdropFilter: "blur(18px)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
         <div
           style={{
-            maxWidth: "1120px",
+            maxWidth: "1400px",
             margin: "0 auto",
-            padding: "1rem 1.75rem",
+            padding: "0.875rem 1.75rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -113,44 +136,36 @@ export default function DashboardPage() {
             <img
               src="/logo.png"
               alt="Footprint"
-              style={{
-                height: "36px",
-                width: "auto",
-                filter: "drop-shadow(0 0 8px rgba(200,146,42,0.6))",
-              }}
+              style={{ height: "32px", width: "auto", opacity: 0.85 }}
             />
             <span
-              className="font-cinzel"
               style={{
-                fontWeight: 900,
-                fontSize: "0.95rem",
-                letterSpacing: "0.2em",
-                color: "var(--accent)",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                letterSpacing: "0.12em",
+                color: "#e8e0d0",
+                textTransform: "uppercase",
               }}
             >
               Footprint
             </span>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "1.75rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
             <a
               href="/vault"
-              className="font-cinzel"
               style={{
-                fontSize: "0.62rem",
-                letterSpacing: "0.14em",
-                color: "var(--accent)",
+                fontFamily: "Inter, sans-serif",
+                fontSize: "0.65rem",
+                letterSpacing: "0.1em",
+                color: "#666",
                 textTransform: "uppercase",
                 textDecoration: "none",
-                opacity: 0.7,
-                transition: "opacity 0.2s",
+                transition: "color 0.2s",
               }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLAnchorElement).style.opacity = "1")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLAnchorElement).style.opacity = "0.7")
-              }
+              onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#a0a0a0")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#666")}
             >
               Full Vault →
             </a>
@@ -159,262 +174,301 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* ── Hero banner ─────────────────────────────────────────── */}
-      <div
+      {/* ── Main ─────────────────────────────────────────────────── */}
+      <main
         style={{
           position: "relative",
           zIndex: 1,
-          height: "220px",
-          borderBottom: "1px solid rgba(200,146,42,0.12)",
+          maxWidth: "1400px",
+          margin: "0 auto",
+          padding: "2rem 1.75rem 4rem",
         }}
       >
-        {/* Banner content */}
+        {/* Page title row */}
         <div
           style={{
-            height: "100%",
-            maxWidth: "1120px",
-            margin: "0 auto",
-            padding: "0 1.75rem",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            marginBottom: "1.75rem",
           }}
         >
-          <p
-            className="font-cinzel"
-            style={{
-              fontSize: "0.6rem",
-              letterSpacing: "0.28em",
-              color: "rgba(200,146,42,0.45)",
-              marginBottom: "0.5rem",
-              textTransform: "uppercase",
-            }}
-          >
-            Dashboard
-          </p>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "1rem",
-            }}
-          >
-            <h1
-              className="font-cinzel"
+          <div>
+            <p
               style={{
-                fontSize: "clamp(1.6rem, 4vw, 2.6rem)",
-                fontWeight: 900,
-                letterSpacing: "0.06em",
+                fontFamily: "Inter, sans-serif",
+                fontSize: "0.55rem",
+                letterSpacing: "0.4em",
+                color: "#444",
                 textTransform: "uppercase",
-                color: "var(--text-primary)",
+                marginBottom: "0.4rem",
+              }}
+            >
+              Dashboard
+            </p>
+            <h1
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "clamp(1.3rem, 3vw, 1.9rem)",
+                fontWeight: 600,
+                color: "#e8e0d0",
+                letterSpacing: "-0.01em",
                 lineHeight: 1,
               }}
             >
               Your Accounts
             </h1>
-            <a
-              href="/onboarding"
-              className="btn-iron"
-              style={{ fontSize: "0.6rem", padding: "0.5rem 1rem" }}
-            >
-              Edit Services
-            </a>
           </div>
-        </div>
-      </div>
-
-      {/* ── Main content ─────────────────────────────────────────── */}
-      <main
-        style={{
-          position: "relative",
-          zIndex: 1,
-          maxWidth: "1120px",
-          margin: "0 auto",
-          padding: "3rem 1.75rem",
-        }}
-      >
-        {/* Stats row */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "1.75rem",
-            marginBottom: "3.75rem",
-          }}
-        >
-          {[
-            { label: "Services", value: services.length },
-            { label: "Categories", value: grouped.length },
-            { label: "Encryption", value: "AES-256" },
-          ].map((stat) => (
-            <div key={stat.label} className="stat-card">
-              <div
-                className="font-cinzel"
-                style={{
-                  fontSize: "1.6rem",
-                  fontWeight: 700,
-                  color: "var(--accent)",
-                  letterSpacing: "0.04em",
-                  lineHeight: 1,
-                }}
-              >
-                {stat.value}
-              </div>
-              <div
-                style={{
-                  fontSize: "0.65rem",
-                  color: "var(--text-secondary)",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginTop: "0.4rem",
-                }}
-              >
-                {stat.label}
-              </div>
-            </div>
-          ))}
+          <a href="/onboarding" style={btn}>Edit Services</a>
         </div>
 
-        {/* Categories */}
         {grouped.length === 0 ? (
           <div style={{ textAlign: "center", padding: "6rem 0" }}>
             <p
               style={{
-                color: "var(--text-muted)",
+                fontFamily: "Inter, sans-serif",
+                color: "#555",
                 marginBottom: "1.5rem",
                 fontSize: "0.9rem",
               }}
             >
               No services selected yet.
             </p>
-            <a href="/onboarding" className="btn-iron">
-              ← Go to Setup
-            </a>
+            <a href="/onboarding" style={btn}>← Go to Setup</a>
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "3.25rem" }}>
-            {grouped.map((cat, catIdx) => {
-              const catNum = String(catIdx + 1).padStart(2, "0")
-              const catActiveId = activeCards[cat.id] ?? ""
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
 
-              return (
-                <section key={cat.id}>
-                  {/* Category header */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.875rem",
-                      marginBottom: "1.25rem",
-                    }}
-                  >
-                    <span className="cat-number">{catNum}</span>
-                    <span
-                      className="font-cinzel"
-                      style={{
-                        fontSize: "0.65rem",
-                        fontWeight: 700,
-                        letterSpacing: "0.18em",
-                        color: "var(--text-secondary)",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {cat.name}
-                    </span>
-                    <div
-                      style={{
-                        flex: 1,
-                        height: "1px",
-                        background: "rgba(200,146,42,0.1)",
-                      }}
-                    />
-                  </div>
+            {/* ── Primary panel: accounts ──────────────────────── */}
+            <section style={panel}>
+              <div
+                style={{
+                  padding: "1rem 1.75rem",
+                  borderBottom: "1px solid rgba(255,255,255,0.05)",
+                }}
+              >
+                <h2
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontSize: "0.58rem",
+                    fontWeight: 500,
+                    letterSpacing: "0.22em",
+                    color: "#555",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Accounts
+                </h2>
+              </div>
 
-                  {/* Cards */}
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))",
-                      gap: "1rem",
-                      overflow: "visible",
-                    }}
-                  >
-                    {cat.selected.map((service) => {
-                      const isActive = catActiveId === service.id
-                      const isDimmed = !!catActiveId && !isActive
-                      return (
+              <div style={{ padding: "1.5rem 1.75rem" }}>
+                {(() => {
+                  const catLabels: Record<string, string> = {
+                    entertainment: "Entertainment Systems",
+                    utilities: "Utility Systems",
+                    finance: "Financial Records",
+                    health: "Health Records",
+                    other: "General Access",
+                  }
+                  return (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+                      {grouped.map((cat) => (
                         <div
-                          key={service.id}
-                          onClick={() =>
-                            setActiveCards((prev) => ({
-                              ...prev,
-                              [cat.id]: isActive ? "" : service.id,
-                            }))
-                          }
-                          className="card-stone"
+                          key={cat.id}
                           style={{
-                            padding: "1.5rem 1.25rem",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "0.75rem",
-                            cursor: "pointer",
-                            position: "relative",
-                            zIndex: isActive ? 2 : 1,
-                            boxShadow: isActive
-                              ? "0 0 36px rgba(200,146,42,0.35), 0 8px 40px rgba(0,0,0,0.55)"
-                              : "none",
-                            borderColor: isActive ? "var(--accent)" : undefined,
-                            transition: "box-shadow 0.35s ease, border-color 0.35s ease",
+                            background: "rgba(255,255,255,0.02)",
+                            border: "1px solid #222222",
+                            boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.04)",
                           }}
                         >
-                          <span
+                          {/* Category header */}
+                          <div
                             style={{
-                              fontSize: isActive ? "2.4rem" : "1.85rem",
-                              lineHeight: 1,
-                              transition: "font-size 0.35s ease",
+                              padding: "10px 16px",
+                              borderBottom: "1px solid #222222",
+                              marginBottom: "1rem",
                             }}
                           >
-                            {service.emoji}
-                          </span>
-                          <span
-                            className="font-cinzel"
-                            style={{
-                              fontSize: isActive ? "0.7rem" : "0.64rem",
-                              fontWeight: 700,
-                              letterSpacing: "0.08em",
-                              color: isActive ? "var(--accent)" : "var(--text-primary)",
-                              textTransform: "uppercase",
-                              textAlign: "center",
-                              transition: "font-size 0.35s ease, color 0.35s ease",
-                            }}
-                          >
-                            {service.name}
-                          </span>
-                          {isActive && (
-                            <a
-                              href={`/vault?service=${service.id}`}
-                              onClick={(e) => e.stopPropagation()}
-                              className="btn-iron"
+                            <span
                               style={{
-                                fontSize: "0.55rem",
-                                padding: "0.3rem 0.75rem",
-                                marginTop: "0.25rem",
+                                fontFamily: "Inter, sans-serif",
+                                fontSize: "13px",
+                                fontWeight: 500,
+                                letterSpacing: "2.5px",
+                                color: "#aaaaaa",
+                                textTransform: "uppercase",
                               }}
                             >
-                              Open →
-                            </a>
-                          )}
+                              {catLabels[cat.id] ?? cat.name}
+                            </span>
+                          </div>
+
+                          {/* Service rows */}
+                          <div style={{ display: "flex", flexDirection: "column" }}>
+                            {cat.selected.map((service, svcIdx) => (
+                              <a
+                                key={service.id}
+                                href={`/vault?service=${service.id}`}
+                                className="flex items-center justify-between min-h-[72px] py-5 px-5 border-b border-[#c8922a]/10 last:border-b-0 bg-[#111111] hover:bg-[#161616] hover:border-[#c8922a]/25 active:scale-[0.99] transition-all duration-200 cursor-pointer no-underline"
+                              >
+                                <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                                  <span
+                                    style={{
+                                      fontFamily: "Inter, sans-serif",
+                                      fontSize: "15px",
+                                      fontWeight: 500,
+                                      color: "#e8e0d0",
+                                      letterSpacing: "0.01em",
+                                    }}
+                                  >
+                                    {service.name}
+                                  </span>
+                                  <span className="inline-flex items-center border border-[#c8922a]/25 text-[#c8922a]/55 text-[9px] tracking-[0.15em] px-1.5 py-0.5 rounded-sm mt-1">SECURED</span>
+                                </div>
+                                <span className="text-[#c8922a]/50 text-xl leading-none">›</span>
+                              </a>
+                            ))}
+                          </div>
                         </div>
-                      )
-                    })}
+                      ))}
+                    </div>
+                  )
+                })()}
+              </div>
+            </section>
+
+            {/* ── Secondary panels ─────────────────────────────── */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "1.25rem",
+              }}
+            >
+              {/* Overview / stats */}
+              <section style={panel}>
+                <div
+                  style={{
+                    padding: "1rem 1.75rem",
+                    borderBottom: "1px solid rgba(255,255,255,0.05)",
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontFamily: "Inter, sans-serif",
+                      fontSize: "0.58rem",
+                      fontWeight: 500,
+                      letterSpacing: "0.22em",
+                      color: "#555",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Overview
+                  </h2>
+                </div>
+                <div style={{ padding: "1.5rem 1.75rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                  {[
+                    { label: "Services tracked", value: String(services.length) },
+                    { label: "Categories", value: String(grouped.length) },
+                  ].map((stat) => (
+                    <div
+                      key={stat.label}
+                      style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "1rem" }}
+                    >
+                      <div
+                        style={{
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "1.75rem",
+                          fontWeight: 300,
+                          color: "#e8e0d0",
+                          lineHeight: 1,
+                        }}
+                      >
+                        {stat.value}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "0.58rem",
+                          color: "#444",
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          marginTop: "0.35rem",
+                        }}
+                      >
+                        {stat.label}
+                      </div>
+                    </div>
+                  ))}
+                  <div>
+                    <a href="/onboarding" style={btn}>Manage services</a>
                   </div>
-                </section>
-              )
-            })}
+                </div>
+              </section>
+
+              {/* Security info */}
+              <section style={panel}>
+                <div
+                  style={{
+                    padding: "1rem 1.75rem",
+                    borderBottom: "1px solid rgba(255,255,255,0.05)",
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontFamily: "Inter, sans-serif",
+                      fontSize: "0.58rem",
+                      fontWeight: 500,
+                      letterSpacing: "0.22em",
+                      color: "#555",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Security
+                  </h2>
+                </div>
+                <div style={{ padding: "1.5rem 1.75rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                  {[
+                    { label: "Encryption", value: "AES-256-GCM" },
+                    { label: "Key derivation", value: "PBKDF2 · 100K iterations" },
+                    { label: "Architecture", value: "Zero knowledge" },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "1rem" }}
+                    >
+                      <div
+                        style={{
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "0.85rem",
+                          fontWeight: 400,
+                          color: "#e8e0d0",
+                          letterSpacing: "0.01em",
+                        }}
+                      >
+                        {item.value}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "0.58rem",
+                          color: "#444",
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          marginTop: "0.3rem",
+                        }}
+                      >
+                        {item.label}
+                      </div>
+                    </div>
+                  ))}
+                  <div>
+                    <a href="/vault" style={btn}>Open vault →</a>
+                  </div>
+                </div>
+              </section>
+            </div>
+
           </div>
         )}
       </main>

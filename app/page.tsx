@@ -28,7 +28,6 @@ export default async function Home() {
     >
       {/* ── Nav ─────────────────────────────────────────────────── */}
       <nav
-        className="nav-stone"
         style={{
           flexShrink: 0,
           position: "relative",
@@ -37,6 +36,10 @@ export default async function Home() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "1rem 2.5rem",
+          background: "rgba(10,10,10,0.72)",
+          backdropFilter: "blur(18px)",
+          WebkitBackdropFilter: "blur(18px)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
@@ -44,26 +47,38 @@ export default async function Home() {
           <img
             src="/logo.png"
             alt="Footprint"
-            style={{
-              height: "36px",
-              width: "auto",
-              filter: "drop-shadow(0 0 8px rgba(200,146,42,0.65))",
-            }}
+            style={{ height: "32px", width: "auto", opacity: 0.9 }}
           />
           <span
-            className="font-cinzel"
             style={{
-              fontWeight: 900,
-              fontSize: "1rem",
-              letterSpacing: "0.22em",
-              color: "var(--accent)",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 600,
+              fontSize: "0.95rem",
+              letterSpacing: "0.12em",
+              color: "#e8e0d0",
+              textTransform: "uppercase",
             }}
           >
             Footprint
           </span>
         </div>
 
-        <a href="/sign-in" className="btn-iron">
+        <a
+          href="/sign-in"
+          style={{
+            fontFamily: "Inter, sans-serif",
+            fontSize: "0.72rem",
+            fontWeight: 500,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: "#e8e0d0",
+            background: "#1a1a1a",
+            border: "1px solid #444",
+            padding: "0.55rem 1.4rem",
+            textDecoration: "none",
+            transition: "filter 0.2s",
+          }}
+        >
           Sign In
         </a>
       </nav>
@@ -84,11 +99,17 @@ export default async function Home() {
           style={{ backgroundImage: "url(/hero-vault.png)" }}
         />
 
-        {/* Gradient overlays */}
-        <div className="hero-overlays" />
-
-        {/* Amber glow */}
-        <div className="hero-glow-pulse" />
+        {/* Gradient overlays — neutral dark only, no warm tint */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to right, rgba(10,10,10,0.94) 0%, rgba(10,10,10,0.78) 32%, rgba(10,10,10,0.35) 58%, transparent 72%), linear-gradient(rgba(10,10,10,0.12), rgba(10,10,10,0.12))",
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
+        />
 
         {/* Left content */}
         <div
@@ -100,11 +121,12 @@ export default async function Home() {
           }}
         >
           <p
-            className="font-cinzel"
             style={{
-              fontSize: "0.65rem",
-              letterSpacing: "0.3em",
-              color: "rgba(200,146,42,0.55)",
+              fontFamily: "Inter, sans-serif",
+              fontSize: "0.6rem",
+              fontWeight: 400,
+              letterSpacing: "0.45em",
+              color: "#a0a0a0",
               marginBottom: "1.5rem",
               textTransform: "uppercase",
             }}
@@ -113,26 +135,27 @@ export default async function Home() {
           </p>
 
           <h1
-            className="font-cinzel"
             style={{
-              fontSize: "clamp(2.6rem, 6vw, 5.25rem)",
-              fontWeight: 900,
+              fontFamily: "Inter, sans-serif",
+              fontSize: "clamp(2rem, 4.5vw, 4rem)",
+              fontWeight: 700,
               lineHeight: 1.08,
-              letterSpacing: "0.04em",
+              letterSpacing: "-0.01em",
               textTransform: "uppercase",
-              color: "var(--text-primary)",
+              color: "#ffffff",
               marginBottom: "1.5rem",
             }}
           >
             Every Account.
             <br />
-            <span style={{ color: "var(--accent)" }}>Secured.</span>
+            Secured.
           </h1>
 
           <p
             style={{
-              fontSize: "1.05rem",
-              color: "var(--text-secondary)",
+              fontFamily: "Inter, sans-serif",
+              fontSize: "1rem",
+              color: "rgba(232,224,208,0.55)",
               lineHeight: 1.8,
               maxWidth: "430px",
               marginBottom: "2.75rem",
@@ -145,15 +168,37 @@ export default async function Home() {
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
             <a
               href="/sign-in"
-              className="btn-iron-solid"
-              style={{ padding: "0.8rem 2.25rem" }}
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "0.72rem",
+                fontWeight: 600,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "#ffffff",
+                background: "#1a1a1a",
+                border: "1px solid #555",
+                padding: "0.8rem 2.25rem",
+                textDecoration: "none",
+                transition: "filter 0.2s",
+              }}
             >
               Get Started
             </a>
             <a
               href="/sign-in"
-              className="btn-iron"
-              style={{ padding: "0.8rem 2.25rem" }}
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "0.72rem",
+                fontWeight: 500,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "#e8e0d0",
+                background: "transparent",
+                border: "1px solid rgba(255,255,255,0.12)",
+                padding: "0.8rem 2.25rem",
+                textDecoration: "none",
+                transition: "filter 0.2s",
+              }}
             >
               Sign In
             </a>
@@ -171,13 +216,15 @@ export default async function Home() {
             {["AES-256-GCM", "PBKDF2 100K", "Zero Knowledge"].map((tag) => (
               <span
                 key={tag}
-                className="font-cinzel"
                 style={{
-                  fontSize: "0.58rem",
-                  letterSpacing: "0.12em",
-                  color: "rgba(200,146,42,0.5)",
-                  borderBottom: "1px solid rgba(200,146,42,0.2)",
+                  fontFamily: "Inter, sans-serif",
+                  fontSize: "0.6rem",
+                  fontWeight: 400,
+                  letterSpacing: "0.14em",
+                  color: "#777",
+                  borderBottom: "1px solid #333",
                   paddingBottom: "0.3rem",
+                  textTransform: "uppercase",
                 }}
               >
                 {tag}
