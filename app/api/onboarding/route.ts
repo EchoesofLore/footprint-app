@@ -47,7 +47,10 @@ export async function POST(req: NextRequest) {
       { onConflict: "user_id" }
     )
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error("[onboarding] upsert error", JSON.stringify(error, null, 2))
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
 
   return NextResponse.json({ ok: true })
 }
