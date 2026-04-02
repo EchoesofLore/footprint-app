@@ -103,27 +103,39 @@ export default async function Home() {
           style={{ backgroundImage: "url(/hero-vault.png)" }}
         />
 
-        {/* Gradient overlays — neutral dark only, no warm tint */}
+        {/* Gradient overlay — even dark coverage across full image */}
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(to right, rgba(10,10,10,0.94) 0%, rgba(10,10,10,0.78) 32%, rgba(10,10,10,0.35) 58%, transparent 72%), linear-gradient(rgba(10,10,10,0.12), rgba(10,10,10,0.12))",
+            background: "linear-gradient(rgba(10,10,10,0.55), rgba(10,10,10,0.55))",
             pointerEvents: "none",
             zIndex: 1,
           }}
         />
 
-        {/* Left content */}
+        {/* Centered content */}
         <div
           style={{
             position: "relative",
             zIndex: 3,
             maxWidth: "600px",
-            paddingLeft: "56px",
+            margin: "0 auto",
+            textAlign: "center",
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+            paddingLeft: "1.5rem",
+            paddingRight: "1.5rem",
           }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Footprint"
+            style={{ height: "64px", width: "auto", marginBottom: "2rem", opacity: 0.92 }}
+          />
+
           <p
             style={{
               fontFamily: "Inter, sans-serif",
@@ -169,7 +181,7 @@ export default async function Home() {
             Your master password never leaves your device.
           </p>
 
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center" }}>
             <a
               href="/sign-in"
               style={{
@@ -215,6 +227,7 @@ export default async function Home() {
               gap: "2rem",
               marginTop: "3.25rem",
               flexWrap: "wrap",
+              justifyContent: "center",
             }}
           >
             {["AES-256-GCM", "PBKDF2 100K", "Zero Knowledge"].map((tag) => (

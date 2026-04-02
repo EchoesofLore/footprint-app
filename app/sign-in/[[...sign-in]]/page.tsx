@@ -52,7 +52,7 @@ export default function SignInPage() {
             <img
               src="/logo.png"
               alt="Footprint"
-              style={{ height: "30px", width: "auto", opacity: 0.8 }}
+              style={{ height: "40px", width: "auto", opacity: 0.92 }}
             />
             <span
               style={{
@@ -250,16 +250,7 @@ export default function SignInPage() {
             border-radius: 0 !important;
           }
         `}</style>
-        <div
-          style={{
-            background: "transparent",
-            border: "1px solid #3a3a3a",
-            boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.08)",
-            borderRadius: 0,
-          }}
-        >
-          <SignIn />
-        </div>
+        <SignIn />
       </div>
     </div>
   )
