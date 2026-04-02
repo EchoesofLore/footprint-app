@@ -178,13 +178,20 @@ export default function OnboardingPage() {
   async function handleSubmit() {
     setSubmitting(true)
     try {
-      await fetch("/api/onboarding", {
+      const res = await fetch("/api/onboarding", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ services: confirmed }),
       })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({ error: "Unknown error" }))
+        console.error("[onboarding] POST failed", res.status, body)
+        setSubmitting(false)
+        return
+      }
       setStep(5)
-    } catch {
+    } catch (err) {
+      console.error("[onboarding] POST threw", err)
       setSubmitting(false)
     }
   }
