@@ -49,7 +49,7 @@ export default async function Home() {
         <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
+            src="/logo-transparent.png"
             alt="Footprint"
             style={{ height: "32px", width: "auto", opacity: 0.9 }}
           />
@@ -131,7 +131,7 @@ export default async function Home() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
+            src="/logo-transparent.png"
             alt="Footprint"
             style={{ height: "120px", width: "auto", marginBottom: "2rem", opacity: 0.92 }}
           />
