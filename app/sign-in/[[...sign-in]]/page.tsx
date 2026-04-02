@@ -52,7 +52,7 @@ export default function SignInPage() {
             <img
               src="/logo.png"
               alt="Footprint"
-              style={{ height: "40px", width: "auto", opacity: 0.92 }}
+              style={{ height: "40px", width: "auto", opacity: 0.92, mixBlendMode: "screen" }}
             />
             <span
               style={{

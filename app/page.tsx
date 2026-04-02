@@ -51,7 +51,7 @@ export default async function Home() {
           <img
             src="/logo.png"
             alt="Footprint"
-            style={{ height: "32px", width: "auto", opacity: 0.9 }}
+            style={{ height: "32px", width: "auto", opacity: 0.9, mixBlendMode: "screen" }}
           />
           <span
             style={{
@@ -133,7 +133,7 @@ export default async function Home() {
           <img
             src="/logo.png"
             alt="Footprint"
-            style={{ height: "64px", width: "auto", marginBottom: "2rem", opacity: 0.92 }}
+            style={{ height: "88px", width: "auto", marginBottom: "2rem", opacity: 0.92, mixBlendMode: "screen" }}
           />
 
           <p
