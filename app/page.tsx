@@ -1,18 +1,22 @@
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
-import { supabaseServer } from "@/lib/supabaseServer"
+import { createSupabaseUserClient } from "@/lib/supabaseUser"
 
 export default async function Home() {
-  const { userId } = await auth()
+  const { userId, getToken } = await auth()
 
   if (userId) {
-    const { data } = await supabaseServer
-      .from("user_onboarding")
-      .select("user_id")
-      .eq("user_id", userId)
-      .maybeSingle()
+    const token = await getToken({ template: "supabase" })
+    if (token) {
+      const supabase = createSupabaseUserClient(token)
+      const { data } = await supabase
+        .from("user_onboarding")
+        .select("user_id")
+        .eq("user_id", userId)
+        .maybeSingle()
 
-    redirect(data ? "/dashboard" : "/onboarding")
+      redirect(data ? "/dashboard" : "/onboarding")
+    }
   }
 
   return (

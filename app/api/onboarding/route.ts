@@ -1,30 +1,22 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getAuth } from "@clerk/nextjs/server"
-import { supabaseServer } from "@/lib/supabaseServer"
-
-// Run this SQL in Supabase before using this route:
-//
-// CREATE TABLE user_onboarding (
-//   user_id      TEXT        PRIMARY KEY,
-//   services     JSONB       NOT NULL DEFAULT '[]',
-//   completed_at TIMESTAMPTZ DEFAULT now()
-// );
+import { auth } from "@clerk/nextjs/server"
+import { createSupabaseUserClient } from "@/lib/supabaseUser"
 
 export async function GET(req: NextRequest) {
-  const { userId } = getAuth(req)
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
+  const { userId, getToken } = await auth()
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const { data, error } = await supabaseServer
+  const token = await getToken({ template: "supabase" })
+  if (!token) return NextResponse.json({ error: "No session token" }, { status: 401 })
+
+  const supabase = createSupabaseUserClient(token)
+  const { data, error } = await supabase
     .from("user_onboarding")
     .select("services")
     .eq("user_id", userId)
     .maybeSingle()
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   return NextResponse.json({
     completed: !!data,
@@ -33,10 +25,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { userId } = getAuth(req)
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
+  const { userId, getToken } = await auth()
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+  const token = await getToken({ template: "supabase" })
+  if (!token) return NextResponse.json({ error: "No session token" }, { status: 401 })
 
   let body: { services?: string[] } | null = null
   try {
@@ -46,17 +39,15 @@ export async function POST(req: NextRequest) {
   }
 
   const services: string[] = body?.services ?? []
-
-  const { error } = await supabaseServer
+  const supabase = createSupabaseUserClient(token)
+  const { error } = await supabase
     .from("user_onboarding")
     .upsert(
       { user_id: userId, services, completed_at: new Date().toISOString() },
       { onConflict: "user_id" }
     )
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   return NextResponse.json({ ok: true })
 }
