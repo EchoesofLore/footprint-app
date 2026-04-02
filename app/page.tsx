@@ -133,7 +133,7 @@ export default async function Home() {
           <img
             src="/logo.png"
             alt="Footprint"
-            style={{ height: "88px", width: "auto", marginBottom: "2rem", opacity: 0.92 }}
+            style={{ height: "120px", width: "auto", marginBottom: "2rem", opacity: 0.92 }}
           />
 
           <p
