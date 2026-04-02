@@ -1,11 +1,9 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { ALL_SERVICES, CATEGORIES } from "@/lib/services"
-
-type DiscoveryMethod = "manual" | "csv" | "file" | null
 
 type Suggestion = {
   id: string
@@ -13,6 +11,13 @@ type Suggestion = {
   category: string
   source: "email" | "curated" | "manual"
 }
+
+const SCAN_MESSAGES = [
+  "Scanning saved credentials…",
+  "Identifying known services…",
+  "Securing your vault…",
+  "Organizing your accounts…",
+]
 
 // ── Helper: manual-add row (defined outside to avoid remount on each render) ──
 function AddManualRow({ onAdd }: { onAdd: (name: string) => void }) {
@@ -66,7 +71,6 @@ function AddManualRow({ onAdd }: { onAdd: (name: string) => void }) {
 export default function OnboardingPage() {
   const router = useRouter()
   const { isLoaded, isSignedIn } = useAuth()
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // ── State ──────────────────────────────────────────────────────────────────
 
@@ -80,11 +84,11 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0)
   const [emails, setEmails] = useState<string[]>([])
   const [emailInput, setEmailInput] = useState("")
-  const [discoveryMethod, setDiscoveryMethod] = useState<DiscoveryMethod>(null)
-  const [csvText, setCsvText] = useState("")
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [confirmed, setConfirmed] = useState<string[]>([])
   const [manualInput, setManualInput] = useState("")
+  const [scanMsgIndex, setScanMsgIndex] = useState(0)
+  const [scanProgress, setScanProgress] = useState(0)
 
   // ── Effects ────────────────────────────────────────────────────────────────
 
@@ -113,6 +117,28 @@ export default function OnboardingPage() {
     const t = setTimeout(() => router.push("/dashboard"), 2000)
     return () => clearTimeout(t)
   }, [step, router])
+
+  // Scanning step: cycle messages + auto-advance to step 3
+  useEffect(() => {
+    if (step !== 1.5) return
+    setScanMsgIndex(0)
+    setScanProgress(0)
+    const progressStart = setTimeout(() => setScanProgress(100), 50)
+    let msgIdx = 0
+    const msgInterval = setInterval(() => {
+      msgIdx = (msgIdx + 1) % SCAN_MESSAGES.length
+      setScanMsgIndex(msgIdx)
+    }, 600)
+    const done = setTimeout(() => {
+      clearInterval(msgInterval)
+      setStep(3)
+    }, 2500)
+    return () => {
+      clearTimeout(progressStart)
+      clearInterval(msgInterval)
+      clearTimeout(done)
+    }
+  }, [step])
 
   // Build suggestions when entering step 3
   useEffect(() => {
@@ -323,6 +349,46 @@ export default function OnboardingPage() {
     )
   }
 
+  // ── Step 1.5: Scanning ─────────────────────────────────────────────────────
+
+  if (step === 1.5) {
+    return (
+      <div style={outerWrap}>
+        <div style={{ width: "100%", maxWidth: "400px", textAlign: "center" }}>
+          <p
+            className="font-cinzel"
+            style={{
+              fontSize: "0.65rem",
+              letterSpacing: "0.28em",
+              color: "rgba(255,255,255,0.5)",
+              textTransform: "uppercase",
+              marginBottom: "2rem",
+              minHeight: "1.2em",
+            }}
+          >
+            {SCAN_MESSAGES[scanMsgIndex]}
+          </p>
+          <div
+            style={{
+              height: "2px",
+              background: "rgba(255,255,255,0.08)",
+              width: "100%",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                background: "rgba(255,255,255,0.5)",
+                width: `${scanProgress}%`,
+                transition: "width 2.4s linear",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // ── Step 5: Complete ───────────────────────────────────────────────────────
 
   if (step === 5) {
@@ -380,7 +446,7 @@ export default function OnboardingPage() {
     )
   }
 
-  // ── Steps 1–4: panel layout ────────────────────────────────────────────────
+  // ── Steps 1, 3, 4: panel layout ───────────────────────────────────────────
 
   return (
     <div style={outerWrap}>
@@ -574,166 +640,9 @@ export default function OnboardingPage() {
                 }}
               >
                 <button
-                  onClick={() => setStep(2)}
+                  onClick={() => setStep(1.5)}
                   disabled={emails.length === 0}
                   className={emails.length === 0 ? disabledBtn : primaryBtn}
-                >
-                  Continue →
-                </button>
-              </div>
-            </>
-          )}
-
-          {/* ── Step 2: Discovery Method ─────────────────────────────────── */}
-          {step === 2 && (
-            <>
-              <h2
-                className="font-cinzel"
-                style={{
-                  fontSize: "1rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.14em",
-                  color: "#e8e0d0",
-                  textTransform: "uppercase",
-                  marginBottom: "0.6rem",
-                }}
-              >
-                Discover Accounts
-              </h2>
-              <p
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "0.82rem",
-                  color: "rgba(232,224,208,0.4)",
-                  lineHeight: 1.7,
-                  marginBottom: "1.75rem",
-                }}
-              >
-                How would you like to discover your accounts?
-              </p>
-
-              {/* Option cards */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.65rem",
-                  marginBottom: "1.5rem",
-                }}
-              >
-                {(
-                  [
-                    { id: "manual", label: "Manual", desc: "Add accounts one by one" },
-                    { id: "csv", label: "Import CSV", desc: "Paste exported browser passwords" },
-                    { id: "file", label: "Upload File", desc: "Upload a browser password export file" },
-                  ] as Array<{ id: "manual" | "csv" | "file"; label: string; desc: string }>
-                ).map((opt) => {
-                  const isActive = discoveryMethod === opt.id
-                  return (
-                    <button
-                      key={opt.id}
-                      onClick={() => setDiscoveryMethod(opt.id)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "1rem 1.25rem",
-                        textAlign: "left",
-                        cursor: "pointer",
-                        background: isActive
-                          ? "rgba(255,255,255,0.04)"
-                          : "rgba(255,255,255,0.02)",
-                        border: `1px solid ${
-                          isActive
-                            ? "rgba(255,255,255,0.25)"
-                            : "rgba(255,255,255,0.06)"
-                        }`,
-                        transition: "background 0.2s, border-color 0.2s",
-                      }}
-                    >
-                      <div>
-                        <div
-                          className={isActive ? "font-cinzel" : ""}
-                          style={{
-                            fontSize: isActive ? "0.65rem" : "0.85rem",
-                            fontWeight: isActive ? 700 : 400,
-                            letterSpacing: isActive ? "0.1em" : "0",
-                            color: isActive ? "rgba(255,255,255,0.9)" : "#e8e0d0",
-                            textTransform: isActive ? "uppercase" : "none",
-                            fontFamily: isActive ? undefined : "Inter, sans-serif",
-                          }}
-                        >
-                          {opt.label}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "0.75rem",
-                            color: "rgba(232,224,208,0.35)",
-                            marginTop: "0.2rem",
-                            fontFamily: "Inter, sans-serif",
-                          }}
-                        >
-                          {opt.desc}
-                        </div>
-                      </div>
-                      {isActive && (
-                        <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "1.2rem" }}>
-                          ›
-                        </span>
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-
-              {/* CSV textarea */}
-              {discoveryMethod === "csv" && (
-                <textarea
-                  value={csvText}
-                  onChange={(e) => setCsvText(e.target.value)}
-                  placeholder="Paste CSV content here…"
-                  style={{
-                    width: "100%",
-                    height: "120px",
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.15)",
-                    padding: "0.75rem",
-                    fontSize: "0.75rem",
-                    color: "#e8e0d0",
-                    fontFamily: "monospace",
-                    outline: "none",
-                    resize: "vertical",
-                    marginBottom: "1rem",
-                    boxSizing: "border-box",
-                  }}
-                />
-              )}
-
-              {/* File input */}
-              {discoveryMethod === "file" && (
-                <div style={{ marginBottom: "1rem" }}>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".csv,.json"
-                    style={{ display: "none" }}
-                    onChange={() => {}}
-                  />
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className={primaryBtn}
-                    style={{ fontSize: "0.6rem", padding: "0.6rem 1.25rem" }}
-                  >
-                    Choose File
-                  </button>
-                </div>
-              )}
-
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button
-                  onClick={() => setStep(3)}
-                  disabled={!discoveryMethod}
-                  className={!discoveryMethod ? disabledBtn : primaryBtn}
                 >
                   Continue →
                 </button>
@@ -755,7 +664,7 @@ export default function OnboardingPage() {
                   marginBottom: "0.5rem",
                 }}
               >
-                Accounts Detected
+                We Found Your Accounts
               </h2>
               <p
                 style={{
@@ -766,10 +675,7 @@ export default function OnboardingPage() {
                   marginBottom: "1.25rem",
                 }}
               >
-                <span style={{ color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>
-                  {selected.size} account{selected.size !== 1 ? "s" : ""}
-                </span>{" "}
-                selected
+                Review and confirm to continue
               </p>
 
               {/* Suggestions list */}
