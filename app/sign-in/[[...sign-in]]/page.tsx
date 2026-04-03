@@ -62,12 +62,12 @@ export default function SignInPage() {
         <h1
           style={{
             fontFamily: "Inter, sans-serif",
-            fontSize: "clamp(2rem, 4vw, 3.75rem)",
+            fontSize: "clamp(1.5rem, 3vw, 2.8rem)",
             fontWeight: 700,
             letterSpacing: "-0.01em",
             lineHeight: 1.1,
             color: "#efefef",
-            marginBottom: "2rem",
+            marginBottom: "1.25rem",
             textAlign: "center",
           }}
         >
@@ -204,7 +204,7 @@ export default function SignInPage() {
             fontSize: "0.9rem",
             lineHeight: 1.78,
             maxWidth: "380px",
-            marginTop: "2rem",
+            marginTop: "1.25rem",
             textAlign: "center",
           }}
         >
@@ -213,7 +213,7 @@ export default function SignInPage() {
         </p>
 
         {/* Trust labels */}
-        <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "center", marginTop: "1.5rem" }}>
+        <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "center", marginTop: "1rem" }}>
           {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag) => (
             <span
               key={tag}
@@ -222,8 +222,8 @@ export default function SignInPage() {
                 fontSize: "0.58rem",
                 fontWeight: 400,
                 letterSpacing: "0.14em",
-                color: "#909090",
-                borderBottom: "1px solid #555",
+                color: "#b0b0b0",
+                borderBottom: "1px solid #666",
                 paddingBottom: "0.25rem",
                 textTransform: "uppercase",
               }}
