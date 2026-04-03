@@ -154,6 +154,15 @@ body {
   opacity: 0.6;
 }
 
+/* ── Landing CTA buttons ─────────────────────────────────────────── */
+.cta-hero {
+  transition: filter 0.2s, transform 0.2s, box-shadow 0.2s !important;
+}
+.cta-hero:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.12);
+}
+
 /* ── Hero background image layer (Ken Burns) ─────────────────────── */
 .hero-bg-img {
   position: absolute;

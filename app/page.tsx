@@ -133,7 +133,7 @@ export default async function Home() {
           <img
             src="/logo-transparent.png"
             alt="Footprint"
-            style={{ height: "120px", width: "auto", marginBottom: "2rem", opacity: 0.92 }}
+            style={{ height: "210px", width: "auto", marginBottom: "3.5rem", opacity: 0.92 }}
           />
 
           <p
@@ -142,7 +142,7 @@ export default async function Home() {
               fontSize: "0.6rem",
               fontWeight: 400,
               letterSpacing: "0.45em",
-              color: "#a0a0a0",
+              color: "#c0c0c0",
               marginBottom: "1.5rem",
               textTransform: "uppercase",
             }}
@@ -184,6 +184,7 @@ export default async function Home() {
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center" }}>
             <a
               href="/sign-in"
+              className="cta-hero"
               style={{
                 fontFamily: "Inter, sans-serif",
                 fontSize: "0.72rem",
@@ -195,13 +196,13 @@ export default async function Home() {
                 border: "1px solid #555",
                 padding: "0.8rem 2.25rem",
                 textDecoration: "none",
-                transition: "filter 0.2s",
               }}
             >
               Get Started
             </a>
             <a
               href="/sign-in"
+              className="cta-hero"
               style={{
                 fontFamily: "Inter, sans-serif",
                 fontSize: "0.72rem",
@@ -213,7 +214,6 @@ export default async function Home() {
                 border: "1px solid rgba(255,255,255,0.12)",
                 padding: "0.8rem 2.25rem",
                 textDecoration: "none",
-                transition: "filter 0.2s",
               }}
             >
               Sign In
