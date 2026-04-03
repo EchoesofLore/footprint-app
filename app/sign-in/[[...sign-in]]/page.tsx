@@ -161,10 +161,10 @@ export default function SignInPage() {
             color: #e8e0d0 !important;
           }
           .cl-dividerLine {
-            background: #2a2a2a !important;
+            background: #888888 !important;
           }
           .cl-dividerText {
-            color: #444444 !important;
+            color: #999999 !important;
             font-family: Inter, sans-serif !important;
           }
           .cl-identityPreviewText,
@@ -221,8 +221,8 @@ export default function SignInPage() {
                 fontSize: "0.58rem",
                 fontWeight: 400,
                 letterSpacing: "0.14em",
-                color: "#555",
-                borderBottom: "1px solid #2a2a2a",
+                color: "#909090",
+                borderBottom: "1px solid #555",
                 paddingBottom: "0.25rem",
                 textTransform: "uppercase",
               }}
