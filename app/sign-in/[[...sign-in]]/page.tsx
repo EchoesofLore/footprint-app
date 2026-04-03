@@ -62,7 +62,7 @@ export default function SignInPage() {
         <h1
           style={{
             fontFamily: "Inter, sans-serif",
-            fontSize: "clamp(1.5rem, 3vw, 2.8rem)",
+            fontSize: "clamp(1.3rem, 2.6vw, 2.4rem)",
             fontWeight: 700,
             letterSpacing: "-0.01em",
             lineHeight: 1.1,
@@ -84,9 +84,9 @@ export default function SignInPage() {
           }
           .cl-headerTitle {
             font-family: Inter, sans-serif !important;
-            color: #ffffff !important;
-            font-size: 1rem !important;
-            font-weight: 600 !important;
+            color: rgba(255,255,255,0.7) !important;
+            font-size: 0.82rem !important;
+            font-weight: 400 !important;
             letter-spacing: 0em !important;
             text-transform: none !important;
           }
@@ -204,7 +204,7 @@ export default function SignInPage() {
             fontSize: "0.9rem",
             lineHeight: 1.78,
             maxWidth: "380px",
-            marginTop: "1.25rem",
+            marginTop: "0.875rem",
             textAlign: "center",
           }}
         >
@@ -222,8 +222,8 @@ export default function SignInPage() {
                 fontSize: "0.58rem",
                 fontWeight: 400,
                 letterSpacing: "0.14em",
-                color: "#b0b0b0",
-                borderBottom: "1px solid #666",
+                color: "#c2c2c2",
+                borderBottom: "1px solid #777",
                 paddingBottom: "0.25rem",
                 textTransform: "uppercase",
               }}
