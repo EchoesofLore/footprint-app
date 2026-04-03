@@ -8,41 +8,16 @@ export default function SignInPage() {
         display: "flex",
         alignItems: "stretch",
         position: "relative",
-        backgroundImage: "url(/bg-onboarding.png)",
+        backgroundImage: "url(/bg-login.png)",
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
-        backgroundColor: "#080808",
+        backgroundColor: "#0a0a0a",
       }}
     >
-      {/* ── Atmospheric overlays ──────────────────────────────────── */}
-
-      {/* Dark base — heavier than landing page */}
+      {/* ── Dark overlay ──────────────────────────────────────────── */}
       <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-        background: "rgba(5,5,5,0.84)" }} />
-
-      {/* Tight overhead light source — single central ceiling beam */}
-      <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-        background: "radial-gradient(ellipse 52% 26% at 50% 0%, rgba(255,255,255,0.046) 0%, transparent 100%)" }} />
-
-      {/* Structural panel seam lines — vertical divisions */}
-      <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-        background: `linear-gradient(
-          90deg,
-          transparent calc(33.333% - 0.5px),
-          rgba(255,255,255,0.022) calc(33.333% - 0.5px),
-          rgba(255,255,255,0.022) calc(33.333% + 0.5px),
-          transparent calc(33.333% + 0.5px),
-          transparent calc(66.666% - 0.5px),
-          rgba(255,255,255,0.022) calc(66.666% - 0.5px),
-          rgba(255,255,255,0.022) calc(66.666% + 0.5px),
-          transparent calc(66.666% + 0.5px)
-        )` }} />
-
-      {/* Horizontal section seam — low ground line */}
-      <div style={{ position: "absolute", left: 0, right: 0, bottom: "9%",
-        height: "1px", zIndex: 0, pointerEvents: "none",
-        background: "rgba(255,255,255,0.018)" }} />
+        background: "rgba(0,0,0,0.35)" }} />
 
       {/* ── Left panel — welcome copy ─────────────────────────────── */}
       <div
