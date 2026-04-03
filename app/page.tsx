@@ -133,7 +133,8 @@ export default async function Home() {
           <img
             src="/logo-transparent.png"
             alt="Footprint"
-            style={{ height: "210px", width: "auto", marginBottom: "3.5rem", opacity: 0.92 }}
+            className="hero-logo-entrance"
+            style={{ height: "210px", width: "auto", marginBottom: "3.5rem" }}
           />
 
           <p
@@ -162,9 +163,8 @@ export default async function Home() {
               marginBottom: "1.5rem",
             }}
           >
-            Every Account.
-            <br />
-            Secured.
+            <span className="hero-line" style={{ animationDelay: "0.9s" }}>Every Account.</span>
+            <span className="hero-line" style={{ animationDelay: "1.075s" }}>Secured.</span>
           </h1>
 
           <p
