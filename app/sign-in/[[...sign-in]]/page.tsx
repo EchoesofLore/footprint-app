@@ -75,8 +75,8 @@ export default function SignInPage() {
             </span>
           </a>
 
-          {/* Content block — aligned with form header height */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start", paddingTop: "14vh", textAlign: "left" }}>
+          {/* Content block — vertically centered */}
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center", textAlign: "left" }}>
             <h1
               style={{
                 fontFamily: "Inter, sans-serif",
