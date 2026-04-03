@@ -7,13 +7,43 @@ export default function SignInPage() {
         minHeight: "100vh",
         display: "flex",
         alignItems: "stretch",
+        position: "relative",
         backgroundImage: "url(/bg-onboarding.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundColor: "#0a0a0a",
+        backgroundColor: "#080808",
       }}
     >
+      {/* ── Atmospheric overlays ──────────────────────────────────── */}
+
+      {/* Dark base — heavier than landing page */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+        background: "rgba(5,5,5,0.84)" }} />
+
+      {/* Tight overhead light source — single central ceiling beam */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+        background: "radial-gradient(ellipse 52% 26% at 50% 0%, rgba(255,255,255,0.046) 0%, transparent 100%)" }} />
+
+      {/* Structural panel seam lines — vertical divisions */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+        background: `linear-gradient(
+          90deg,
+          transparent calc(33.333% - 0.5px),
+          rgba(255,255,255,0.022) calc(33.333% - 0.5px),
+          rgba(255,255,255,0.022) calc(33.333% + 0.5px),
+          transparent calc(33.333% + 0.5px),
+          transparent calc(66.666% - 0.5px),
+          rgba(255,255,255,0.022) calc(66.666% - 0.5px),
+          rgba(255,255,255,0.022) calc(66.666% + 0.5px),
+          transparent calc(66.666% + 0.5px)
+        )` }} />
+
+      {/* Horizontal section seam — low ground line */}
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: "9%",
+        height: "1px", zIndex: 0, pointerEvents: "none",
+        background: "rgba(255,255,255,0.018)" }} />
+
       {/* ── Left panel — welcome copy ─────────────────────────────── */}
       <div
         className="hidden lg:flex"
@@ -22,8 +52,9 @@ export default function SignInPage() {
           flexDirection: "column",
           justifyContent: "center",
           position: "relative",
+          zIndex: 1,
           overflow: "hidden",
-          borderRight: "1px solid #2a2a2a",
+          borderRight: "1px solid #222222",
         }}
       >
         {/* Neutral legibility overlay — no warm tint */}
@@ -32,7 +63,7 @@ export default function SignInPage() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to right, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.55) 100%)",
+              "linear-gradient(to right, rgba(5,5,5,0.92) 0%, rgba(5,5,5,0.60) 100%)",
             pointerEvents: "none",
           }}
         />
@@ -129,8 +160,24 @@ export default function SignInPage() {
           alignItems: "center",
           justifyContent: "center",
           padding: "2rem",
+          position: "relative",
+          zIndex: 1,
         }}
       >
+        {/* Corner bracket markers — architectural / locking reference points */}
+        <div style={{ position: "absolute", top: "1.75rem", left: "1.75rem", width: "14px", height: "14px",
+          borderTop: "1px solid rgba(255,255,255,0.07)", borderLeft: "1px solid rgba(255,255,255,0.07)",
+          pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "1.75rem", right: "1.75rem", width: "14px", height: "14px",
+          borderTop: "1px solid rgba(255,255,255,0.07)", borderRight: "1px solid rgba(255,255,255,0.07)",
+          pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "1.75rem", left: "1.75rem", width: "14px", height: "14px",
+          borderBottom: "1px solid rgba(255,255,255,0.07)", borderLeft: "1px solid rgba(255,255,255,0.07)",
+          pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "1.75rem", right: "1.75rem", width: "14px", height: "14px",
+          borderBottom: "1px solid rgba(255,255,255,0.07)", borderRight: "1px solid rgba(255,255,255,0.07)",
+          pointerEvents: "none" }} />
+
         {/* Override all Clerk amber/brand colors to match dark neutral theme */}
         <style>{`
           .cl-card {
