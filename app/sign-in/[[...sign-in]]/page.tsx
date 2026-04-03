@@ -76,15 +76,15 @@ export default function SignInPage() {
           </a>
 
           {/* Centered content block */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", textAlign: "right" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center", textAlign: "left" }}>
             <h1
               style={{
                 fontFamily: "Inter, sans-serif",
-                fontSize: "1.7rem",
-                fontWeight: 300,
-                letterSpacing: "0.01em",
-                lineHeight: 1.3,
-                color: "#e0e0e0",
+                fontSize: "clamp(2rem, 4vw, 3.75rem)",
+                fontWeight: 700,
+                letterSpacing: "-0.01em",
+                lineHeight: 1.1,
+                color: "#efefef",
                 marginBottom: "0.75rem",
               }}
             >
@@ -105,7 +105,7 @@ export default function SignInPage() {
               your accounts securely.
             </p>
 
-            <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "flex-start" }}>
               {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag) => (
                 <span
                   key={tag}
