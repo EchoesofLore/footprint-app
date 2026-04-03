@@ -43,27 +43,29 @@ export default function SignInPage() {
           }}
         />
 
-        <div style={{ position: "relative", zIndex: 1, padding: "5rem" }}>
+        <div style={{ position: "relative", zIndex: 1, padding: "5rem", height: "100%", display: "flex", flexDirection: "column" }}>
+
+          {/* Brand mark — top left */}
           <a
             href="/"
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "0.6rem",
-              marginBottom: "2.5rem",
+              gap: "0.75rem",
               textDecoration: "none",
+              flexShrink: 0,
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
               alt="Footprint"
-              style={{ height: "40px", width: "auto", opacity: 0.92 }}
+              style={{ height: "52px", width: "auto", opacity: 0.92 }}
             />
             <span
               style={{
                 fontFamily: "Inter, sans-serif",
-                fontSize: "0.62rem",
+                fontSize: "0.75rem",
                 letterSpacing: "0.18em",
                 color: "#555",
                 textTransform: "uppercase",
@@ -73,56 +75,60 @@ export default function SignInPage() {
             </span>
           </a>
 
-          <h1
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "clamp(2rem, 4vw, 3.75rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.01em",
-              textTransform: "uppercase",
-              lineHeight: 1.1,
-              color: "#ffffff",
-              marginBottom: "1.5rem",
-            }}
-          >
-            Welcome
-            <br />
-            Back.
-          </h1>
+          {/* Centered content block */}
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+            <h1
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "clamp(2rem, 4vw, 3.75rem)",
+                fontWeight: 700,
+                letterSpacing: "-0.01em",
+                textTransform: "uppercase",
+                lineHeight: 1.1,
+                color: "#ffffff",
+                marginBottom: "1.5rem",
+              }}
+            >
+              Welcome
+              <br />
+              Back.
+            </h1>
 
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              color: "#a0a0a0",
-              fontSize: "0.95rem",
-              lineHeight: 1.78,
-              maxWidth: "360px",
-              marginBottom: "3rem",
-            }}
-          >
-            Your encrypted vault is waiting. Sign in to access and manage all
-            your accounts securely.
-          </p>
+            <p
+              style={{
+                fontFamily: "Inter, sans-serif",
+                color: "#a0a0a0",
+                fontSize: "0.95rem",
+                lineHeight: 1.78,
+                maxWidth: "360px",
+                marginBottom: "3rem",
+              }}
+            >
+              Your encrypted vault is waiting. Sign in to access and manage all
+              your accounts securely.
+            </p>
 
-          <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
-            {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag) => (
-              <span
-                key={tag}
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: "0.58rem",
-                  fontWeight: 400,
-                  letterSpacing: "0.14em",
-                  color: "#555",
-                  borderBottom: "1px solid #2a2a2a",
-                  paddingBottom: "0.25rem",
-                  textTransform: "uppercase",
-                }}
-              >
-                {tag}
-              </span>
-            ))}
+            <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "center" }}>
+              {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag) => (
+                <span
+                  key={tag}
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontSize: "0.58rem",
+                    fontWeight: 400,
+                    letterSpacing: "0.14em",
+                    color: "#555",
+                    borderBottom: "1px solid #2a2a2a",
+                    paddingBottom: "0.25rem",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
+
         </div>
       </div>
 
