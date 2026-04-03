@@ -161,11 +161,12 @@ export default function SignInPage() {
             color: #e8e0d0 !important;
           }
           .cl-dividerLine {
-            background: #888888 !important;
+            background: #666666 !important;
           }
           .cl-dividerText {
-            color: #999999 !important;
+            color: #d0d0d0 !important;
             font-family: Inter, sans-serif !important;
+            text-shadow: 0 0 8px rgba(0,0,0,0.8) !important;
           }
           .cl-identityPreviewText,
           .cl-identityPreviewEditButton {
