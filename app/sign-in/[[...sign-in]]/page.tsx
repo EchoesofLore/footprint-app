@@ -6,7 +6,7 @@ export default function SignInPage() {
       style={{
         minHeight: "100vh",
         display: "flex",
-        alignItems: "stretch",
+        flexDirection: "column",
         position: "relative",
         backgroundImage: "url(/bg-login.png)",
         backgroundSize: "cover",
@@ -19,144 +19,62 @@ export default function SignInPage() {
       <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
         background: "rgba(0,0,0,0.35)" }} />
 
-      {/* ── Left panel — welcome copy ─────────────────────────────── */}
-      <div
-        className="hidden lg:flex"
-        style={{
-          flex: "1 1 0",
-          flexDirection: "column",
-          justifyContent: "center",
-          position: "relative",
-          zIndex: 1,
-          overflow: "hidden",
-          borderRight: "1px solid #222222",
-        }}
-      >
-        {/* Subtle left-edge fade for text legibility */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to right, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.05) 100%)",
-            pointerEvents: "none",
-          }}
-        />
-
-        <div style={{ position: "relative", zIndex: 1, padding: "5rem 5rem 5rem 4rem", height: "100%", display: "flex", flexDirection: "column" }}>
-
-          {/* Brand mark — top left */}
-          <a
-            href="/"
+      {/* ── Logo — top left ───────────────────────────────────────── */}
+      <div style={{ position: "relative", zIndex: 1, padding: "2rem 2.5rem", flexShrink: 0 }}>
+        <a
+          href="/"
+          style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none" }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Footprint"
+            style={{ height: "52px", width: "auto", opacity: 0.92 }}
+          />
+          <span
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              textDecoration: "none",
-              flexShrink: 0,
+              fontFamily: "Inter, sans-serif",
+              fontSize: "0.75rem",
+              letterSpacing: "0.18em",
+              color: "#555",
+              textTransform: "uppercase",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt="Footprint"
-              style={{ height: "52px", width: "auto", opacity: 0.92 }}
-            />
-            <span
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "0.75rem",
-                letterSpacing: "0.18em",
-                color: "#555",
-                textTransform: "uppercase",
-              }}
-            >
-              ← Footprint
-            </span>
-          </a>
-
-          {/* Content block — vertically centered */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center", textAlign: "left" }}>
-            <h1
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "clamp(2rem, 4vw, 3.75rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.01em",
-                lineHeight: 1.1,
-                color: "#efefef",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Access your vault
-            </h1>
-
-            <p
-              style={{
-                fontFamily: "Inter, sans-serif",
-                color: "#a0a0a0",
-                fontSize: "0.95rem",
-                lineHeight: 1.78,
-                maxWidth: "360px",
-                marginBottom: "3rem",
-              }}
-            >
-              Your encrypted vault is waiting. Sign in to access and manage all
-              your accounts securely.
-            </p>
-
-            <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "flex-start" }}>
-              {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag) => (
-                <span
-                  key={tag}
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "0.58rem",
-                    fontWeight: 400,
-                    letterSpacing: "0.14em",
-                    color: "#555",
-                    borderBottom: "1px solid #2a2a2a",
-                    paddingBottom: "0.25rem",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-        </div>
+            ← Footprint
+          </span>
+        </a>
       </div>
 
-      {/* ── Right panel — Clerk card ──────────────────────────────── */}
+      {/* ── Centered content stack ────────────────────────────────── */}
       <div
         style={{
-          flex: "1 1 0",
-          minHeight: "100vh",
+          flex: 1,
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          padding: "2rem",
           position: "relative",
           zIndex: 1,
+          padding: "2rem 1rem 4rem",
         }}
       >
-        {/* Corner bracket markers — architectural / locking reference points */}
-        <div style={{ position: "absolute", top: "1.75rem", left: "1.75rem", width: "14px", height: "14px",
-          borderTop: "1px solid rgba(255,255,255,0.07)", borderLeft: "1px solid rgba(255,255,255,0.07)",
-          pointerEvents: "none" }} />
-        <div style={{ position: "absolute", top: "1.75rem", right: "1.75rem", width: "14px", height: "14px",
-          borderTop: "1px solid rgba(255,255,255,0.07)", borderRight: "1px solid rgba(255,255,255,0.07)",
-          pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "1.75rem", left: "1.75rem", width: "14px", height: "14px",
-          borderBottom: "1px solid rgba(255,255,255,0.07)", borderLeft: "1px solid rgba(255,255,255,0.07)",
-          pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "1.75rem", right: "1.75rem", width: "14px", height: "14px",
-          borderBottom: "1px solid rgba(255,255,255,0.07)", borderRight: "1px solid rgba(255,255,255,0.07)",
-          pointerEvents: "none" }} />
+        {/* Heading */}
+        <h1
+          style={{
+            fontFamily: "Inter, sans-serif",
+            fontSize: "clamp(2rem, 4vw, 3.75rem)",
+            fontWeight: 700,
+            letterSpacing: "-0.01em",
+            lineHeight: 1.1,
+            color: "#efefef",
+            marginBottom: "2rem",
+            textAlign: "center",
+          }}
+        >
+          Access your vault
+        </h1>
 
-        {/* Override all Clerk amber/brand colors to match dark neutral theme */}
+        {/* Sign-in form */}
         <style>{`
           .cl-card {
             background: transparent !important;
@@ -276,6 +194,43 @@ export default function SignInPage() {
           }
         `}</style>
         <SignIn />
+
+        {/* Supporting sentence */}
+        <p
+          style={{
+            fontFamily: "Inter, sans-serif",
+            color: "#a0a0a0",
+            fontSize: "0.9rem",
+            lineHeight: 1.78,
+            maxWidth: "380px",
+            marginTop: "2rem",
+            textAlign: "center",
+          }}
+        >
+          Your encrypted vault is waiting. Sign in to access and manage all
+          your accounts securely.
+        </p>
+
+        {/* Trust labels */}
+        <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "center", marginTop: "1.5rem" }}>
+          {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag) => (
+            <span
+              key={tag}
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "0.58rem",
+                fontWeight: 400,
+                letterSpacing: "0.14em",
+                color: "#555",
+                borderBottom: "1px solid #2a2a2a",
+                paddingBottom: "0.25rem",
+                textTransform: "uppercase",
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   )
