@@ -43,7 +43,7 @@ export default function SignInPage() {
           }}
         />
 
-        <div style={{ position: "relative", zIndex: 1, padding: "5rem", height: "100%", display: "flex", flexDirection: "column" }}>
+        <div style={{ position: "relative", zIndex: 1, padding: "5rem 5rem 5rem 4rem", height: "100%", display: "flex", flexDirection: "column" }}>
 
           {/* Brand mark — top left */}
           <a
@@ -76,15 +76,15 @@ export default function SignInPage() {
           </a>
 
           {/* Centered content block */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", textAlign: "right" }}>
             <h1
               style={{
                 fontFamily: "Inter, sans-serif",
-                fontSize: "1.25rem",
+                fontSize: "1.7rem",
                 fontWeight: 300,
                 letterSpacing: "0.01em",
                 lineHeight: 1.3,
-                color: "#c8c8c8",
+                color: "#e0e0e0",
                 marginBottom: "0.75rem",
               }}
             >
@@ -105,7 +105,7 @@ export default function SignInPage() {
               your accounts securely.
             </p>
 
-            <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "center" }}>
+            <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
               {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag) => (
                 <span
                   key={tag}
