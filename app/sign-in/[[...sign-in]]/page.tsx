@@ -32,13 +32,13 @@ export default function SignInPage() {
           borderRight: "1px solid #222222",
         }}
       >
-        {/* Neutral legibility overlay — no warm tint */}
+        {/* Subtle left-edge fade for text legibility */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to right, rgba(5,5,5,0.92) 0%, rgba(5,5,5,0.60) 100%)",
+              "linear-gradient(to right, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.05) 100%)",
             pointerEvents: "none",
           }}
         />
@@ -75,8 +75,8 @@ export default function SignInPage() {
             </span>
           </a>
 
-          {/* Centered content block */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center", textAlign: "left" }}>
+          {/* Content block — aligned with form header height */}
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start", paddingTop: "14vh", textAlign: "left" }}>
             <h1
               style={{
                 fontFamily: "Inter, sans-serif",
