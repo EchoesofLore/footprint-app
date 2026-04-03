@@ -80,18 +80,15 @@ export default function SignInPage() {
             <h1
               style={{
                 fontFamily: "Inter, sans-serif",
-                fontSize: "clamp(2rem, 4vw, 3.75rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.01em",
-                textTransform: "uppercase",
-                lineHeight: 1.1,
-                color: "#ffffff",
-                marginBottom: "1.5rem",
+                fontSize: "1.25rem",
+                fontWeight: 300,
+                letterSpacing: "0.01em",
+                lineHeight: 1.3,
+                color: "#c8c8c8",
+                marginBottom: "0.75rem",
               }}
             >
-              Welcome
-              <br />
-              Back.
+              Access your vault
             </h1>
 
             <p
