@@ -1502,413 +1502,688 @@ export default function VaultPage() {
         backgroundColor: "#0a0a0a",
       }}
     >
-      {/* Scrim so panels read as embedded, not floating */}
-      <div className="min-h-screen" style={{ background: "rgba(10,10,10,0.75)" }}>
+      {/* ── Environment scrim ─────────────────────────────────────────── */}
+      <div className="min-h-screen flex flex-col" style={{ background: "rgba(4,3,2,0.62)" }}>
 
-        {/* ── Control bar ─────────────────────────────────────────────── */}
-        <div className="border-b border-white/5 px-6 py-3" style={{ background: "rgba(10,10,10,0.6)", backdropFilter: "blur(12px)" }}>
-          <div className="max-w-[1400px] mx-auto flex flex-wrap gap-3 items-center">
-            <span className="font-cinzel text-[#c8922a] text-xs tracking-[0.2em] uppercase mr-2">Footprint</span>
+        {/* ── Top navigation ────────────────────────────────────────────── */}
+        <div
+          style={{
+            backdropFilter: "blur(20px)",
+            background: "rgba(6,6,6,0.68)",
+            borderBottom: "1px solid rgba(255,255,255,0.04)",
+            flexShrink: 0,
+          }}
+        >
+          <div
+            className="px-8 py-3 flex items-center gap-3 flex-wrap"
+            style={{ maxWidth: 1600, margin: "0 auto" }}
+          >
+            <a href="/" style={{ display: "flex", alignItems: "center", gap: "0.55rem", textDecoration: "none" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="Footprint" style={{ height: 26, width: "auto", opacity: 0.82 }} />
+              <span className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.22em", color: "rgba(200,146,42,0.70)", textTransform: "uppercase" }}>
+                Footprint
+              </span>
+            </a>
 
-            {!unlocked ? (
-              <>
-                <input
-                  type="password"
-                  placeholder="Master password"
-                  autoFocus
-                  value={masterPassword}
-                  onChange={(e) => setMasterPassword(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter") { setUnlockClicks(c => c + 1); handleUnlock(); } }}
-                  className="px-3 py-1.5 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/30 border border-white/10 focus:outline-none focus:border-white/20"
-                  style={{ background: "rgba(255,255,255,0.04)", minWidth: "220px" }}
-                />
+            <div className="flex-1" />
+
+            {unlocked && (
+              <div className="flex gap-2 items-center flex-wrap">
                 <button
-                  type="button"
-                  onClick={() => { setUnlockClicks(c => c + 1); handleUnlock(); }}
-                  className="font-cinzel px-4 py-1.5 text-xs tracking-widest uppercase border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]"
+                  onClick={() => saveVault(vault)}
+                  className="hover:brightness-125 transition-[filter]"
+                  style={{ padding: "4px 12px", fontSize: 10, letterSpacing: "0.1em", border: "1px solid rgba(255,255,255,0.10)", color: "rgba(232,224,208,0.50)", textTransform: "uppercase" }}
                 >
-                  Unlock
+                  Save
                 </button>
-              </>
-            ) : (
-              <>
-                <button onClick={() => saveVault(vault)} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/60 hover:brightness-125 transition-[filter]">Save</button>
-                <button onClick={handleLock} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/60 hover:brightness-125 transition-[filter]">Lock</button>
-                <button onClick={copyAutofillJson} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/60 hover:brightness-125 transition-[filter]">Copy Autofill JSON</button>
-                <label className="text-xs flex items-center gap-2 border border-white/10 px-3 py-1.5 text-[#e8e0d0]/60">
-                  <input type="checkbox" checked={idleLockEnabled} onChange={(e) => setIdleLockEnabled(e.target.checked)} />
+                <label
+                  style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.08)", color: "rgba(232,224,208,0.45)", cursor: "pointer" }}
+                >
+                  <input type="checkbox" checked={idleLockEnabled} onChange={(e) => setIdleLockEnabled(e.target.checked)} className="accent-[#c8922a]" />
                   auto-lock
                 </label>
-                <label className="text-xs flex items-center gap-2 border border-white/10 px-3 py-1.5 text-[#e8e0d0]/60">
-                  min
-                  <input type="number" min={1} max={120} value={idleMinutes} onChange={(e) => setIdleMinutes(Number(e.target.value))} className="w-12 bg-transparent text-center border border-white/10 px-1" disabled={!idleLockEnabled} />
-                </label>
-              </>
+                {idleLockEnabled && (
+                  <label style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 8px", fontSize: 10, border: "1px solid rgba(255,255,255,0.08)", color: "rgba(232,224,208,0.40)" }}>
+                    <input
+                      type="number"
+                      min={1}
+                      max={120}
+                      value={idleMinutes}
+                      onChange={(e) => setIdleMinutes(Number(e.target.value))}
+                      className="bg-transparent text-center"
+                      style={{ width: 32, fontSize: 10, color: "rgba(232,224,208,0.60)" }}
+                    />
+                    min
+                  </label>
+                )}
+                <button
+                  onClick={copyAutofillJson}
+                  className="hover:brightness-125 transition-[filter]"
+                  style={{ padding: "4px 12px", fontSize: 10, letterSpacing: "0.1em", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(232,224,208,0.45)", textTransform: "uppercase" }}
+                >
+                  Autofill
+                </button>
+                <button
+                  onClick={handleLock}
+                  className="hover:brightness-125 transition-[filter]"
+                  style={{ padding: "4px 12px", fontSize: 10, letterSpacing: "0.1em", border: "1px solid rgba(200,146,42,0.28)", color: "rgba(200,146,42,0.65)", textTransform: "uppercase" }}
+                >
+                  Lock
+                </button>
+              </div>
             )}
 
-            <span className="ml-auto text-xs text-[#e8e0d0]/35">
-              {unlocked ? "Unlocked" : "Locked"}
-              {status && <span className="ml-2 text-[#c8922a]/60">{status}</span>}
-            </span>
+            {status && (
+              <span style={{ fontSize: 10, color: "rgba(200,146,42,0.50)", letterSpacing: "0.04em", marginLeft: 4 }}>
+                {status}
+              </span>
+            )}
           </div>
         </div>
 
-        {/* ── Panel grid ──────────────────────────────────────────────── */}
-        <div className="max-w-[1400px] mx-auto p-6 space-y-4">
+        {/* ── Environment body ──────────────────────────────────────────── */}
+        <div className="flex-1 flex flex-col">
 
-          {/* ── Primary panel: Vault ────────────────────────────────── */}
-          <section
-            className="border border-white/5 hover:brightness-[1.03] transition-[filter] duration-300"
-            style={{ background: "rgba(255,255,255,0.03)" }}
-          >
-            {/* Panel header */}
-            <div className="px-6 py-4 border-b border-white/5 flex flex-wrap gap-3 items-center justify-between">
-              <h2 className="font-cinzel text-[#e8e0d0] text-xs tracking-[0.22em] uppercase">Vault</h2>
-              {unlocked && (
-                <div className="flex flex-wrap gap-2 items-center">
-                  <button onClick={() => setView("active")} className={`px-3 py-1 text-xs border ${view === "active" ? "border-[#c8922a]/40 text-[#c8922a]" : "border-white/10 text-[#e8e0d0]/40"} hover:brightness-125 transition-[filter]`}>
-                    Active ({activeEntries.length})
-                  </button>
-                  <button onClick={() => setView("trash")} className={`px-3 py-1 text-xs border ${view === "trash" ? "border-[#c8922a]/40 text-[#c8922a]" : "border-white/10 text-[#e8e0d0]/40"} hover:brightness-125 transition-[filter]`}>
-                    Trash ({trashEntries.length})
-                  </button>
-                  {view === "trash" && trashEntries.length > 0 && (
-                    <button onClick={emptyTrash} className="px-3 py-1 text-xs border border-white/10 text-[#e8e0d0]/40 hover:brightness-125 transition-[filter]">Empty Trash</button>
-                  )}
-                  <button onClick={() => selectAll(listToRender.map((e) => e.id))} className="px-3 py-1 text-xs border border-white/10 text-[#e8e0d0]/40 hover:brightness-125 transition-[filter]" disabled={!listToRender.length}>Select all</button>
-                  <button onClick={deselectAll} className="px-3 py-1 text-xs border border-white/10 text-[#e8e0d0]/40 hover:brightness-125 transition-[filter]" disabled={selectedIds.size === 0}>Deselect</button>
+          {/* ══════════════════════════════════════════════════════════════
+              LOCKED — vault door environment
+          ══════════════════════════════════════════════════════════════ */}
+          {!unlocked && (
+            <div className="flex-1 flex flex-col items-center justify-center text-center" style={{ padding: "80px 40px 100px" }}>
+
+                {/* Lock icon */}
+                <div
+                  style={{
+                    width: 68,
+                    height: 68,
+                    border: "1px solid rgba(200,146,42,0.22)",
+                    background: "rgba(200,146,42,0.06)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "2rem",
+                    boxShadow: "0 0 32px rgba(200,146,42,0.08), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  }}
+                >
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(200,146,42,0.55)" strokeWidth="1.4" strokeLinecap="square">
+                    <rect x="3" y="11" width="18" height="11" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
                 </div>
-              )}
+
+                <h1
+                  className="font-cinzel"
+                  style={{ fontSize: "clamp(1.3rem, 3vw, 2rem)", letterSpacing: "0.32em", color: "#e8e0d0", textTransform: "uppercase", marginBottom: "0.75rem" }}
+                >
+                  Vault
+                </h1>
+                <p style={{ fontSize: 13, color: "rgba(232,224,208,0.38)", marginBottom: "2.5rem", maxWidth: 320, lineHeight: 1.7 }}>
+                  Enter your master password to access your encrypted records.
+                </p>
+
+                <div style={{ width: "100%", maxWidth: 360 }} className="space-y-3">
+                  <input
+                    type="password"
+                    placeholder="Master password"
+                    autoFocus
+                    value={masterPassword}
+                    onChange={(e) => setMasterPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        setUnlockClicks((c) => c + 1);
+                        handleUnlock();
+                      }
+                    }}
+                    className="focus:outline-none"
+                    style={{
+                      width: "100%",
+                      padding: "12px 16px",
+                      fontSize: 14,
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      color: "#e8e0d0",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUnlockClicks((c) => c + 1);
+                      handleUnlock();
+                    }}
+                    className="font-cinzel hover:brightness-125 transition-[filter]"
+                    style={{
+                      width: "100%",
+                      padding: "13px 0",
+                      fontSize: 11,
+                      letterSpacing: "0.32em",
+                      textTransform: "uppercase",
+                      border: "1px solid rgba(200,146,42,0.50)",
+                      color: "rgba(200,146,42,0.90)",
+                      background: "rgba(200,146,42,0.05)",
+                      boxShadow: "0 0 20px rgba(200,146,42,0.06)",
+                    }}
+                  >
+                    Unlock Vault
+                  </button>
+                  {status && (
+                    <p style={{ fontSize: 12, color: "rgba(232,224,208,0.38)", textAlign: "center" }}>{status}</p>
+                  )}
+                </div>
+
+              {/* Trust badges */}
+              <div className="flex gap-7 flex-wrap justify-center" style={{ marginTop: "3rem" }}>
+                {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag) => (
+                  <span
+                    key={tag}
+                    style={{
+                      fontSize: 9,
+                      letterSpacing: "0.16em",
+                      color: "rgba(232,224,208,0.22)",
+                      textTransform: "uppercase",
+                      borderBottom: "1px solid rgba(255,255,255,0.08)",
+                      paddingBottom: 4,
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
+          )}
 
-            <div className="p-6 space-y-4">
+          {/* ══════════════════════════════════════════════════════════════
+              UNLOCKED — vault interior environment
+          ══════════════════════════════════════════════════════════════ */}
+          {unlocked && (
+            <div className="flex-1 flex flex-col">
 
-              {/* Bulk actions */}
-              {unlocked && selectedIds.size > 0 && (
-                <div className="p-3 border border-white/5 space-y-2" style={{ background: "rgba(255,255,255,0.02)" }}>
-                  <div className="text-[10px] font-cinzel tracking-widest uppercase text-[#e8e0d0]/35">
-                    Bulk — {selectedIds.size} selected
+              {/* Ceiling light seam */}
+              <div style={{ height: 1, flexShrink: 0, background: "linear-gradient(to right, transparent 0%, rgba(200,146,42,0.05) 20%, rgba(200,146,42,0.13) 50%, rgba(200,146,42,0.05) 80%, transparent 100%)" }} />
+
+              {/* ── Interior header zone ─────────────────────────────────── */}
+              <div
+                style={{
+                  padding: "40px 72px 28px",
+                  display: "flex",
+                  alignItems: "flex-end",
+                  gap: 32,
+                  flexShrink: 0,
+                  flexWrap: "wrap",
+                }}
+              >
+                {/* Vault identity — like a plaque on the wall */}
+                <div style={{ flex: 1, minWidth: 180 }}>
+                  <h1
+                    className="font-cinzel"
+                    style={{
+                      fontSize: "clamp(0.6rem, 0.85vw, 0.75rem)",
+                      letterSpacing: "0.42em",
+                      textTransform: "uppercase",
+                      color: "rgba(232,224,208,0.28)",
+                      marginBottom: 7,
+                      lineHeight: 1,
+                    }}
+                  >
+                    Your Vault
+                  </h1>
+                  <p style={{ fontSize: 11, color: "rgba(232,224,208,0.15)", letterSpacing: "0.02em", lineHeight: 1.5 }}>
+                    Your encrypted credentials, secured.
+                  </p>
+                </div>
+
+                {/* Action cluster — embedded into environment */}
+                <div className="flex items-center gap-3 flex-wrap">
+                  <input
+                    placeholder="Search records…"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="focus:outline-none"
+                    style={{
+                      padding: "8px 14px",
+                      fontSize: 12,
+                      background: "rgba(0,0,0,0.52)",
+                      border: "1px solid rgba(255,255,255,0.07)",
+                      borderBottom: "1px solid rgba(255,255,255,0.11)",
+                      color: "#e8e0d0",
+                      width: 200,
+                      letterSpacing: "0.01em",
+                      boxShadow: "inset 0 2px 6px rgba(0,0,0,0.40)",
+                    }}
+                  />
+                  <button
+                    onClick={() => addEntryRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}
+                    className="font-cinzel hover:brightness-125 transition-[filter] shrink-0"
+                    style={{
+                      padding: "8px 22px",
+                      fontSize: 10,
+                      letterSpacing: "0.26em",
+                      textTransform: "uppercase",
+                      border: "1px solid rgba(200,146,42,0.45)",
+                      color: "rgba(200,146,42,0.88)",
+                      background: "rgba(200,146,42,0.05)",
+                      boxShadow: "0 0 16px rgba(200,146,42,0.05)",
+                    }}
+                  >
+                    + Add Account
+                  </button>
+                </div>
+              </div>
+
+              {/* ── Architectural floor seam ─────────────────────────────── */}
+              <div style={{ height: 1, flexShrink: 0, margin: "0 72px", background: "linear-gradient(to right, rgba(255,255,255,0.00), rgba(255,255,255,0.05), rgba(255,255,255,0.00))" }} />
+
+              {/* ── Open records floor ───────────────────────────────────── */}
+              <div className="flex-1" style={{ padding: "0 32px 80px" }}>
+
+                {/* Sort + view controls */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "18px 0 22px", flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 10, color: "rgba(232,224,208,0.18)", letterSpacing: "0.08em" }}>
+                    {view === "active"
+                      ? `${filteredActiveEntries.length} record${filteredActiveEntries.length !== 1 ? "s" : ""}`
+                      : `${filteredTrashEntries.length} in trash`}
+                  </span>
+                  <div style={{ flex: 1 }} />
+                  <select
+                    value={sortMode}
+                    onChange={(e) => setSortMode(e.target.value as SortMode)}
+                    className="bg-transparent hover:brightness-125 transition-[filter]"
+                    style={{ padding: "5px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.06)", color: "rgba(232,224,208,0.32)", letterSpacing: "0.06em" }}
+                  >
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                    <option value="az">A → Z</option>
+                    <option value="za">Z → A</option>
+                  </select>
+                  <div className="flex gap-px shrink-0">
+                    {(["active", "trash"] as const).map((v) => (
+                      <button
+                        key={v}
+                        onClick={() => setView(v)}
+                        className="hover:brightness-125 transition-[filter]"
+                        style={{
+                          padding: "5px 13px",
+                          fontSize: 10,
+                          letterSpacing: "0.12em",
+                          textTransform: "uppercase",
+                          border: view === v ? "1px solid rgba(200,146,42,0.32)" : "1px solid rgba(255,255,255,0.06)",
+                          color: view === v ? "rgba(200,146,42,0.78)" : "rgba(232,224,208,0.28)",
+                        }}
+                      >
+                        {v === "active" ? `Active${activeEntries.length > 0 ? ` (${activeEntries.length})` : ""}` : `Trash${trashEntries.length > 0 ? ` (${trashEntries.length})` : ""}`}
+                      </button>
+                    ))}
                   </div>
-                  {view === "active" ? (
-                    <div className="flex flex-wrap gap-2">
-                      <button onClick={bulkTrashSelected} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Trash</button>
-                      <button onClick={() => bulkSetFavorite(true)} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Favorite</button>
-                      <button onClick={() => bulkSetFavorite(false)} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Unfavorite</button>
-                      <input placeholder="Set category…" value={bulkCategory} onChange={(e) => setBulkCategory(e.target.value)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0] placeholder-[#e8e0d0]/25" style={{ background: "rgba(255,255,255,0.04)" }} />
-                      <button onClick={bulkSetCategory} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Apply category</button>
-                      <input placeholder="Add tags (comma separated)" value={bulkTagsInput} onChange={(e) => setBulkTagsInput(e.target.value)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0] placeholder-[#e8e0d0]/25" style={{ background: "rgba(255,255,255,0.04)" }} />
-                      <button onClick={bulkAddTags} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Add tags</button>
-                    </div>
-                  ) : (
-                    <div className="flex flex-wrap gap-2">
-                      <button onClick={bulkRestoreSelected} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Restore</button>
-                      <button onClick={() => deletePermanentlySelected(Array.from(selectedIds))} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]">Delete permanently</button>
-                    </div>
+                  {view === "trash" && trashEntries.length > 0 && (
+                    <button
+                      onClick={emptyTrash}
+                      className="hover:brightness-125 transition-[filter]"
+                      style={{ padding: "5px 11px", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.06)", color: "rgba(232,224,208,0.28)" }}
+                    >
+                      Empty trash
+                    </button>
                   )}
                 </div>
-              )}
 
-              {/* Search + Filters */}
-              <div className="space-y-2">
-                <input
-                  placeholder={view === "trash" ? "Search trash…" : "Search vault…"}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20"
-                  style={{ background: "rgba(255,255,255,0.04)" }}
-                  disabled={!unlocked}
-                />
-                {view === "active" && (
-                  <div className="flex flex-wrap gap-2">
-                    <select value={sortMode} onChange={(e) => setSortMode(e.target.value as SortMode)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0]/55 bg-transparent" disabled={!unlocked}>
-                      <option value="newest">Newest</option>
-                      <option value="oldest">Oldest</option>
-                      <option value="az">A → Z</option>
-                      <option value="za">Z → A</option>
-                    </select>
-                    <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0]/55 bg-transparent" disabled={!unlocked}>
-                      <option value="__all__">All Categories</option>
-                      {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                    <select value={tagFilter} onChange={(e) => setTagFilter(e.target.value)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0]/55 bg-transparent" disabled={!unlocked}>
-                      <option value="__all__">All Tags</option>
-                      {allTags.map((t) => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                    {[["favoritesOnly", favoritesOnly, setFavoritesOnly, "Favorites"], ["showReusedOnly", showReusedOnly, setShowReusedOnly, "Reused"], ["showWeakOnly", showWeakOnly, setShowWeakOnly, "Weak"], ["showDuplicatesOnly", showDuplicatesOnly, setShowDuplicatesOnly, "Duplicates"]].map(([key, val, setter, label]: any) => (
-                      <label key={key} className="text-xs flex items-center gap-1.5 border border-white/10 px-2 py-1 text-[#e8e0d0]/50">
-                        <input type="checkbox" checked={val} onChange={(e) => setter(e.target.checked)} disabled={!unlocked} />
-                        {label}
-                      </label>
-                    ))}
-                    {(search || tagFilter !== "__all__" || categoryFilter !== "__all__" || favoritesOnly || showReusedOnly || showWeakOnly || showDuplicatesOnly) && (
-                      <button onClick={clearFilters} className="px-3 py-1 text-xs border border-white/10 text-[#e8e0d0]/40 hover:brightness-125 transition-[filter]" disabled={!unlocked}>Clear</button>
+                {/* Bulk actions */}
+                {selectedIds.size > 0 && (
+                  <div
+                    style={{
+                      padding: "12px 20px",
+                      marginBottom: 16,
+                      borderTop: "1px solid rgba(200,146,42,0.08)",
+                      borderBottom: "1px solid rgba(200,146,42,0.08)",
+                      background: "rgba(200,146,42,0.025)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.26em", color: "rgba(200,146,42,0.55)", textTransform: "uppercase" }}>
+                      {selectedIds.size} selected
+                    </span>
+                    <div style={{ width: 1, height: 14, background: "rgba(255,255,255,0.08)" }} />
+                    {view === "active" ? (
+                      <>
+                        <button onClick={bulkTrashSelected} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Trash</button>
+                        <button onClick={() => bulkSetFavorite(true)} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Favorite</button>
+                        <button onClick={() => bulkSetFavorite(false)} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Unfavorite</button>
+                        <input placeholder="Set category…" value={bulkCategory} onChange={(e) => setBulkCategory(e.target.value)} className="focus:outline-none" style={{ padding: "4px 9px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "#e8e0d0", background: "rgba(255,255,255,0.04)" }} />
+                        <button onClick={bulkSetCategory} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Apply</button>
+                        <input placeholder="Add tags…" value={bulkTagsInput} onChange={(e) => setBulkTagsInput(e.target.value)} className="focus:outline-none" style={{ padding: "4px 9px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "#e8e0d0", background: "rgba(255,255,255,0.04)" }} />
+                        <button onClick={bulkAddTags} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Add tags</button>
+                      </>
+                    ) : (
+                      <>
+                        <button onClick={bulkRestoreSelected} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Restore</button>
+                        <button onClick={() => deletePermanentlySelected(Array.from(selectedIds))} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.35)" }}>Delete permanently</button>
+                      </>
+                    )}
+                    <div style={{ flex: 1 }} />
+                    <button onClick={deselectAll} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 8px", fontSize: 10, border: "1px solid rgba(255,255,255,0.07)", color: "rgba(232,224,208,0.28)" }}>✕ Deselect</button>
+                  </div>
+                )}
+
+                {/* Records — empty state or list */}
+                {listToRender.length === 0 ? (
+
+                  /* Empty state — floating in the vault space */
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minHeight: 440,
+                      textAlign: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 52,
+                        height: 52,
+                        border: "1px solid rgba(255,255,255,0.06)",
+                        background: "rgba(255,255,255,0.015)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: 28,
+                        boxShadow: "0 0 40px rgba(0,0,0,0.40)",
+                      }}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(232,224,208,0.18)" strokeWidth="1.3" strokeLinecap="square">
+                        <rect x="3" y="11" width="18" height="11" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        <line x1="12" y1="15" x2="12" y2="17" />
+                      </svg>
+                    </div>
+                    <p className="font-cinzel" style={{ fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(232,224,208,0.22)", marginBottom: 12 }}>
+                      {view === "trash" ? "Trash is empty" : "Your vault is empty"}
+                    </p>
+                    {view === "active" && (
+                      <>
+                        <p style={{ fontSize: 12, color: "rgba(232,224,208,0.14)", lineHeight: 1.8, maxWidth: 260, marginBottom: 32 }}>
+                          Add your first account to begin securing your digital footprint.
+                        </p>
+                        <button
+                          onClick={() => addEntryRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}
+                          className="font-cinzel hover:brightness-125 transition-[filter]"
+                          style={{ padding: "9px 24px", fontSize: 9, letterSpacing: "0.30em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.28)", color: "rgba(200,146,42,0.60)", background: "rgba(200,146,42,0.03)" }}
+                        >
+                          + Add Account
+                        </button>
+                      </>
                     )}
                   </div>
-                )}
-                <div className="text-[10px] text-[#e8e0d0]/25 tracking-wider">
-                  {view === "active"
-                    ? `${filteredActiveEntries.length} of ${activeEntries.length} entries`
-                    : `${filteredTrashEntries.length} of ${trashEntries.length} trashed`}
-                </div>
-              </div>
 
-              {/* Add/Edit Entry */}
-              <div ref={addEntryRef} className="border border-white/5 p-4 space-y-2" style={{ background: "rgba(255,255,255,0.02)" }}>
-                <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">
-                  {editingId ? "Edit entry" : "Add entry"}
-                </div>
-                <input placeholder="Site (or URL)" value={site} onChange={(e) => setSite(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
-                <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
-                <div className="space-y-1.5">
-                  <div className="flex gap-2 items-center">
-                    <input placeholder="Password" type={showFormPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
-                    <button type="button" onClick={() => setShowFormPassword((v) => !v)} className="px-3 py-2 text-xs border border-white/10 text-[#e8e0d0]/50 hover:brightness-125 transition-[filter]" disabled={!unlocked}>{showFormPassword ? "Hide" : "Show"}</button>
-                  </div>
-                  {unlocked && password.length > 0 && (
-                    <div className="text-xs text-[#e8e0d0]/50">
-                      Strength: <span className="text-[#e8e0d0]/80">{strengthTyped.label}</span> ({strengthTyped.score}/4)
-                      {strengthTyped.score <= 1 && <span className="ml-2 text-amber-400/70">⚠ weak</span>}
-                    </div>
-                  )}
-                  {unlocked && password.length > 0 && reuseForTypedPassword > 0 && (
-                    <div className="text-xs text-amber-400/70">⚠ Reused in {reuseForTypedPassword} other entr{reuseForTypedPassword === 1 ? "y" : "ies"}.</div>
-                  )}
-                  {unlocked && typedDupCount > 0 && (
-                    <div className="text-xs text-amber-400/70">⚠ Duplicate site + username exists.</div>
-                  )}
-                  {unlocked && site.trim() && (
-                    <div className="text-xs text-[#e8e0d0]/30">Domain: {extractDomain(site.trim()) ?? "none"}</div>
-                  )}
-                </div>
-                <input placeholder="Category" value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
-                <input placeholder="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
-                <input placeholder="Tags (comma separated)" value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} className="w-full px-3 py-2 text-sm text-[#e8e0d0] placeholder-[#e8e0d0]/25 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
-                <div className="flex gap-2 pt-1">
-                  <button onClick={addOrUpdateEntry} className={`font-cinzel px-4 py-2 text-xs tracking-wider uppercase ${unlocked ? "border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]" : "border border-white/10 text-[#e8e0d0]/25 cursor-not-allowed"}`} disabled={!unlocked}>
-                    {editingId ? "Save changes" : "Add entry"}
-                  </button>
-                  {editingId && <button onClick={cancelEdit} className="px-4 py-2 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Cancel</button>}
-                </div>
-              </div>
-
-              {/* Entries */}
-              <div className="space-y-2">
-                {!unlocked ? (
-                  <div className="py-12 text-center text-xs font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/20">
-                    Enter master password to unlock
-                  </div>
-                ) : listToRender.length === 0 ? (
-                  <div className="py-8 text-center text-xs text-[#e8e0d0]/30">
-                    {view === "trash" ? "Trash is empty." : "No results."}
-                  </div>
                 ) : (
-                  (() => {
-                    const sectionMap = new Map<string, typeof listToRender>();
-                    for (const e of listToRender) {
-                      const key = e.category || "Uncategorized";
-                      if (!sectionMap.has(key)) sectionMap.set(key, []);
-                      sectionMap.get(key)!.push(e);
-                    }
-                    return [...sectionMap.entries()].map(([cat, entries]) => (
-                      <VaultSection key={cat} title={cat}>
-                        {entries.map((e) => (
-                          <VaultRow
-                            key={e.id}
-                            entry={e}
-                            view={view}
-                            expandedId={expandedId}
-                            setExpandedId={setExpandedId}
-                            isSelected={isSelected}
-                            toggleSelected={toggleSelected}
-                            toggleFavorite={toggleFavorite}
-                            startEdit={startEdit}
-                            duplicateEntry={duplicateEntry}
-                            moveToTrash={moveToTrash}
-                            restoreFromTrash={restoreFromTrash}
-                            deletePermanentlySelected={deletePermanentlySelected}
-                            handleCopy={handleCopy}
-                            copyText={copyText}
-                            toggleReveal={toggleReveal}
-                            clickTagChip={clickTagChip}
-                            clickCategoryChip={clickCategoryChip}
-                            copyCountdown={copyCountdown}
-                            revealMap={revealMap}
-                            passwordCounts={passwordCounts}
-                            dupSiteUserCounts={dupSiteUserCounts}
-                          />
-                        ))}
-                      </VaultSection>
-                    ));
-                  })()
+
+                  /* Record list — open floor */
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        marginBottom: 20,
+                        paddingBottom: 12,
+                        borderBottom: "1px solid rgba(255,255,255,0.04)",
+                      }}
+                    >
+                      <span style={{ fontSize: 10, color: "rgba(232,224,208,0.20)", letterSpacing: "0.05em" }}>
+                        {view === "active"
+                          ? `${filteredActiveEntries.length} of ${activeEntries.length} records`
+                          : `${filteredTrashEntries.length} trashed`}
+                      </span>
+                      <div style={{ flex: 1 }} />
+                      <button
+                        onClick={() => selectAll(currentIds)}
+                        disabled={!listToRender.length}
+                        className="hover:brightness-125 transition-[filter] disabled:opacity-30"
+                        style={{ padding: "3px 9px", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.06)", color: "rgba(232,224,208,0.28)" }}
+                      >
+                        Select all
+                      </button>
+                    </div>
+
+                    {(() => {
+                      const sectionMap = new Map<string, typeof listToRender>();
+                      for (const e of listToRender) {
+                        const key = e.category || "Uncategorized";
+                        if (!sectionMap.has(key)) sectionMap.set(key, []);
+                        sectionMap.get(key)!.push(e);
+                      }
+                      return [...sectionMap.entries()].map(([cat, entries]) => (
+                        <VaultSection key={cat} title={cat}>
+                          {entries.map((e) => (
+                            <VaultRow
+                              key={e.id}
+                              entry={e}
+                              view={view}
+                              expandedId={expandedId}
+                              setExpandedId={setExpandedId}
+                              isSelected={isSelected}
+                              toggleSelected={toggleSelected}
+                              toggleFavorite={toggleFavorite}
+                              startEdit={startEdit}
+                              duplicateEntry={duplicateEntry}
+                              moveToTrash={moveToTrash}
+                              restoreFromTrash={restoreFromTrash}
+                              deletePermanentlySelected={deletePermanentlySelected}
+                              handleCopy={handleCopy}
+                              copyText={copyText}
+                              toggleReveal={toggleReveal}
+                              clickTagChip={clickTagChip}
+                              clickCategoryChip={clickCategoryChip}
+                              copyCountdown={copyCountdown}
+                              revealMap={revealMap}
+                              passwordCounts={passwordCounts}
+                              dupSiteUserCounts={dupSiteUserCounts}
+                            />
+                          ))}
+                        </VaultSection>
+                      ));
+                    })()}
+                  </div>
                 )}
               </div>
-            </div>
-          </section>
 
-          {/* ── Secondary panels ────────────────────────────────────── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-            {/* ── Footprints panel ──────────────────────────────── */}
-            <section
-              className="border border-white/5 hover:brightness-[1.03] transition-[filter] duration-300"
-              style={{ background: "rgba(255,255,255,0.03)" }}
-            >
-              <div className="px-6 py-4 border-b border-white/5">
-                <h2 className="font-cinzel text-[#e8e0d0] text-xs tracking-[0.22em] uppercase">Footprints</h2>
-              </div>
-              <div className="p-6 space-y-6">
-
-                {/* Backup */}
-                <div className="space-y-3">
-                  <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">Backup</div>
-                  <div className="flex gap-2 flex-wrap">
-                    <button onClick={exportEncryptedBackup} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]" disabled={!unlocked}>Export encrypted backup</button>
-                    <button onClick={() => fileInputRef.current?.click()} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]" disabled={!unlocked}>Import file</button>
-                    <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImportFile(f); }} />
-                  </div>
-                  {importError && <div className="text-xs text-red-400/65 p-2 border border-white/5">{importError}</div>}
-                  {importPreview && (
-                    <div className="p-3 border border-white/5 space-y-2" style={{ background: "rgba(255,255,255,0.02)" }}>
-                      <div className="text-[10px] font-cinzel tracking-wider uppercase text-[#e8e0d0]/35">Import preview</div>
-                      <div className="text-xs text-[#e8e0d0]/55">
-                        {importPreview.entriesCount} entries · {importPreview.tagsCount} tags · {importPreview.categoriesCount} categories
-                      </div>
-                      <div className="text-xs text-[#e8e0d0]/45">
-                        Reused: {importPreview.reusedCount} · Weak: {importPreview.weakCount}
-                        {importPreview.dupSiteUserCount > 0 && ` · Collisions: ${importPreview.dupSiteUserCount}`}
-                      </div>
-                      <div className="flex gap-2 flex-wrap items-center pt-1">
-                        <select value={importMode} onChange={(e) => setImportMode(e.target.value as any)} className="px-2 py-1 text-xs border border-white/10 text-[#e8e0d0]/55 bg-transparent" disabled={!unlocked}>
-                          <option value="merge">Merge</option>
-                          <option value="overwrite">Overwrite</option>
-                        </select>
-                        <button onClick={confirmImport} className="font-cinzel px-3 py-1.5 text-xs border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]" disabled={!unlocked || !importDecryptedVault}>Confirm</button>
-                        <button onClick={resetImportState} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Cancel</button>
-                      </div>
+              {/* ── Add / Edit Entry form ─────────────────────────────────── */}
+              <div
+                ref={addEntryRef}
+                style={{
+                  borderTop: "1px solid rgba(200,146,42,0.06)",
+                  padding: "36px 72px 48px",
+                  background:
+                    "linear-gradient(180deg, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.28) 100%)",
+                  backdropFilter: "blur(4px)",
+                  flexShrink: 0,
+                }}
+              >
+                <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(200,146,42,0.45)", marginBottom: 22 }}>
+                  {editingId ? "Edit Record" : "Add Record"}
+                </div>
+                <div className="grid gap-3" style={{ maxWidth: 520 }}>
+                  <input placeholder="Service / Site (or URL)" value={site} onChange={(e) => setSite(e.target.value)} className="focus:outline-none" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
+                  <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="focus:outline-none" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
+                  <div className="space-y-1.5">
+                    <div className="flex gap-2">
+                      <input placeholder="Password" type={showFormPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="focus:outline-none flex-1" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
+                      <button type="button" onClick={() => setShowFormPassword((v) => !v)} className="hover:brightness-125 transition-[filter] shrink-0" style={{ padding: "10px 14px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>{showFormPassword ? "Hide" : "Show"}</button>
                     </div>
-                  )}
-                </div>
-
-                {/* CSV Import */}
-                <div className="space-y-2">
-                  <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">CSV Import</div>
-                  <div className="text-xs text-[#e8e0d0]/30">Format: <span className="font-mono">site,username,password,notes,category,tags</span></div>
-                  <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} placeholder={`example.com,user@email.com,Password123!,note,Finance,bank`} className="w-full h-28 px-3 py-2 text-xs font-mono text-[#e8e0d0]/70 placeholder-[#e8e0d0]/20 border border-white/10 focus:outline-none focus:border-white/20" style={{ background: "rgba(255,255,255,0.04)" }} disabled={!unlocked} />
-                  {csvPreview && <div className="text-xs text-[#e8e0d0]/45">Rows: {csvPreview.rows} · OK: {csvPreview.ok} · Bad: {csvPreview.bad}</div>}
-                  <div className="flex gap-2">
-                    <button onClick={importCsvIntoVault} className="font-cinzel px-3 py-1.5 text-xs border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]" disabled={!unlocked || !csvText.trim()}>Import CSV</button>
-                    <button onClick={() => { setCsvText(""); setCsvPreview(null); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]" disabled={!unlocked || (!csvText.trim() && !csvPreview)}>Clear</button>
+                    {password.length > 0 && (
+                      <div style={{ fontSize: 11, color: "rgba(232,224,208,0.38)" }}>
+                        {strengthTyped.label}
+                        {strengthTyped.score <= 1 && <span style={{ marginLeft: 8, color: "rgba(251,191,36,0.68)" }}>⚠ Weak</span>}
+                        {reuseForTypedPassword > 0 && <span style={{ marginLeft: 8, color: "rgba(251,191,36,0.58)" }}>· Reused ({reuseForTypedPassword})</span>}
+                        {typedDupCount > 0 && <span style={{ marginLeft: 8, color: "rgba(251,191,36,0.58)" }}>· Duplicate entry</span>}
+                      </div>
+                    )}
+                    {site.trim() && <div style={{ fontSize: 10, color: "rgba(232,224,208,0.22)" }}>Domain: {extractDomain(site.trim()) ?? "—"}</div>}
+                  </div>
+                  <input placeholder="Category (optional)" value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)} className="focus:outline-none" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
+                  <input placeholder="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} className="focus:outline-none" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
+                  <input placeholder="Tags (comma separated)" value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} className="focus:outline-none" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
+                  <div className="flex gap-2" style={{ paddingTop: 4 }}>
+                    <button onClick={addOrUpdateEntry} className="font-cinzel hover:brightness-125 transition-[filter]" style={{ padding: "11px 24px", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.52)", color: "rgba(200,146,42,0.90)", background: "rgba(200,146,42,0.05)" }}>
+                      {editingId ? "Save Changes" : "Add Entry"}
+                    </button>
+                    {editingId && (
+                      <button onClick={cancelEdit} className="hover:brightness-125 transition-[filter]" style={{ padding: "11px 20px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>Cancel</button>
+                    )}
                   </div>
                 </div>
+              </div>
 
-                {/* Reused groups (shown here when active) */}
-                {unlocked && view === "active" && showReusedGroups && reusedGroups.length > 0 && (
-                  <div className="space-y-2">
-                    <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">Reused groups</div>
-                    <div className="text-xs text-[#e8e0d0]/30">Entries sharing identical passwords. Edit each to generate unique ones.</div>
-                    <div className="space-y-2">
-                      {reusedGroups.map((g, idx) => (
-                        <div key={idx} className="p-3 border border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
-                          <div className="text-[10px] text-[#e8e0d0]/30 mb-2">Group size: {g.entries.length}</div>
-                          <div className="space-y-2">
-                            {g.entries.map((e) => (
-                              <div key={e.id} className="flex items-center justify-between gap-2">
-                                <div>
-                                  <div className="text-sm text-[#e8e0d0]/75">{e.site}</div>
-                                  <div className="text-xs text-[#e8e0d0]/40">{e.username}</div>
+              {/* ── Secondary panels (Footprints + Security) ──────────────── */}
+              <div style={{ borderTop: "1px solid rgba(200,146,42,0.05)", background: "rgba(0,0,0,0.32)", backdropFilter: "blur(4px)", flexShrink: 0 }}>
+                <div className="grid grid-cols-1 md:grid-cols-2">
+
+                  {/* Footprints */}
+                  <div style={{ padding: "32px 72px", borderRight: "1px solid rgba(255,255,255,0.04)" }}>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(200,146,42,0.45)", marginBottom: 18 }}>Footprints</div>
+                    <div className="space-y-5">
+                      <div className="space-y-3">
+                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>Backup</div>
+                        <div className="flex gap-2 flex-wrap">
+                          <button onClick={exportEncryptedBackup} className="hover:brightness-125 transition-[filter]" style={{ padding: "6px 13px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Export encrypted</button>
+                          <button onClick={() => fileInputRef.current?.click()} className="hover:brightness-125 transition-[filter]" style={{ padding: "6px 13px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Import file</button>
+                          <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImportFile(f); }} />
+                        </div>
+                        {importError && <div style={{ fontSize: 11, color: "rgba(248,113,113,0.60)" }}>{importError}</div>}
+                        {importPreview && (
+                          <div style={{ padding: "12px 14px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }} className="space-y-2">
+                            <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(232,224,208,0.30)" }}>Preview</div>
+                            <div style={{ fontSize: 11, color: "rgba(232,224,208,0.48)" }}>{importPreview.entriesCount} entries · {importPreview.tagsCount} tags · {importPreview.categoriesCount} categories</div>
+                            <div style={{ fontSize: 11, color: "rgba(232,224,208,0.38)" }}>Reused: {importPreview.reusedCount} · Weak: {importPreview.weakCount}{importPreview.dupSiteUserCount > 0 && ` · Collisions: ${importPreview.dupSiteUserCount}`}</div>
+                            <div className="flex gap-2 flex-wrap items-center" style={{ paddingTop: 4 }}>
+                              <select value={importMode} onChange={(e) => setImportMode(e.target.value as any)} className="bg-transparent" style={{ padding: "5px 9px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>
+                                <option value="merge">Merge</option>
+                                <option value="overwrite">Overwrite</option>
+                              </select>
+                              <button onClick={confirmImport} disabled={!importDecryptedVault} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "5px 14px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.45)", color: "rgba(200,146,42,0.85)" }}>Confirm</button>
+                              <button onClick={resetImportState} className="hover:brightness-125 transition-[filter]" style={{ padding: "5px 11px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.35)" }}>Cancel</button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>CSV Import</div>
+                        <div style={{ fontSize: 10, color: "rgba(232,224,208,0.22)" }}>Format: <span className="font-mono">site,username,password,notes,category,tags</span></div>
+                        <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} placeholder="example.com,user@email.com,Password123!" className="focus:outline-none font-mono" style={{ width: "100%", height: 80, padding: "8px 12px", fontSize: 11, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.62)", resize: "vertical" }} />
+                        {csvPreview && <div style={{ fontSize: 11, color: "rgba(232,224,208,0.36)" }}>Rows: {csvPreview.rows} · OK: {csvPreview.ok} · Bad: {csvPreview.bad}</div>}
+                        <div className="flex gap-2">
+                          <button onClick={importCsvIntoVault} disabled={!csvText.trim()} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 13px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.45)", color: "rgba(200,146,42,0.82)" }}>Import CSV</button>
+                          <button onClick={() => { setCsvText(""); setCsvPreview(null); }} disabled={!csvText.trim() && !csvPreview} className="hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 11px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.35)" }}>Clear</button>
+                        </div>
+                      </div>
+                      {view === "active" && showReusedGroups && reusedGroups.length > 0 && (
+                        <div className="space-y-2">
+                          <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>Reused Groups</div>
+                          {reusedGroups.map((g, idx) => (
+                            <div key={idx} style={{ padding: "10px 12px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }} className="space-y-2">
+                              <div style={{ fontSize: 10, color: "rgba(232,224,208,0.25)" }}>Group: {g.entries.length} entries</div>
+                              {g.entries.map((e) => (
+                                <div key={e.id} className="flex items-center justify-between gap-2">
+                                  <div>
+                                    <div style={{ fontSize: 12, color: "rgba(232,224,208,0.62)" }}>{e.site}</div>
+                                    <div style={{ fontSize: 10, color: "rgba(232,224,208,0.32)" }}>{e.username}</div>
+                                  </div>
+                                  <button onClick={() => startEdit(e)} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 9px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>Edit</button>
                                 </div>
-                                <div className="flex gap-1.5">
-                                  <button onClick={() => startEdit(e)} className="px-2.5 py-1 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Edit</button>
-                                  <button onClick={() => duplicateEntry(e)} className="px-2.5 py-1 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Duplicate</button>
-                                </div>
-                              </div>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Security */}
+                  <div style={{ padding: "32px 72px" }}>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(200,146,42,0.45)", marginBottom: 18 }}>Security</div>
+                    <div className="space-y-5">
+                      <div className="space-y-3">
+                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>Vault Health</div>
+                        <div className="grid grid-cols-3 gap-2">
+                          {([["Active", activeEntries.length], ["Favorites", favoritesCount], ["Weak", weakCount], ["Reused", reusedEntriesCount], ["Duplicates", duplicateCount], ["Trash", trashEntries.length]] as [string, number][]).map(([label, val]) => (
+                            <div key={label} style={{ padding: "9px 11px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}>
+                              <div style={{ fontSize: 8, color: "rgba(232,224,208,0.22)", textTransform: "uppercase", letterSpacing: "0.18em" }}>{label}</div>
+                              <div className="font-cinzel" style={{ fontSize: 19, color: "rgba(232,224,208,0.58)", marginTop: 2 }}>{val}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex gap-1.5 flex-wrap">
+                          {[["Weak", () => { setView("active"); clearFilters(); setShowWeakOnly(true); }], ["Reused", () => { setView("active"); clearFilters(); setShowReusedOnly(true); }], ["Duplicates", () => { setView("active"); clearFilters(); setShowDuplicatesOnly(true); }], ["Trash", () => setView("trash")], ["Clear", clearFilters]].map(([label, action]: any) => (
+                            <button key={label} onClick={action} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 11px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>{label}</button>
+                          ))}
+                          <button onClick={() => setShowReusedGroups((v) => !v)} disabled={reusedEntriesCount === 0} className="hover:brightness-125 transition-[filter] disabled:opacity-30" style={{ padding: "4px 11px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>
+                            {showReusedGroups ? "Hide reused" : "Reused groups"}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>Password Generator</div>
+                        <div style={{ padding: "13px 15px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }} className="space-y-3">
+                          <div className="flex items-center gap-3">
+                            <span style={{ fontSize: 11, color: "rgba(232,224,208,0.35)", width: 42 }}>Length</span>
+                            <input type="range" min={8} max={40} value={genLength} onChange={(e) => setGenLength(Number(e.target.value))} className="flex-1 accent-[#c8922a]" />
+                            <span style={{ fontSize: 11, color: "rgba(232,224,208,0.52)", width: 18, textAlign: "right" }}>{genLength}</span>
+                          </div>
+                          <div className="flex flex-wrap gap-4">
+                            {([["lower", genLower, setGenLower, "lower"], ["upper", genUpper, setGenUpper, "UPPER"], ["numbers", genNumbers, setGenNumbers, "123"], ["symbols", genSymbols, setGenSymbols, "!@#"]] as any[]).map(([key, val, setter, label]) => (
+                              <label key={key} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "rgba(232,224,208,0.38)", cursor: "pointer" }}>
+                                <input type="checkbox" checked={val} onChange={(e) => setter(e.target.checked)} className="accent-[#c8922a]" />{label}
+                              </label>
                             ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </section>
-
-            {/* ── Security panel ────────────────────────────────── */}
-            <section
-              className="border border-white/5 hover:brightness-[1.03] transition-[filter] duration-300"
-              style={{ background: "rgba(255,255,255,0.03)" }}
-            >
-              <div className="px-6 py-4 border-b border-white/5">
-                <h2 className="font-cinzel text-[#e8e0d0] text-xs tracking-[0.22em] uppercase">Security</h2>
-              </div>
-              <div className="p-6 space-y-6">
-
-                {/* Vault Health */}
-                {unlocked && (
-                  <div className="space-y-3">
-                    <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">Vault Health</div>
-                    <div className="grid grid-cols-3 gap-2">
-                      {([["Active", activeEntries.length], ["Favorites", favoritesCount], ["Weak", weakCount], ["Reused", reusedEntriesCount], ["Duplicates", duplicateCount], ["Trash", trashEntries.length]] as [string, number][]).map(([label, val]) => (
-                        <div key={label} className="p-2 border border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
-                          <div className="text-[9px] text-[#e8e0d0]/25 uppercase tracking-widest">{label}</div>
-                          <div className="text-xl font-cinzel text-[#e8e0d0]/65 mt-0.5">{val}</div>
+                        <input value={genValue} readOnly className="focus:outline-none font-mono w-full" style={{ padding: "9px 13px", fontSize: 12, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.68)" }} placeholder="Click Generate…" />
+                        <div className="flex gap-2">
+                          <button onClick={regenerate} className="hover:brightness-125 transition-[filter]" style={{ padding: "6px 13px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Generate</button>
+                          <button onClick={async () => { if (!genValue) return; await navigator.clipboard.writeText(genValue); setStatus("Generated password copied ✅"); }} disabled={!genValue} className="hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 13px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Copy</button>
+                          <button onClick={() => setPassword(genValue)} disabled={!genValue} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 13px", fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.42)", color: "rgba(200,146,42,0.82)" }}>Use in form</button>
                         </div>
-                      ))}
-                    </div>
-                    <div className="flex gap-2 flex-wrap">
-                      <button onClick={() => { setView("active"); setShowWeakOnly(true); setShowReusedOnly(false); setShowDuplicatesOnly(false); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Weak</button>
-                      <button onClick={() => { setView("active"); setShowReusedOnly(true); setShowWeakOnly(false); setShowDuplicatesOnly(false); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Reused</button>
-                      <button onClick={() => { setView("active"); setShowDuplicatesOnly(true); setShowWeakOnly(false); setShowReusedOnly(false); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Duplicates</button>
-                      <button onClick={() => setView("trash")} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Trash</button>
-                      <button onClick={clearFilters} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]">Clear filters</button>
-                      <button onClick={() => setShowReusedGroups((v) => !v)} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/45 hover:brightness-125 transition-[filter]" disabled={reusedEntriesCount === 0}>
-                        {showReusedGroups ? "Hide reused groups" : "Reused groups"}
-                      </button>
+                      </div>
                     </div>
                   </div>
-                )}
 
-                {/* Password Generator */}
-                <div className="space-y-3">
-                  <div className="text-[10px] font-cinzel tracking-[0.2em] uppercase text-[#e8e0d0]/35">Password Generator</div>
-                  <div className="border border-white/5 px-4 py-3 space-y-3" style={{ background: "rgba(255,255,255,0.02)" }}>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-[#e8e0d0]/40">Length</span>
-                      <input type="range" min={8} max={40} value={genLength} onChange={(e) => setGenLength(Number(e.target.value))} className="flex-1 accent-[#c8922a]" disabled={!unlocked} />
-                      <span className="text-xs text-[#e8e0d0]/55 w-6 text-right">{genLength}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-4">
-                      {[["lower", genLower, setGenLower, "lower"], ["upper", genUpper, setGenUpper, "UPPER"], ["numbers", genNumbers, setGenNumbers, "123"], ["symbols", genSymbols, setGenSymbols, "!@#"]].map(([key, val, setter, label]: any) => (
-                        <label key={key} className="text-xs flex items-center gap-1.5 text-[#e8e0d0]/45">
-                          <input type="checkbox" checked={val} onChange={(e) => setter(e.target.checked)} disabled={!unlocked} className="accent-[#c8922a]" />
-                          {label}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                  <input value={genValue} readOnly className="w-full px-3 py-2 text-sm font-mono text-[#e8e0d0]/75 border border-white/10 focus:outline-none" style={{ background: "rgba(255,255,255,0.04)" }} placeholder="Click Generate…" />
-                  <div className="flex gap-2">
-                    <button onClick={regenerate} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]" disabled={!unlocked}>Generate</button>
-                    <button onClick={async () => { if (!genValue) return; await navigator.clipboard.writeText(genValue); setStatus("Generated password copied ✅"); }} className="px-3 py-1.5 text-xs border border-white/10 text-[#e8e0d0]/55 hover:brightness-125 transition-[filter]" disabled={!unlocked || !genValue}>Copy</button>
-                    <button onClick={() => setPassword(genValue)} className="font-cinzel px-3 py-1.5 text-xs border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]" disabled={!unlocked || !genValue}>Use in form</button>
-                  </div>
                 </div>
               </div>
-            </section>
-          </div>
-        </div>
 
-        {/* ── Undo Toast ──────────────────────────────────────────────── */}
+            </div>
+          )}
+
+        </div>
+        {/* ── Undo Toast ─────────────────────────────────────────────── */}
         {unlocked && undoToast?.active && (
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[min(700px,calc(100%-24px))] p-3 border border-white/10 backdrop-blur" style={{ background: "rgba(10,10,10,0.92)" }}>
-            <div className="flex items-center justify-between gap-2">
-              <div className="text-xs text-[#e8e0d0]/60">
-                Moved <span className="text-[#e8e0d0]">{undoToast.count}</span> item{undoToast.count === 1 ? "" : "s"} to Trash.
-                <span className="text-[#e8e0d0]/30 ml-2">(Undo in 10s)</span>
-              </div>
-              <button onClick={undoLastTrash} className="font-cinzel px-3 py-1.5 text-xs border border-[#c8922a]/50 text-[#c8922a] hover:brightness-125 transition-[filter]">Undo</button>
+          <div
+            className="fixed bottom-6 left-1/2 -translate-x-1/2"
+            style={{
+              width: "min(640px, calc(100% - 32px))",
+              padding: "14px 20px",
+              border: "1px solid rgba(255,255,255,0.10)",
+              background: "rgba(10,10,10,0.96)",
+              backdropFilter: "blur(16px)",
+              boxShadow: "0 8px 48px rgba(0,0,0,0.70)",
+            }}
+          >
+            <div className="flex items-center justify-between gap-4">
+              <span style={{ fontSize: 12, color: "rgba(232,224,208,0.55)" }}>
+                Moved <span style={{ color: "#e8e0d0" }}>{undoToast.count}</span> item{undoToast.count === 1 ? "" : "s"} to Trash.{" "}
+                <span style={{ color: "rgba(232,224,208,0.28)" }}>(Undo in 10s)</span>
+              </span>
+              <button
+                onClick={undoLastTrash}
+                className="font-cinzel hover:brightness-125 transition-[filter] shrink-0"
+                style={{ padding: "6px 16px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.50)", color: "rgba(200,146,42,0.90)" }}
+              >
+                Undo
+              </button>
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

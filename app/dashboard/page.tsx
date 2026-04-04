@@ -8,8 +8,8 @@ import type { Service } from "@/lib/services"
 
 const panel: React.CSSProperties = {
   background: "none",
-  border: "1px solid #3a3a3a",
-  boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.08)",
+  border: "none",
+  boxShadow: "none",
 }
 
 const btn: React.CSSProperties = {
@@ -18,9 +18,9 @@ const btn: React.CSSProperties = {
   fontWeight: 500,
   letterSpacing: "0.08em",
   textTransform: "uppercase",
-  color: "#e8e0d0",
-  background: "#1a1a1a",
-  border: "1px solid #333",
+  color: "rgba(255,255,255,0.70)",
+  background: "rgba(255,255,255,0.05)",
+  border: "1px solid rgba(255,255,255,0.12)",
   padding: "0.45rem 1rem",
   textDecoration: "none",
   display: "inline-block",
@@ -79,7 +79,7 @@ export default function DashboardPage() {
         <p
           style={{
             fontFamily: "Inter, sans-serif",
-            color: "#444",
+            color: "rgba(255,255,255,0.28)",
             fontSize: "0.65rem",
             letterSpacing: "0.25em",
             textTransform: "uppercase",
@@ -98,6 +98,7 @@ export default function DashboardPage() {
 
   return (
     <div
+      className="vault-scene"
       style={{
         minHeight: "100vh",
         position: "relative",
@@ -108,6 +109,86 @@ export default function DashboardPage() {
         backgroundColor: "#0a0a0a",
       }}
     >
+      <style>{`
+        @keyframes vaultGlow {
+          0%   { background-position: 0% 50%; }
+          100% { background-position: 100% 50%; }
+        }
+        @keyframes ambientDrift {
+          0%   { background-position: 65% 65%; }
+          100% { background-position: 35% 35%; }
+        }
+        .vault-scene::before {
+          content: '';
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
+          background: linear-gradient(90deg, transparent 45%, rgba(255,255,255,0.025) 50%, transparent 55%);
+          background-size: 600% 100%;
+          animation: vaultGlow 18s linear infinite;
+        }
+      `}</style>
+
+      {/* ── Page scrim ──────────────────────────────────────────── */}
+      <div style={{ position: "fixed", inset: 0, background: "rgba(4,3,2,0.62)", pointerEvents: "none", zIndex: 0 }} />
+
+      {/* ── Top ceiling light bar ────────────────────────────────── */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "320px",
+          pointerEvents: "none",
+          zIndex: 0,
+          background: "radial-gradient(ellipse 70% 180px at 50% 0%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.025) 40%, transparent 100%)",
+        }}
+      />
+
+      {/* ── Center ambient wall glow ─────────────────────────────── */}
+      <div
+        style={{
+          position: "fixed",
+          top: "8%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          zIndex: 0,
+          background: "radial-gradient(ellipse 100% 100% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 70%)",
+        }}
+      />
+
+      {/* ── Floor reflected glow ─────────────────────────────────── */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "260px",
+          pointerEvents: "none",
+          zIndex: 0,
+          background: "radial-gradient(ellipse 60% 160px at 50% 100%, rgba(255,255,255,0.04) 0%, transparent 100%)",
+        }}
+      />
+
+      {/* ── Ambient drift glow ──────────────────────────────────── */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          background: "radial-gradient(ellipse 40% 40% at 50% 50%, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.03) 50%, transparent 70%)",
+          backgroundSize: "200% 200%",
+          backgroundPosition: "65% 65%",
+          animation: "ambientDrift 12s ease-in-out infinite alternate",
+        }}
+      />
 
       {/* ── Nav ─────────────────────────────────────────────────── */}
       <header
@@ -144,7 +225,7 @@ export default function DashboardPage() {
                 fontWeight: 600,
                 fontSize: "0.9rem",
                 letterSpacing: "0.12em",
-                color: "#e8e0d0",
+                color: "rgba(255,255,255,0.88)",
                 textTransform: "uppercase",
               }}
             >
@@ -179,9 +260,10 @@ export default function DashboardPage() {
         style={{
           position: "relative",
           zIndex: 1,
-          maxWidth: "1400px",
+          maxWidth: "1160px",
           margin: "0 auto",
           padding: "2rem 1.75rem 4rem",
+          background: "none",
         }}
       >
         {/* Page title row */}
@@ -199,7 +281,7 @@ export default function DashboardPage() {
                 fontFamily: "Inter, sans-serif",
                 fontSize: "0.55rem",
                 letterSpacing: "0.4em",
-                color: "#444",
+                color: "rgba(255,255,255,0.28)",
                 textTransform: "uppercase",
                 marginBottom: "0.4rem",
               }}
@@ -211,7 +293,7 @@ export default function DashboardPage() {
                 fontFamily: "Inter, sans-serif",
                 fontSize: "clamp(1.3rem, 3vw, 1.9rem)",
                 fontWeight: 600,
-                color: "#e8e0d0",
+                color: "rgba(255,255,255,0.88)",
                 letterSpacing: "-0.01em",
                 lineHeight: 1,
               }}
@@ -227,7 +309,7 @@ export default function DashboardPage() {
             <p
               style={{
                 fontFamily: "Inter, sans-serif",
-                color: "#555",
+                color: "rgba(255,255,255,0.32)",
                 marginBottom: "1.5rem",
                 fontSize: "0.9rem",
               }}
@@ -253,7 +335,7 @@ export default function DashboardPage() {
                     fontSize: "0.58rem",
                     fontWeight: 500,
                     letterSpacing: "0.22em",
-                    color: "#555",
+                    color: "rgba(255,255,255,0.32)",
                     textTransform: "uppercase",
                   }}
                 >
@@ -271,61 +353,100 @@ export default function DashboardPage() {
                     other: "General Access",
                   }
                   return (
-                    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "64px" }}>
                       {grouped.map((cat) => (
                         <div
                           key={cat.id}
                           style={{
-                            background: "rgba(255,255,255,0.02)",
-                            border: "1px solid #222222",
-                            boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.04)",
+                            position: "relative",
+                            overflow: "hidden",
+                            background: "linear-gradient(180deg, rgba(32,32,32,0.78) 0%, rgba(16,16,16,0.92) 60%, rgba(10,10,10,0.96) 100%), url(/texture-panel.png) center/cover",
+                            border: "1px solid rgba(255,255,255,0.05)",
+                            borderLeft: "2px solid rgba(255,255,255,0.08)",
+                            borderTop: "1px solid rgba(255,255,255,0.04)",
+                            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), inset 0 2px 10px rgba(0,0,0,0.40), 0 8px 30px rgba(0,0,0,0.60), 0 18px 60px rgba(0,0,0,0.70)",
+                            borderRadius: 4,
                           }}
                         >
-                          {/* Category header */}
+                          {/* Category header — label plate */}
                           <div
                             style={{
-                              padding: "10px 16px",
-                              borderBottom: "1px solid #222222",
-                              marginBottom: "1rem",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                              padding: "10px 18px 9px",
+                              borderBottom: "1px solid rgba(255,255,255,0.08)",
+                              background: "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.005) 100%)",
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.03)",
                             }}
                           >
+                            <div style={{ width: 2, height: 10, flexShrink: 0, background: "rgba(255,255,255,0.22)", boxShadow: "0 0 3px rgba(255,255,255,0.08)" }} />
                             <span
                               style={{
                                 fontFamily: "Inter, sans-serif",
-                                fontSize: "13px",
-                                fontWeight: 500,
-                                letterSpacing: "2.5px",
-                                color: "#aaaaaa",
+                                fontSize: 10,
+                                fontWeight: 400,
+                                letterSpacing: "0.2em",
+                                color: "rgba(255,255,255,0.30)",
                                 textTransform: "uppercase",
                               }}
                             >
-                              {catLabels[cat.id] ?? cat.name}
+                              ▪ {catLabels[cat.id] ?? cat.name}
                             </span>
                           </div>
 
                           {/* Service rows */}
-                          <div style={{ display: "flex", flexDirection: "column" }}>
+                          <div style={{ display: "flex", flexDirection: "column", padding: "10px 10px 4px", background: "rgba(0,0,0,0.30)" }}>
                             {cat.selected.map((service, svcIdx) => (
                               <a
                                 key={service.id}
                                 href={`/vault?service=${service.id}`}
-                                className="flex items-center justify-between min-h-[72px] py-5 px-5 border-b border-[#c8922a]/10 last:border-b-0 bg-[#111111] hover:bg-[#161616] hover:border-[#c8922a]/25 active:scale-[0.99] transition-all duration-200 cursor-pointer no-underline"
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "space-between",
+                                  minHeight: "50px",
+                                  padding: "11px 18px",
+                                  background: "rgba(11,11,12,0.96)",
+                                  border: "1px solid rgba(255,255,255,0.04)",
+                                  borderTop: "1px solid rgba(255,255,255,0.09)",
+                                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), inset 0 3px 8px rgba(0,0,0,0.90), inset 0 -2px 12px rgba(0,0,0,0.95)",
+                                  marginBottom: svcIdx < cat.selected.length - 1 ? "4px" : "0",
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  transition: "box-shadow 0.14s ease-out, border-color 0.14s ease-out, background 0.14s ease-out, transform 0.14s ease-out",
+                                  borderRadius: 2,
+                                }}
+                                onMouseEnter={(e) => {
+                                  const el = e.currentTarget as HTMLAnchorElement
+                                  el.style.background = "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 8px), rgba(18,18,20,0.96)"
+                                  el.style.boxShadow = "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 1px 3px rgba(0,0,0,0.45), inset 0 -1px 5px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.70)"
+                                  el.style.borderTopColor = "rgba(255,255,255,0.22)"
+                                  el.style.transform = "translateY(-1px)"
+                                }}
+                                onMouseLeave={(e) => {
+                                  const el = e.currentTarget as HTMLAnchorElement
+                                  el.style.background = "rgba(11,11,12,0.96)"
+                                  el.style.boxShadow = "inset 0 1px 0 rgba(255,255,255,0.06), inset 0 3px 8px rgba(0,0,0,0.90), inset 0 -2px 12px rgba(0,0,0,0.95), 0 0px 0px transparent"
+                                  el.style.borderTopColor = "rgba(255,255,255,0.09)"
+                                  el.style.transform = "translateY(0)"
+                                }}
                               >
-                                <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                                   <span
                                     style={{
                                       fontFamily: "Inter, sans-serif",
                                       fontSize: "15px",
                                       fontWeight: 500,
-                                      color: "#e8e0d0",
+                                      color: "rgba(255,255,255,0.95)",
                                       letterSpacing: "0.01em",
                                     }}
                                   >
                                     {service.name}
                                   </span>
-                                  <span className="inline-flex items-center border border-[#c8922a]/25 text-[#c8922a]/55 text-[9px] tracking-[0.15em] px-1.5 py-0.5 rounded-sm mt-1">SECURED</span>
+                                  <span style={{ display: "inline-flex", alignItems: "center", border: "1px solid rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.15)", fontSize: "9px", letterSpacing: "0.15em", padding: "2px 6px", marginTop: 2, borderRadius: 2 }}>SECURED</span>
                                 </div>
-                                <span className="text-[#c8922a]/50 text-xl leading-none">›</span>
+                                <span style={{ color: "rgba(255,255,255,0.38)", fontSize: "20px", lineHeight: 1, transition: "transform 0.15s ease, color 0.15s ease" }}>›</span>
                               </a>
                             ))}
                           </div>
@@ -359,7 +480,7 @@ export default function DashboardPage() {
                       fontSize: "0.58rem",
                       fontWeight: 500,
                       letterSpacing: "0.22em",
-                      color: "#555",
+                      color: "rgba(255,255,255,0.32)",
                       textTransform: "uppercase",
                     }}
                   >
@@ -380,7 +501,7 @@ export default function DashboardPage() {
                           fontFamily: "Inter, sans-serif",
                           fontSize: "1.75rem",
                           fontWeight: 300,
-                          color: "#e8e0d0",
+                          color: "rgba(255,255,255,0.88)",
                           lineHeight: 1,
                         }}
                       >
@@ -390,7 +511,7 @@ export default function DashboardPage() {
                         style={{
                           fontFamily: "Inter, sans-serif",
                           fontSize: "0.58rem",
-                          color: "#444",
+                          color: "rgba(255,255,255,0.28)",
                           letterSpacing: "0.14em",
                           textTransform: "uppercase",
                           marginTop: "0.35rem",
@@ -420,7 +541,7 @@ export default function DashboardPage() {
                       fontSize: "0.58rem",
                       fontWeight: 500,
                       letterSpacing: "0.22em",
-                      color: "#555",
+                      color: "rgba(255,255,255,0.32)",
                       textTransform: "uppercase",
                     }}
                   >
@@ -442,7 +563,7 @@ export default function DashboardPage() {
                           fontFamily: "Inter, sans-serif",
                           fontSize: "0.85rem",
                           fontWeight: 400,
-                          color: "#e8e0d0",
+                          color: "rgba(255,255,255,0.88)",
                           letterSpacing: "0.01em",
                         }}
                       >
@@ -452,7 +573,7 @@ export default function DashboardPage() {
                         style={{
                           fontFamily: "Inter, sans-serif",
                           fontSize: "0.58rem",
-                          color: "#444",
+                          color: "rgba(255,255,255,0.28)",
                           letterSpacing: "0.14em",
                           textTransform: "uppercase",
                           marginTop: "0.3rem",
