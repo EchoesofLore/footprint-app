@@ -260,6 +260,23 @@ body {
   transition: width 0.35s ease;
 }
 
+/* ── Vault split layout — responsive collapse ────────────────────── */
+/* Desktop: independent scrolling panels. Mobile: normal page scroll. */
+@media (max-width: 1023px) {
+  .vault-shell {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .vault-split {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
+  }
+  .vault-split > div {
+    overflow-y: visible !important;
+  }
+}
+
 /* ── Clerk appearance overrides ──────────────────────────────────── */
 .cl-rootBox,
 .cl-signIn-root,
