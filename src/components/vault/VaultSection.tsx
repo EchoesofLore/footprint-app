@@ -16,13 +16,13 @@ export default function VaultSection({ title, children }: VaultSectionProps) {
         backgroundImage: "url(/texture-panel.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        border: "1px solid rgba(255,255,255,0.10)",
-        borderLeft: "3px solid rgba(255,255,255,0.14)",
-        borderTop: "2px solid rgba(255,255,255,0.11)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderLeft: "2px solid rgba(255,255,255,0.10)",
+        borderTop: "1px solid rgba(255,255,255,0.09)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 2px 10px rgba(0,0,0,0.50), 0 18px 60px rgba(0,0,0,0.85), 0 4px 16px rgba(0,0,0,0.60), 0 0 0 1px rgba(0,0,0,0.50)",
-        borderRadius: 4,
-        marginBottom: 64,
+          "inset 0 1px 0 rgba(255,255,255,0.07), inset 0 2px 8px rgba(0,0,0,0.40), 0 8px 28px rgba(0,0,0,0.70), 0 0 0 1px rgba(0,0,0,0.40)",
+        borderRadius: 3,
+        marginBottom: 40,
       }}
     >
       {/* Module surface overlay — lighter than page scrim so module reads above the wall */}
@@ -31,7 +31,7 @@ export default function VaultSection({ title, children }: VaultSectionProps) {
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(180deg, rgba(14,14,18,0.72) 0%, rgba(8,8,12,0.84) 100%)",
+            "linear-gradient(180deg, rgba(14,14,18,0.55) 0%, rgba(8,8,12,0.68) 100%)",
           pointerEvents: "none",
         }}
       />
@@ -43,42 +43,41 @@ export default function VaultSection({ title, children }: VaultSectionProps) {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 10,
-            padding: "13px 18px 12px",
-            borderBottom: "1px solid rgba(255,255,255,0.08)",
+            gap: 7,
+            padding: "6px 14px 6px",
+            borderBottom: "1px solid rgba(255,255,255,0.06)",
             background:
-              "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%)",
+              "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
             boxShadow:
-              "0 3px 10px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 0 rgba(255,255,255,0.06)",
+              "0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05)",
           }}
         >
           <div
             style={{
-              width: 2,
-              height: 10,
+              width: 1,
+              height: 8,
               flexShrink: 0,
-              background: "rgba(255,255,255,0.32)",
-              boxShadow: "0 0 4px rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.22)",
+              boxShadow: "0 0 3px rgba(255,255,255,0.08)",
             }}
           />
           <span
             className="font-cinzel"
             style={{
-              fontSize: 10,
-              letterSpacing: "0.12em",
-              color: "rgba(255,255,255,0.42)",
-              opacity: 0.7,
+              fontSize: 9,
+              letterSpacing: "0.18em",
+              color: "rgba(255,255,255,0.32)",
               textTransform: "uppercase",
               fontWeight: 400,
             }}
           >
-            ▪ {title}
+            {title}
           </span>
         </div>
 
         {/* Slot rows — darker recess below the label plate */}
         <div
-          style={{ padding: "14px 14px 6px", background: "rgba(0,0,0,0.30)" }}
+          style={{ padding: "10px 10px 4px", background: "rgba(0,0,0,0.22)" }}
         >
           {children}
         </div>

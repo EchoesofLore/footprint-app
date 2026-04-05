@@ -1506,15 +1506,15 @@ export default function VaultPage() {
     <div
       className="min-h-screen text-[#e8e0d0]"
       style={{
-        backgroundImage: "url(/bg-dashboard.png)",
+        backgroundImage: "url(/hero-vault.png)",
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: "center top",
         backgroundAttachment: "fixed",
         backgroundColor: "#0a0a0a",
       }}
     >
       {/* ── Environment scrim ─────────────────────────────────────────── */}
-      <div className="min-h-screen flex flex-col" style={{ background: "rgba(4,3,2,0.62)" }}>
+      <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(to bottom, rgba(4,3,2,0.52) 0%, rgba(4,3,2,0.46) 40%, rgba(4,3,2,0.58) 100%), radial-gradient(ellipse 80% 70% at 50% 38%, transparent 0%, rgba(0,0,0,0.28) 100%)" }}>
 
         {/* ── Top navigation ────────────────────────────────────────────── */}
         <div
@@ -1792,10 +1792,10 @@ export default function VaultPage() {
               <div style={{ height: 1, flexShrink: 0, background: "linear-gradient(to right, transparent 0%, rgba(255,255,255,0.04) 20%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 80%, transparent 100%)" }} />
 
               {/* ── 2-panel app shell ────────────────────────────────────── */}
-              <div className="vault-split" style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 340px", overflow: "hidden" }}>
+              <div className="vault-split" style={{ flex: 1, display: "grid", gridTemplateColumns: "3fr 2fr", overflow: "hidden" }}>
 
                 {/* ── LEFT: scrollable records panel ─────────────────────── */}
-                <div style={{ overflowY: "auto", display: "flex", flexDirection: "column" }}>
+                <div style={{ overflowY: "auto", display: "flex", flexDirection: "column", maxWidth: 1000 }}>
 
                   {/* Header zone */}
                   <div style={{ padding: "22px 28px 14px", flexShrink: 0 }}>
@@ -1943,20 +1943,20 @@ export default function VaultPage() {
                 </div>
 
                 {/* ── RIGHT: utility rail ─────────────────────────────────── */}
-                <div style={{ overflowY: "auto", borderLeft: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.22)", backdropFilter: "blur(4px)", display: "flex", flexDirection: "column" }}>
+                <div style={{ overflowY: "auto", borderLeft: "1px solid rgba(255,255,255,0.07)", background: "linear-gradient(180deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.20) 100%)", backdropFilter: "blur(6px)", boxShadow: "inset 1px 0 0 rgba(255,255,255,0.03)", display: "flex", flexDirection: "column" }}>
 
                   {/* Add / Edit Record */}
                   <div ref={addEntryRef} style={{ padding: "22px 20px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
-                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.42)", marginBottom: 14 }}>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)", marginBottom: 14 }}>
                       {editingId ? "Edit Record" : "Add Record"}
                     </div>
                     <div className="grid gap-2.5">
-                      <input placeholder="Service / Site (or URL)" value={site} onChange={(e) => setSite(e.target.value)} className="focus:outline-none" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
-                      <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="focus:outline-none" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
+                      <input placeholder="Service / Site (or URL)" value={site} onChange={(e) => setSite(e.target.value)} className="focus:outline-none rp-input" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
+                      <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="focus:outline-none rp-input" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
                       <div className="space-y-1.5">
                         <div className="flex gap-2">
-                          <input placeholder="Password" type={showFormPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="focus:outline-none flex-1" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
-                          <button type="button" onClick={() => setShowFormPassword((v) => !v)} className="hover:brightness-125 transition-[filter] shrink-0" style={{ padding: "8px 11px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>{showFormPassword ? "Hide" : "Show"}</button>
+                          <input placeholder="Password" type={showFormPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="focus:outline-none rp-input flex-1" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
+                          <button type="button" onClick={() => setShowFormPassword((v) => !v)} className="rp-btn shrink-0" style={{ padding: "8px 11px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>{showFormPassword ? "Hide" : "Show"}</button>
                         </div>
                         {password.length > 0 && (
                           <div style={{ fontSize: 10, color: "rgba(232,224,208,0.38)" }}>
@@ -1968,15 +1968,15 @@ export default function VaultPage() {
                         )}
                         {site.trim() && <div style={{ fontSize: 10, color: "rgba(232,224,208,0.22)" }}>Domain: {extractDomain(site.trim()) ?? "—"}</div>}
                       </div>
-                      <input placeholder="Category (optional)" value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)} className="focus:outline-none" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
-                      <input placeholder="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} className="focus:outline-none" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
-                      <input placeholder="Tags (comma separated)" value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} className="focus:outline-none" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
+                      <input placeholder="Category (optional)" value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)} className="focus:outline-none rp-input" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
+                      <input placeholder="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} className="focus:outline-none rp-input" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
+                      <input placeholder="Tags (comma separated)" value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} className="focus:outline-none rp-input" style={{ padding: "8px 11px", fontSize: 12, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 5px rgba(0,0,0,0.35)" }} />
                       <div className="flex gap-2" style={{ paddingTop: 2 }}>
-                        <button onClick={addOrUpdateEntry} className="font-cinzel hover:brightness-125 transition-[filter]" style={{ padding: "9px 18px", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.80)", background: "rgba(255,255,255,0.04)" }}>
+                        <button onClick={addOrUpdateEntry} className="font-cinzel rp-btn-primary" style={{ padding: "9px 18px", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.80)", background: "rgba(255,255,255,0.04)" }}>
                           {editingId ? "Save Changes" : "Add Entry"}
                         </button>
                         {editingId && (
-                          <button onClick={cancelEdit} className="hover:brightness-125 transition-[filter]" style={{ padding: "9px 14px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>Cancel</button>
+                          <button onClick={cancelEdit} className="rp-btn" style={{ padding: "9px 14px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>Cancel</button>
                         )}
                       </div>
                     </div>
@@ -1984,7 +1984,7 @@ export default function VaultPage() {
 
                   {/* Security / Vault Health */}
                   <div style={{ padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
-                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.50)", marginBottom: 12 }}>Security</div>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.58)", marginBottom: 12 }}>Security</div>
                     <div className="grid grid-cols-3 gap-1.5" style={{ marginBottom: 10 }}>
                       {([["Active", activeEntries.length], ["Weak", weakCount], ["Reused", reusedEntriesCount], ["Dupes", duplicateCount], ["Favs", favoritesCount], ["Trash", trashEntries.length]] as [string, number][]).map(([label, val]) => (
                         <div key={label} style={{ padding: "7px 9px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}>
@@ -1995,9 +1995,9 @@ export default function VaultPage() {
                     </div>
                     <div className="flex gap-1.5 flex-wrap">
                       {[["Weak", () => { setView("active"); clearFilters(); setShowWeakOnly(true); }], ["Reused", () => { setView("active"); clearFilters(); setShowReusedOnly(true); }], ["Duplicates", () => { setView("active"); clearFilters(); setShowDuplicatesOnly(true); }], ["Trash", () => setView("trash")], ["Clear", clearFilters]].map(([label, action]: any) => (
-                        <button key={label} onClick={action} className="hover:brightness-125 transition-[filter]" style={{ padding: "3px 9px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>{label}</button>
+                        <button key={label} onClick={action} className="rp-btn" style={{ padding: "3px 9px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>{label}</button>
                       ))}
-                      <button onClick={() => setShowReusedGroups((v) => !v)} disabled={reusedEntriesCount === 0} className="hover:brightness-125 transition-[filter] disabled:opacity-30" style={{ padding: "3px 9px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>
+                      <button onClick={() => setShowReusedGroups((v) => !v)} disabled={reusedEntriesCount === 0} className="rp-btn disabled:opacity-30" style={{ padding: "3px 9px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>
                         {showReusedGroups ? "Hide reused" : "Reused groups"}
                       </button>
                     </div>
@@ -2012,7 +2012,7 @@ export default function VaultPage() {
                                   <div style={{ fontSize: 11, color: "rgba(232,224,208,0.62)" }}>{e.site}</div>
                                   <div style={{ fontSize: 10, color: "rgba(232,224,208,0.32)" }}>{e.username}</div>
                                 </div>
-                                <button onClick={() => startEdit(e)} className="hover:brightness-125 transition-[filter]" style={{ padding: "3px 8px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>Edit</button>
+                                <button onClick={() => startEdit(e)} className="rp-btn" style={{ padding: "3px 8px", fontSize: 10, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.38)" }}>Edit</button>
                               </div>
                             ))}
                           </div>
@@ -2023,7 +2023,7 @@ export default function VaultPage() {
 
                   {/* Password Generator */}
                   <div style={{ padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
-                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.50)", marginBottom: 12 }}>Generator</div>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.58)", marginBottom: 12 }}>Generator</div>
                     <div className="space-y-2.5">
                       <div style={{ padding: "11px 13px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }} className="space-y-2.5">
                         <div className="flex items-center gap-3">
@@ -2039,24 +2039,24 @@ export default function VaultPage() {
                           ))}
                         </div>
                       </div>
-                      <input value={genValue} readOnly className="focus:outline-none font-mono w-full" style={{ padding: "8px 11px", fontSize: 11, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.68)" }} placeholder="Click Generate…" />
+                      <input value={genValue} readOnly className="focus:outline-none rp-input font-mono w-full" style={{ padding: "8px 11px", fontSize: 11, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.68)" }} placeholder="Click Generate…" />
                       <div className="flex gap-2">
-                        <button onClick={regenerate} className="hover:brightness-125 transition-[filter]" style={{ padding: "5px 12px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Generate</button>
-                        <button onClick={async () => { if (!genValue) return; await navigator.clipboard.writeText(genValue); setStatus("Generated password copied ✅"); }} disabled={!genValue} className="hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "5px 12px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Copy</button>
-                        <button onClick={() => setPassword(genValue)} disabled={!genValue} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "5px 10px", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.70)" }}>Use</button>
+                        <button onClick={regenerate} className="rp-btn" style={{ padding: "5px 12px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Generate</button>
+                        <button onClick={async () => { if (!genValue) return; await navigator.clipboard.writeText(genValue); setStatus("Generated password copied ✅"); }} disabled={!genValue} className="rp-btn disabled:opacity-40" style={{ padding: "5px 12px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Copy</button>
+                        <button onClick={() => setPassword(genValue)} disabled={!genValue} className="font-cinzel rp-btn-primary disabled:opacity-40" style={{ padding: "5px 10px", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.70)" }}>Use</button>
                       </div>
                     </div>
                   </div>
 
                   {/* Footprints / Backup */}
                   <div style={{ padding: "20px", flexShrink: 0 }}>
-                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.50)", marginBottom: 12 }}>Footprints</div>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.58)", marginBottom: 12 }}>Footprints</div>
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.38)", textTransform: "uppercase" }}>Backup</div>
                         <div className="flex gap-2 flex-wrap">
-                          <button onClick={exportEncryptedBackup} className="hover:brightness-125 transition-[filter]" style={{ padding: "5px 11px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Export encrypted</button>
-                          <button onClick={() => fileInputRef.current?.click()} className="hover:brightness-125 transition-[filter]" style={{ padding: "5px 11px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Import file</button>
+                          <button onClick={exportEncryptedBackup} className="rp-btn" style={{ padding: "5px 11px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Export encrypted</button>
+                          <button onClick={() => fileInputRef.current?.click()} className="rp-btn" style={{ padding: "5px 11px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Import file</button>
                           <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImportFile(f); }} />
                         </div>
                         {importError && <div style={{ fontSize: 11, color: "rgba(248,113,113,0.60)" }}>{importError}</div>}
@@ -2070,8 +2070,8 @@ export default function VaultPage() {
                                 <option value="merge">Merge</option>
                                 <option value="overwrite">Overwrite</option>
                               </select>
-                              <button onClick={confirmImport} disabled={!importDecryptedVault} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "4px 12px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.72)" }}>Confirm</button>
-                              <button onClick={resetImportState} className="hover:brightness-125 transition-[filter]" style={{ padding: "4px 9px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.35)" }}>Cancel</button>
+                              <button onClick={confirmImport} disabled={!importDecryptedVault} className="font-cinzel rp-btn-primary disabled:opacity-40" style={{ padding: "4px 12px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.72)" }}>Confirm</button>
+                              <button onClick={resetImportState} className="rp-btn" style={{ padding: "4px 9px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.35)" }}>Cancel</button>
                             </div>
                           </div>
                         )}
@@ -2079,11 +2079,11 @@ export default function VaultPage() {
                       <div className="space-y-2">
                         <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.38)", textTransform: "uppercase" }}>CSV Import</div>
                         <div style={{ fontSize: 10, color: "rgba(232,224,208,0.22)" }}>Format: <span className="font-mono">site,username,password,…</span></div>
-                        <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} placeholder="example.com,user@email.com,pass" className="focus:outline-none font-mono" style={{ width: "100%", height: 60, padding: "7px 10px", fontSize: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.62)", resize: "vertical" }} />
+                        <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} placeholder="example.com,user@email.com,pass" className="focus:outline-none rp-input font-mono" style={{ width: "100%", height: 60, padding: "7px 10px", fontSize: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.62)", resize: "vertical" }} />
                         {csvPreview && <div style={{ fontSize: 11, color: "rgba(232,224,208,0.36)" }}>Rows: {csvPreview.rows} · OK: {csvPreview.ok} · Bad: {csvPreview.bad}</div>}
                         <div className="flex gap-2">
-                          <button onClick={importCsvIntoVault} disabled={!csvText.trim()} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "5px 11px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.70)" }}>Import CSV</button>
-                          <button onClick={() => { setCsvText(""); setCsvPreview(null); }} disabled={!csvText.trim() && !csvPreview} className="hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "5px 9px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.35)" }}>Clear</button>
+                          <button onClick={importCsvIntoVault} disabled={!csvText.trim()} className="font-cinzel rp-btn-primary disabled:opacity-40" style={{ padding: "5px 11px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.70)" }}>Import CSV</button>
+                          <button onClick={() => { setCsvText(""); setCsvPreview(null); }} disabled={!csvText.trim() && !csvPreview} className="rp-btn disabled:opacity-40" style={{ padding: "5px 9px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.35)" }}>Clear</button>
                         </div>
                       </div>
                     </div>

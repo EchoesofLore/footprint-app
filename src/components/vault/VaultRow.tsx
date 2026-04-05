@@ -110,22 +110,30 @@ export default function VaultRow({
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
       style={{
-        background: hovered ? "rgba(22,24,32,0.95)" : "rgba(18,20,26,0.95)",
-        border: `1px solid ${hovered ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.10)"}`,
-        boxShadow: pressed
-          ? "0 2px 8px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -3px 10px rgba(0,0,0,0.90)"
+        background: pressed
+          ? "rgba(14,16,22,0.97)"
           : hovered
-          ? "0 6px 18px rgba(0,0,0,0.60), 0 0 20px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -3px 10px rgba(0,0,0,0.90)"
-          : "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -3px 10px rgba(0,0,0,0.90)",
-        transform: pressed ? "translateY(1px) scale(0.99)" : hovered ? "translateY(-2px) scale(1.01)" : "translateY(0) scale(1)",
-        filter: hovered && !pressed ? "brightness(1.08)" : "brightness(1)",
-        opacity: isDimmed && !hovered ? 0.85 : 1,
+          ? "rgba(24,26,34,0.96)"
+          : "rgba(18,20,26,0.95)",
+        border: `1px solid ${hovered && !pressed ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.09)"}`,
+        boxShadow: pressed
+          ? "0 1px 4px rgba(0,0,0,0.60), inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -2px 8px rgba(0,0,0,0.80)"
+          : hovered
+          ? "0 4px 12px rgba(0,0,0,0.50), 0 0 8px rgba(255,255,255,0.03), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -2px 8px rgba(0,0,0,0.80)"
+          : "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -2px 8px rgba(0,0,0,0.80)",
+        transform: pressed
+          ? "translateY(0) scale(0.988)"
+          : hovered
+          ? "translateY(-1px) scale(1.004)"
+          : "translateY(0) scale(1)",
+        filter: pressed ? "brightness(0.92)" : hovered ? "brightness(1.06)" : "brightness(1)",
+        opacity: isDimmed && !hovered ? 0.82 : 1,
         transition: pressed
-          ? "transform 0.07s ease, filter 0.07s ease, box-shadow 0.07s ease"
-          : "transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease",
+          ? "transform 0.07s ease-in, filter 0.07s ease-in, box-shadow 0.07s ease-in, background 0.07s ease-in, border-color 0.07s ease-in"
+          : "transform 0.14s ease-out, filter 0.14s ease-out, box-shadow 0.14s ease-out, background 0.14s ease-out, border-color 0.14s ease-out, opacity 0.14s ease-out",
         cursor: "pointer",
         borderRadius: 2,
-        marginBottom: 8,
+        marginBottom: 6,
         position: "relative",
         overflow: "hidden",
       }}
@@ -138,15 +146,15 @@ export default function VaultRow({
           inset: 0,
           background: "linear-gradient(120deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 50%, transparent 100%)",
           opacity: hovered && !pressed ? 1 : 0,
-          transition: "opacity 0.2s ease",
+          transition: "opacity 0.14s ease-out",
           pointerEvents: "none",
           borderRadius: 2,
         }}
       />
-      <div className="px-5 py-4">
+      <div className="px-4 py-2">
 
         {/* ── Main card row ─────────────────────────────────────────── */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
 
           {/* Checkbox */}
           <input
@@ -160,8 +168,8 @@ export default function VaultRow({
           {/* Service avatar */}
           <div
             style={{
-              width: 44,
-              height: 44,
+              width: 30,
+              height: 30,
               background: "rgba(255,255,255,0.04)",
               border: "1px solid rgba(255,255,255,0.10)",
               display: "flex",
@@ -177,20 +185,20 @@ export default function VaultRow({
               <img
                 src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
                 alt={e.site}
-                style={{ width: 22, height: 22, objectFit: "contain" }}
+                style={{ width: 16, height: 16, objectFit: "contain" }}
                 onError={(ev) => {
                   const img = ev.target as HTMLImageElement;
                   img.style.display = "none";
                   const parent = img.parentElement;
                   if (parent) {
-                    parent.innerHTML = `<span style="font-family: Cinzel, serif; font-size: 15px; color: rgba(255,255,255,0.32); user-select: none;">${initial}</span>`;
+                    parent.innerHTML = `<span style="font-family: Cinzel, serif; font-size: 11px; color: rgba(255,255,255,0.32); user-select: none;">${initial}</span>`;
                   }
                 }}
               />
             ) : (
               <span
                 className="font-cinzel select-none"
-                style={{ fontSize: 15, color: "rgba(255,255,255,0.32)" }}
+                style={{ fontSize: 11, color: "rgba(255,255,255,0.32)" }}
               >
                 {initial}
               </span>
@@ -241,12 +249,12 @@ export default function VaultRow({
             </div>
 
             {/* Username */}
-            <div style={{ fontSize: 11, marginTop: 3, color: "rgba(255,255,255,0.38)" }} className="truncate">
+            <div style={{ fontSize: 11, marginTop: 1, color: "rgba(255,255,255,0.38)" }} className="truncate">
               {e.username}
             </div>
 
             {/* Password dots + strength */}
-            <div className="flex items-center gap-2" style={{ marginTop: 5 }}>
+            <div className="flex items-center gap-2" style={{ marginTop: 2 }}>
               <span
                 className="font-mono select-none"
                 style={{ fontSize: 10, letterSpacing: "0.1em", color: "rgba(255,255,255,0.18)" }}
@@ -395,12 +403,12 @@ export default function VaultRow({
             style={{
               color: "rgba(255,255,255,0.80)",
               opacity: hovered && !pressed ? 1 : 0.6,
-              fontSize: 18,
+              fontSize: 16,
               lineHeight: 1,
               transform: isExpanded
                 ? "rotate(90deg)"
-                : pressed ? "translateX(6px)" : hovered ? "translateX(4px)" : "translateX(0)",
-              transition: "transform 0.15s ease, opacity 0.15s ease",
+                : pressed ? "translateX(3px)" : hovered ? "translateX(2px)" : "translateX(0)",
+              transition: "transform 0.14s ease-out, opacity 0.14s ease-out",
               marginLeft: 4,
               flexShrink: 0,
             }}

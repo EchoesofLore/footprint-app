@@ -277,6 +277,59 @@ body {
   }
 }
 
+/* ── Right panel — inputs ────────────────────────────────────────── */
+.rp-input {
+  transition: border-color 0.14s ease-out, box-shadow 0.14s ease-out, background 0.14s ease-out;
+}
+.rp-input:hover {
+  border-color: rgba(255,255,255,0.14) !important;
+  background: rgba(0,0,0,0.52) !important;
+}
+.rp-input:focus {
+  border-color: rgba(255,255,255,0.22) !important;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06) !important;
+  background: rgba(0,0,0,0.56) !important;
+}
+
+/* ── Right panel — secondary buttons ─────────────────────────────── */
+.rp-btn {
+  cursor: pointer;
+  transition: transform 0.14s ease-out, filter 0.14s ease-out, border-color 0.14s ease-out !important;
+}
+.rp-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.20);
+  border-color: rgba(255,255,255,0.18) !important;
+}
+.rp-btn:active {
+  transform: scale(0.98) !important;
+  filter: brightness(0.88) !important;
+  transition-duration: 0.07s !important;
+}
+.rp-btn:disabled {
+  pointer-events: none;
+}
+
+/* ── Right panel — primary buttons ───────────────────────────────── */
+.rp-btn-primary {
+  cursor: pointer;
+  transition: transform 0.14s ease-out, filter 0.14s ease-out, box-shadow 0.14s ease-out, border-color 0.14s ease-out !important;
+}
+.rp-btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.22);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.50) !important;
+  border-color: rgba(255,255,255,0.28) !important;
+}
+.rp-btn-primary:active {
+  transform: scale(0.98) !important;
+  filter: brightness(0.88) !important;
+  transition-duration: 0.07s !important;
+}
+.rp-btn-primary:disabled {
+  pointer-events: none;
+}
+
 /* ── Clerk appearance overrides ──────────────────────────────────── */
 .cl-rootBox,
 .cl-signIn-root,
