@@ -54,6 +54,7 @@ export default function VaultRow({
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [pressedBtn, setPressedBtn] = useState<string | null>(null);
+  const [hoveredBtn, setHoveredBtn] = useState<string | null>(null);
   const [siteCopied, setSiteCopied] = useState(false);
   const [passVisible, setPassVisible] = useState(true);
 
@@ -81,9 +82,10 @@ export default function VaultRow({
 
   function btnPressProps(key: string) {
     return {
+      onMouseEnter: () => setHoveredBtn(key),
       onMouseDown: () => setPressedBtn(key),
       onMouseUp: () => setPressedBtn(null),
-      onMouseLeave: () => setPressedBtn(null),
+      onMouseLeave: () => { setPressedBtn(null); setHoveredBtn(null); },
     };
   }
   const ageLabel = daysAgo(e.updatedAt ?? e.createdAt);
@@ -518,17 +520,20 @@ export default function VaultRow({
                   <button
                     onClick={() => startEdit(e)}
                     {...btnPressProps("edit")}
-                    className="hover:brightness-110"
                     style={{
                       padding: "5px 14px",
                       fontSize: 11,
-                      border: "1px solid rgba(255,255,255,0.22)",
-                      color: "rgba(255,255,255,0.80)",
+                      border: hoveredBtn === "edit" && !pressedBtn ? "1px solid rgba(255,255,255,0.34)" : "1px solid rgba(255,255,255,0.22)",
+                      color: hoveredBtn === "edit" && !pressedBtn ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.80)",
                       borderRadius: 1,
                       letterSpacing: "0.06em",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 0 8px rgba(255,255,255,0.03)",
+                      background: hoveredBtn === "edit" && !pressedBtn ? "rgba(255,255,255,0.05)" : "transparent",
+                      boxShadow: hoveredBtn === "edit" && !pressedBtn
+                        ? "inset 0 1px 0 rgba(255,255,255,0.10), 0 0 12px rgba(255,255,255,0.05)"
+                        : "inset 0 1px 0 rgba(255,255,255,0.07)",
                       transform: pressedBtn === "edit" ? "scale(0.97)" : "scale(1)",
-                      transition: "transform 0.08s ease, filter 0.15s ease",
+                      transition: "transform 0.08s ease, border-color 0.15s ease, color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease",
+                      cursor: "pointer",
                     }}
                   >
                     Edit Entry
@@ -538,15 +543,16 @@ export default function VaultRow({
                   <button
                     onClick={() => handleCopy(e.id, "username", e.username)}
                     {...btnPressProps("copy-user")}
-                    className="hover:brightness-125"
                     style={{
                       padding: "4px 10px",
                       fontSize: 11,
                       borderRadius: 1,
-                      border: userCd > 0 ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
-                      color: userCd > 0 ? "rgba(255,255,255,0.70)" : "rgba(255,255,255,0.36)",
+                      border: userCd > 0 ? "1px solid rgba(255,255,255,0.22)" : hoveredBtn === "copy-user" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
+                      color: userCd > 0 ? "rgba(255,255,255,0.78)" : hoveredBtn === "copy-user" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      background: hoveredBtn === "copy-user" && !pressedBtn && userCd === 0 ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "copy-user" ? "scale(0.97)" : "scale(1)",
-                      transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, filter 0.15s ease",
+                      transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+                      cursor: "pointer",
                     }}
                   >
                     {userCd > 0 ? "✓ Copied" : "Copy Username"}
@@ -556,15 +562,16 @@ export default function VaultRow({
                   <button
                     onClick={() => handleCopy(e.id, "password", e.password)}
                     {...btnPressProps("copy-pass")}
-                    className="hover:brightness-125"
                     style={{
                       padding: "4px 10px",
                       fontSize: 11,
                       borderRadius: 1,
-                      border: passCd > 0 ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
-                      color: passCd > 0 ? "rgba(255,255,255,0.70)" : "rgba(255,255,255,0.36)",
+                      border: passCd > 0 ? "1px solid rgba(255,255,255,0.22)" : hoveredBtn === "copy-pass" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
+                      color: passCd > 0 ? "rgba(255,255,255,0.78)" : hoveredBtn === "copy-pass" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      background: hoveredBtn === "copy-pass" && !pressedBtn && passCd === 0 ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "copy-pass" ? "scale(0.97)" : "scale(1)",
-                      transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, filter 0.15s ease",
+                      transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+                      cursor: "pointer",
                     }}
                   >
                     {passCd > 0 ? "✓ Copied" : "Copy Password"}
@@ -584,15 +591,16 @@ export default function VaultRow({
                       }, "*");
                     }}
                     {...btnPressProps("autofill")}
-                    className="hover:brightness-125"
                     style={{
                       padding: "4px 10px",
                       fontSize: 11,
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "rgba(255,255,255,0.36)",
                       borderRadius: 1,
+                      border: hoveredBtn === "autofill" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
+                      color: hoveredBtn === "autofill" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      background: hoveredBtn === "autofill" && !pressedBtn ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "autofill" ? "scale(0.97)" : "scale(1)",
-                      transition: "transform 0.08s ease, filter 0.15s ease",
+                      transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+                      cursor: "pointer",
                     }}
                   >
                     Autofill
@@ -602,15 +610,16 @@ export default function VaultRow({
                   <button
                     onClick={() => toggleReveal(e.id)}
                     {...btnPressProps("reveal")}
-                    className="hover:brightness-125"
                     style={{
                       padding: "4px 10px",
                       fontSize: 11,
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "rgba(255,255,255,0.36)",
                       borderRadius: 1,
+                      border: hoveredBtn === "reveal" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
+                      color: hoveredBtn === "reveal" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      background: hoveredBtn === "reveal" && !pressedBtn ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "reveal" ? "scale(0.97)" : "scale(1)",
-                      transition: "transform 0.08s ease, filter 0.15s ease",
+                      transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+                      cursor: "pointer",
                     }}
                   >
                     {revealed ? "Hide" : "Reveal"}
@@ -620,15 +629,16 @@ export default function VaultRow({
                   <button
                     onClick={handleCopySite}
                     {...btnPressProps("copy-site")}
-                    className="hover:brightness-125"
                     style={{
                       padding: "4px 10px",
                       fontSize: 11,
                       borderRadius: 1,
-                      border: siteCopied ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
-                      color: siteCopied ? "rgba(255,255,255,0.70)" : "rgba(255,255,255,0.36)",
+                      border: siteCopied ? "1px solid rgba(255,255,255,0.22)" : hoveredBtn === "copy-site" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
+                      color: siteCopied ? "rgba(255,255,255,0.78)" : hoveredBtn === "copy-site" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      background: hoveredBtn === "copy-site" && !pressedBtn && !siteCopied ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "copy-site" ? "scale(0.97)" : "scale(1)",
-                      transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, filter 0.15s ease",
+                      transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+                      cursor: "pointer",
                     }}
                   >
                     {siteCopied ? "✓ Copied" : "Copy Site"}
@@ -638,15 +648,16 @@ export default function VaultRow({
                   <button
                     onClick={() => duplicateEntry(e)}
                     {...btnPressProps("duplicate")}
-                    className="hover:brightness-125"
                     style={{
                       padding: "4px 10px",
                       fontSize: 11,
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "rgba(255,255,255,0.36)",
                       borderRadius: 1,
+                      border: hoveredBtn === "duplicate" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
+                      color: hoveredBtn === "duplicate" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      background: hoveredBtn === "duplicate" && !pressedBtn ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "duplicate" ? "scale(0.97)" : "scale(1)",
-                      transition: "transform 0.08s ease, filter 0.15s ease",
+                      transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+                      cursor: "pointer",
                     }}
                   >
                     Duplicate

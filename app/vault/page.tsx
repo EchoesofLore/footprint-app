@@ -1551,7 +1551,7 @@ export default function VaultPage() {
                 <label
                   style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", fontSize: 10, border: "1px solid rgba(255,255,255,0.08)", color: "rgba(232,224,208,0.45)", cursor: "pointer" }}
                 >
-                  <input type="checkbox" checked={idleLockEnabled} onChange={(e) => setIdleLockEnabled(e.target.checked)} className="accent-[#c8922a]" />
+                  <input type="checkbox" checked={idleLockEnabled} onChange={(e) => setIdleLockEnabled(e.target.checked)} className="accent-white" />
                   auto-lock
                 </label>
                 {idleLockEnabled && (
@@ -1578,7 +1578,7 @@ export default function VaultPage() {
                 <button
                   onClick={handleLock}
                   className="hover:brightness-125 transition-[filter]"
-                  style={{ padding: "4px 12px", fontSize: 10, letterSpacing: "0.1em", border: "1px solid rgba(200,146,42,0.28)", color: "rgba(200,146,42,0.65)", textTransform: "uppercase" }}
+                  style={{ padding: "4px 12px", fontSize: 10, letterSpacing: "0.1em", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.50)", textTransform: "uppercase" }}
                 >
                   Lock
                 </button>
@@ -1586,7 +1586,7 @@ export default function VaultPage() {
             )}
 
             {status && (
-              <span style={{ fontSize: 10, color: "rgba(200,146,42,0.50)", letterSpacing: "0.04em", marginLeft: 4 }}>
+              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.36)", letterSpacing: "0.04em", marginLeft: 4 }}>
                 {status}
               </span>
             )}
@@ -1789,7 +1789,7 @@ export default function VaultPage() {
             <div className="flex-1 flex flex-col">
 
               {/* Ceiling light seam */}
-              <div style={{ height: 1, flexShrink: 0, background: "linear-gradient(to right, transparent 0%, rgba(200,146,42,0.05) 20%, rgba(200,146,42,0.13) 50%, rgba(200,146,42,0.05) 80%, transparent 100%)" }} />
+              <div style={{ height: 1, flexShrink: 0, background: "linear-gradient(to right, transparent 0%, rgba(255,255,255,0.04) 20%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 80%, transparent 100%)" }} />
 
               {/* ── Interior header zone ─────────────────────────────────── */}
               <div
@@ -1849,10 +1849,10 @@ export default function VaultPage() {
                       fontSize: 10,
                       letterSpacing: "0.26em",
                       textTransform: "uppercase",
-                      border: "1px solid rgba(200,146,42,0.45)",
-                      color: "rgba(200,146,42,0.88)",
-                      background: "rgba(200,146,42,0.05)",
-                      boxShadow: "0 0 16px rgba(200,146,42,0.05)",
+                      border: "1px solid rgba(255,255,255,0.16)",
+                      color: "rgba(255,255,255,0.72)",
+                      background: "rgba(255,255,255,0.03)",
+                      boxShadow: "0 0 12px rgba(255,255,255,0.03)",
                     }}
                   >
                     + Add Account
@@ -1896,8 +1896,8 @@ export default function VaultPage() {
                           fontSize: 10,
                           letterSpacing: "0.12em",
                           textTransform: "uppercase",
-                          border: view === v ? "1px solid rgba(200,146,42,0.32)" : "1px solid rgba(255,255,255,0.06)",
-                          color: view === v ? "rgba(200,146,42,0.78)" : "rgba(232,224,208,0.28)",
+                          border: view === v ? "1px solid rgba(255,255,255,0.22)" : "1px solid rgba(255,255,255,0.06)",
+                          color: view === v ? "rgba(255,255,255,0.78)" : "rgba(232,224,208,0.28)",
                         }}
                       >
                         {v === "active" ? `Active${activeEntries.length > 0 ? ` (${activeEntries.length})` : ""}` : `Trash${trashEntries.length > 0 ? ` (${trashEntries.length})` : ""}`}
@@ -1921,16 +1921,16 @@ export default function VaultPage() {
                     style={{
                       padding: "12px 20px",
                       marginBottom: 16,
-                      borderTop: "1px solid rgba(200,146,42,0.08)",
-                      borderBottom: "1px solid rgba(200,146,42,0.08)",
-                      background: "rgba(200,146,42,0.025)",
+                      borderTop: "1px solid rgba(255,255,255,0.06)",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)",
+                      background: "rgba(255,255,255,0.02)",
                       display: "flex",
                       alignItems: "center",
                       gap: 10,
                       flexWrap: "wrap",
                     }}
                   >
-                    <span className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.26em", color: "rgba(200,146,42,0.55)", textTransform: "uppercase" }}>
+                    <span className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.26em", color: "rgba(255,255,255,0.42)", textTransform: "uppercase" }}>
                       {selectedIds.size} selected
                     </span>
                     <div style={{ width: 1, height: 14, background: "rgba(255,255,255,0.08)" }} />
@@ -1999,7 +1999,7 @@ export default function VaultPage() {
                         <button
                           onClick={() => addEntryRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}
                           className="font-cinzel hover:brightness-125 transition-[filter]"
-                          style={{ padding: "9px 24px", fontSize: 9, letterSpacing: "0.30em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.28)", color: "rgba(200,146,42,0.60)", background: "rgba(200,146,42,0.03)" }}
+                          style={{ padding: "9px 24px", fontSize: 9, letterSpacing: "0.30em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.52)", background: "rgba(255,255,255,0.02)" }}
                         >
                           + Add Account
                         </button>
@@ -2083,7 +2083,7 @@ export default function VaultPage() {
               <div
                 ref={addEntryRef}
                 style={{
-                  borderTop: "1px solid rgba(200,146,42,0.06)",
+                  borderTop: "1px solid rgba(255,255,255,0.05)",
                   padding: "36px 72px 48px",
                   background:
                     "linear-gradient(180deg, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.28) 100%)",
@@ -2091,7 +2091,7 @@ export default function VaultPage() {
                   flexShrink: 0,
                 }}
               >
-                <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(200,146,42,0.45)", marginBottom: 22 }}>
+                <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 22 }}>
                   {editingId ? "Edit Record" : "Add Record"}
                 </div>
                 <div className="grid gap-3" style={{ maxWidth: 520 }}>
@@ -2116,7 +2116,7 @@ export default function VaultPage() {
                   <input placeholder="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} className="focus:outline-none" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
                   <input placeholder="Tags (comma separated)" value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} className="focus:outline-none" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
                   <div className="flex gap-2" style={{ paddingTop: 4 }}>
-                    <button onClick={addOrUpdateEntry} className="font-cinzel hover:brightness-125 transition-[filter]" style={{ padding: "11px 24px", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.52)", color: "rgba(200,146,42,0.90)", background: "rgba(200,146,42,0.05)" }}>
+                    <button onClick={addOrUpdateEntry} className="font-cinzel hover:brightness-125 transition-[filter]" style={{ padding: "11px 24px", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.80)", background: "rgba(255,255,255,0.04)" }}>
                       {editingId ? "Save Changes" : "Add Entry"}
                     </button>
                     {editingId && (
@@ -2127,12 +2127,12 @@ export default function VaultPage() {
               </div>
 
               {/* ── Secondary panels (Footprints + Security) ──────────────── */}
-              <div style={{ borderTop: "1px solid rgba(200,146,42,0.05)", background: "rgba(0,0,0,0.32)", backdropFilter: "blur(4px)", flexShrink: 0 }}>
+              <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", background: "rgba(0,0,0,0.32)", backdropFilter: "blur(4px)", flexShrink: 0 }}>
                 <div className="grid grid-cols-1 md:grid-cols-2">
 
                   {/* Footprints */}
                   <div style={{ padding: "32px 72px", borderRight: "1px solid rgba(255,255,255,0.04)" }}>
-                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(200,146,42,0.45)", marginBottom: 18 }}>Footprints</div>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 18 }}>Footprints</div>
                     <div className="space-y-5">
                       <div className="space-y-3">
                         <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>Backup</div>
@@ -2152,7 +2152,7 @@ export default function VaultPage() {
                                 <option value="merge">Merge</option>
                                 <option value="overwrite">Overwrite</option>
                               </select>
-                              <button onClick={confirmImport} disabled={!importDecryptedVault} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "5px 14px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.45)", color: "rgba(200,146,42,0.85)" }}>Confirm</button>
+                              <button onClick={confirmImport} disabled={!importDecryptedVault} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "5px 14px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.72)" }}>Confirm</button>
                               <button onClick={resetImportState} className="hover:brightness-125 transition-[filter]" style={{ padding: "5px 11px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.35)" }}>Cancel</button>
                             </div>
                           </div>
@@ -2164,7 +2164,7 @@ export default function VaultPage() {
                         <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} placeholder="example.com,user@email.com,Password123!" className="focus:outline-none font-mono" style={{ width: "100%", height: 80, padding: "8px 12px", fontSize: 11, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.62)", resize: "vertical" }} />
                         {csvPreview && <div style={{ fontSize: 11, color: "rgba(232,224,208,0.36)" }}>Rows: {csvPreview.rows} · OK: {csvPreview.ok} · Bad: {csvPreview.bad}</div>}
                         <div className="flex gap-2">
-                          <button onClick={importCsvIntoVault} disabled={!csvText.trim()} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 13px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.45)", color: "rgba(200,146,42,0.82)" }}>Import CSV</button>
+                          <button onClick={importCsvIntoVault} disabled={!csvText.trim()} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 13px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.70)" }}>Import CSV</button>
                           <button onClick={() => { setCsvText(""); setCsvPreview(null); }} disabled={!csvText.trim() && !csvPreview} className="hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 11px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.35)" }}>Clear</button>
                         </div>
                       </div>
@@ -2192,7 +2192,7 @@ export default function VaultPage() {
 
                   {/* Security */}
                   <div style={{ padding: "32px 72px" }}>
-                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(200,146,42,0.45)", marginBottom: 18 }}>Security</div>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 18 }}>Security</div>
                     <div className="space-y-5">
                       <div className="space-y-3">
                         <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>Vault Health</div>
@@ -2218,13 +2218,13 @@ export default function VaultPage() {
                         <div style={{ padding: "13px 15px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }} className="space-y-3">
                           <div className="flex items-center gap-3">
                             <span style={{ fontSize: 11, color: "rgba(232,224,208,0.35)", width: 42 }}>Length</span>
-                            <input type="range" min={8} max={40} value={genLength} onChange={(e) => setGenLength(Number(e.target.value))} className="flex-1 accent-[#c8922a]" />
+                            <input type="range" min={8} max={40} value={genLength} onChange={(e) => setGenLength(Number(e.target.value))} className="flex-1 accent-white" />
                             <span style={{ fontSize: 11, color: "rgba(232,224,208,0.52)", width: 18, textAlign: "right" }}>{genLength}</span>
                           </div>
                           <div className="flex flex-wrap gap-4">
                             {([["lower", genLower, setGenLower, "lower"], ["upper", genUpper, setGenUpper, "UPPER"], ["numbers", genNumbers, setGenNumbers, "123"], ["symbols", genSymbols, setGenSymbols, "!@#"]] as any[]).map(([key, val, setter, label]) => (
                               <label key={key} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "rgba(232,224,208,0.38)", cursor: "pointer" }}>
-                                <input type="checkbox" checked={val} onChange={(e) => setter(e.target.checked)} className="accent-[#c8922a]" />{label}
+                                <input type="checkbox" checked={val} onChange={(e) => setter(e.target.checked)} className="accent-white" />{label}
                               </label>
                             ))}
                           </div>
@@ -2233,7 +2233,7 @@ export default function VaultPage() {
                         <div className="flex gap-2">
                           <button onClick={regenerate} className="hover:brightness-125 transition-[filter]" style={{ padding: "6px 13px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Generate</button>
                           <button onClick={async () => { if (!genValue) return; await navigator.clipboard.writeText(genValue); setStatus("Generated password copied ✅"); }} disabled={!genValue} className="hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 13px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Copy</button>
-                          <button onClick={() => setPassword(genValue)} disabled={!genValue} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 13px", fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.42)", color: "rgba(200,146,42,0.82)" }}>Use in form</button>
+                          <button onClick={() => setPassword(genValue)} disabled={!genValue} className="font-cinzel hover:brightness-125 transition-[filter] disabled:opacity-40" style={{ padding: "6px 13px", fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.16)", color: "rgba(255,255,255,0.70)" }}>Use in form</button>
                         </div>
                       </div>
                     </div>
@@ -2267,7 +2267,7 @@ export default function VaultPage() {
               <button
                 onClick={undoLastTrash}
                 className="font-cinzel hover:brightness-125 transition-[filter] shrink-0"
-                style={{ padding: "6px 16px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(200,146,42,0.50)", color: "rgba(200,146,42,0.90)" }}
+                style={{ padding: "6px 16px", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.78)" }}
               >
                 Undo
               </button>
