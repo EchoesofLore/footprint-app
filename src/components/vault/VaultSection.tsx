@@ -49,7 +49,7 @@ export default function VaultSection({ title, children }: VaultSectionProps) {
             background:
               "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%)",
             boxShadow:
-              "0 3px 10px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08)",
+              "0 3px 10px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 0 rgba(255,255,255,0.06)",
           }}
         >
           <div
@@ -65,8 +65,9 @@ export default function VaultSection({ title, children }: VaultSectionProps) {
             className="font-cinzel"
             style={{
               fontSize: 10,
-              letterSpacing: "0.2em",
+              letterSpacing: "0.12em",
               color: "rgba(255,255,255,0.42)",
+              opacity: 0.7,
               textTransform: "uppercase",
               fontWeight: 400,
             }}
