@@ -121,8 +121,8 @@ export default function VaultRow({
         filter: hovered && !pressed ? "brightness(1.08)" : "brightness(1)",
         opacity: isDimmed && !hovered ? 0.85 : 1,
         transition: pressed
-          ? "transform 0.08s cubic-bezier(0.4,0,0.2,1), filter 0.08s cubic-bezier(0.4,0,0.2,1), box-shadow 0.08s cubic-bezier(0.4,0,0.2,1)"
-          : "transform 0.2s cubic-bezier(0.4,0,0.2,1), filter 0.2s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s cubic-bezier(0.4,0,0.2,1), background 0.2s cubic-bezier(0.4,0,0.2,1), border-color 0.2s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease",
+          ? "transform 0.07s ease, filter 0.07s ease, box-shadow 0.07s ease"
+          : "transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease",
         cursor: "pointer",
         borderRadius: 2,
         marginBottom: 8,
@@ -400,7 +400,7 @@ export default function VaultRow({
               transform: isExpanded
                 ? "rotate(90deg)"
                 : pressed ? "translateX(6px)" : hovered ? "translateX(4px)" : "translateX(0)",
-              transition: "transform 0.2s cubic-bezier(0.4,0,0.2,1), opacity 0.2s cubic-bezier(0.4,0,0.2,1)",
+              transition: "transform 0.15s ease, opacity 0.15s ease",
               marginLeft: 4,
               flexShrink: 0,
             }}
@@ -548,7 +548,7 @@ export default function VaultRow({
                       fontSize: 11,
                       borderRadius: 1,
                       border: userCd > 0 ? "1px solid rgba(255,255,255,0.22)" : hoveredBtn === "copy-user" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
-                      color: userCd > 0 ? "rgba(255,255,255,0.78)" : hoveredBtn === "copy-user" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      color: userCd > 0 ? "rgba(255,255,255,0.78)" : hoveredBtn === "copy-user" ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.36)",
                       background: hoveredBtn === "copy-user" && !pressedBtn && userCd === 0 ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "copy-user" ? "scale(0.97)" : "scale(1)",
                       transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
@@ -567,7 +567,7 @@ export default function VaultRow({
                       fontSize: 11,
                       borderRadius: 1,
                       border: passCd > 0 ? "1px solid rgba(255,255,255,0.22)" : hoveredBtn === "copy-pass" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
-                      color: passCd > 0 ? "rgba(255,255,255,0.78)" : hoveredBtn === "copy-pass" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      color: passCd > 0 ? "rgba(255,255,255,0.78)" : hoveredBtn === "copy-pass" ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.36)",
                       background: hoveredBtn === "copy-pass" && !pressedBtn && passCd === 0 ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "copy-pass" ? "scale(0.97)" : "scale(1)",
                       transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
@@ -596,7 +596,7 @@ export default function VaultRow({
                       fontSize: 11,
                       borderRadius: 1,
                       border: hoveredBtn === "autofill" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
-                      color: hoveredBtn === "autofill" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      color: hoveredBtn === "autofill" ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.36)",
                       background: hoveredBtn === "autofill" && !pressedBtn ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "autofill" ? "scale(0.97)" : "scale(1)",
                       transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
@@ -615,7 +615,7 @@ export default function VaultRow({
                       fontSize: 11,
                       borderRadius: 1,
                       border: hoveredBtn === "reveal" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
-                      color: hoveredBtn === "reveal" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      color: hoveredBtn === "reveal" ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.36)",
                       background: hoveredBtn === "reveal" && !pressedBtn ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "reveal" ? "scale(0.97)" : "scale(1)",
                       transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
@@ -634,7 +634,7 @@ export default function VaultRow({
                       fontSize: 11,
                       borderRadius: 1,
                       border: siteCopied ? "1px solid rgba(255,255,255,0.22)" : hoveredBtn === "copy-site" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
-                      color: siteCopied ? "rgba(255,255,255,0.78)" : hoveredBtn === "copy-site" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      color: siteCopied ? "rgba(255,255,255,0.78)" : hoveredBtn === "copy-site" ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.36)",
                       background: hoveredBtn === "copy-site" && !pressedBtn && !siteCopied ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "copy-site" ? "scale(0.97)" : "scale(1)",
                       transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",
@@ -653,7 +653,7 @@ export default function VaultRow({
                       fontSize: 11,
                       borderRadius: 1,
                       border: hoveredBtn === "duplicate" ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(255,255,255,0.08)",
-                      color: hoveredBtn === "duplicate" ? "rgba(255,255,255,0.62)" : "rgba(255,255,255,0.36)",
+                      color: hoveredBtn === "duplicate" ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.36)",
                       background: hoveredBtn === "duplicate" && !pressedBtn ? "rgba(255,255,255,0.04)" : "transparent",
                       transform: pressedBtn === "duplicate" ? "scale(0.97)" : "scale(1)",
                       transition: "transform 0.08s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease",

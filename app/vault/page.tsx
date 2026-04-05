@@ -1864,7 +1864,7 @@ export default function VaultPage() {
               <div style={{ height: 1, flexShrink: 0, margin: "0 72px", background: "linear-gradient(to right, rgba(255,255,255,0.00), rgba(255,255,255,0.05), rgba(255,255,255,0.00))" }} />
 
               {/* ── Open records floor ───────────────────────────────────── */}
-              <div className="flex-1" style={{ padding: "0 32px 80px" }}>
+              <div className="flex-1" style={{ padding: "0 32px 100px" }}>
 
                 {/* Sort + view controls */}
                 <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "18px 0 22px", flexWrap: "wrap" }}>
@@ -2079,22 +2079,35 @@ export default function VaultPage() {
                 )}
               </div>
 
+              {/* ── Section divider ───────────────────────────────────────── */}
+              <div aria-hidden style={{ height: 1, margin: "0 32px", flexShrink: 0, background: "linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent)" }} />
+
               {/* ── Add / Edit Entry form ─────────────────────────────────── */}
               <div
                 ref={addEntryRef}
                 style={{
-                  borderTop: "1px solid rgba(255,255,255,0.05)",
-                  padding: "36px 72px 48px",
-                  background:
-                    "linear-gradient(180deg, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.28) 100%)",
+                  padding: "48px 72px 56px",
+                  background: "linear-gradient(180deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.22) 100%)",
                   backdropFilter: "blur(4px)",
                   flexShrink: 0,
                 }}
               >
-                <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 22 }}>
+                <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.42)", marginBottom: 24 }}>
                   {editingId ? "Edit Record" : "Add Record"}
                 </div>
-                <div className="grid gap-3" style={{ maxWidth: 520 }}>
+
+                {/* Form panel */}
+                <div
+                  style={{
+                    maxWidth: 540,
+                    background: "rgba(255,255,255,0.025)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: 10,
+                    padding: "24px 28px 28px",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 24px rgba(0,0,0,0.30)",
+                  }}
+                >
+                <div className="grid gap-3">
                   <input placeholder="Service / Site (or URL)" value={site} onChange={(e) => setSite(e.target.value)} className="focus:outline-none" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
                   <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="focus:outline-none" style={{ padding: "10px 14px", fontSize: 13, background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.11)", color: "#e8e0d0", boxShadow: "inset 0 2px 6px rgba(0,0,0,0.35)" }} />
                   <div className="space-y-1.5">
@@ -2124,18 +2137,22 @@ export default function VaultPage() {
                     )}
                   </div>
                 </div>
+                </div>
               </div>
 
+              {/* ── Section divider ───────────────────────────────────────── */}
+              <div aria-hidden style={{ height: 1, margin: "0 32px", flexShrink: 0, background: "linear-gradient(to right, transparent, rgba(255,255,255,0.04), transparent)" }} />
+
               {/* ── Secondary panels (Footprints + Security) ──────────────── */}
-              <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", background: "rgba(0,0,0,0.32)", backdropFilter: "blur(4px)", flexShrink: 0 }}>
+              <div style={{ background: "rgba(0,0,0,0.22)", backdropFilter: "blur(4px)", flexShrink: 0 }}>
                 <div className="grid grid-cols-1 md:grid-cols-2">
 
                   {/* Footprints */}
-                  <div style={{ padding: "32px 72px", borderRight: "1px solid rgba(255,255,255,0.04)" }}>
-                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 18 }}>Footprints</div>
+                  <div style={{ padding: "44px 72px", borderRight: "1px solid rgba(255,255,255,0.04)" }}>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.50)", marginBottom: 22 }}>Footprints</div>
                     <div className="space-y-5">
                       <div className="space-y-3">
-                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>Backup</div>
+                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.38)", textTransform: "uppercase" }}>Backup</div>
                         <div className="flex gap-2 flex-wrap">
                           <button onClick={exportEncryptedBackup} className="hover:brightness-125 transition-[filter]" style={{ padding: "6px 13px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Export encrypted</button>
                           <button onClick={() => fileInputRef.current?.click()} className="hover:brightness-125 transition-[filter]" style={{ padding: "6px 13px", fontSize: 11, border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.45)" }}>Import file</button>
@@ -2159,7 +2176,7 @@ export default function VaultPage() {
                         )}
                       </div>
                       <div className="space-y-2">
-                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>CSV Import</div>
+                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.38)", textTransform: "uppercase" }}>CSV Import</div>
                         <div style={{ fontSize: 10, color: "rgba(232,224,208,0.22)" }}>Format: <span className="font-mono">site,username,password,notes,category,tags</span></div>
                         <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} placeholder="example.com,user@email.com,Password123!" className="focus:outline-none font-mono" style={{ width: "100%", height: 80, padding: "8px 12px", fontSize: 11, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", color: "rgba(232,224,208,0.62)", resize: "vertical" }} />
                         {csvPreview && <div style={{ fontSize: 11, color: "rgba(232,224,208,0.36)" }}>Rows: {csvPreview.rows} · OK: {csvPreview.ok} · Bad: {csvPreview.bad}</div>}
@@ -2191,11 +2208,11 @@ export default function VaultPage() {
                   </div>
 
                   {/* Security */}
-                  <div style={{ padding: "32px 72px" }}>
-                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 18 }}>Security</div>
+                  <div style={{ padding: "44px 72px" }}>
+                    <div className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.50)", marginBottom: 22 }}>Security</div>
                     <div className="space-y-5">
                       <div className="space-y-3">
-                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>Vault Health</div>
+                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.38)", textTransform: "uppercase" }}>Vault Health</div>
                         <div className="grid grid-cols-3 gap-2">
                           {([["Active", activeEntries.length], ["Favorites", favoritesCount], ["Weak", weakCount], ["Reused", reusedEntriesCount], ["Duplicates", duplicateCount], ["Trash", trashEntries.length]] as [string, number][]).map(([label, val]) => (
                             <div key={label} style={{ padding: "9px 11px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}>
@@ -2214,7 +2231,7 @@ export default function VaultPage() {
                         </div>
                       </div>
                       <div className="space-y-3">
-                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.25)", textTransform: "uppercase" }}>Password Generator</div>
+                        <div style={{ fontSize: 9, letterSpacing: "0.18em", color: "rgba(232,224,208,0.38)", textTransform: "uppercase" }}>Password Generator</div>
                         <div style={{ padding: "13px 15px", border: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }} className="space-y-3">
                           <div className="flex items-center gap-3">
                             <span style={{ fontSize: 11, color: "rgba(232,224,208,0.35)", width: 42 }}>Length</span>
