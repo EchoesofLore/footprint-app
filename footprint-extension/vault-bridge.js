@@ -7,6 +7,14 @@
 window.addEventListener("message", (event) => {
   if (event.source !== window) return;
   if (!event.data || event.data.source !== "footprint") return;
+
+  if (event.data.type === "AUTOFILL_REQUEST") {
+    const { username, password } = event.data.payload ?? {};
+    console.log("[Footprint] Autofill request received from web app");
+    chrome.runtime.sendMessage({ type: "AUTOFILL_REQUEST", username, password }).catch(() => {});
+    return;
+  }
+
   if (event.data.type !== "VAULT_DECRYPTED") return;
 
   const vault = event.data.vault;

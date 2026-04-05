@@ -28,4 +28,16 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     });
     return true;
   }
+
+  if (message.type === "AUTOFILL_REQUEST") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (!tabs[0]?.id) return;
+      chrome.tabs.sendMessage(tabs[0].id, {
+        type: "FILL_CREDENTIALS",
+        username: message.username,
+        password: message.password,
+      });
+    });
+    // No async sendResponse needed
+  }
 });

@@ -570,6 +570,34 @@ export default function VaultRow({
                     {passCd > 0 ? "✓ Copied" : "Copy Password"}
                   </button>
 
+                  {/* Autofill */}
+                  <button
+                    onClick={() => {
+                      console.log("[Footprint] AUTOFILL CLICK", {
+                        username: e.username,
+                        password: e.password,
+                      });
+                      window.postMessage({
+                        source: "footprint",
+                        type: "AUTOFILL_REQUEST",
+                        payload: { username: e.username, password: e.password },
+                      }, "*");
+                    }}
+                    {...btnPressProps("autofill")}
+                    className="hover:brightness-125"
+                    style={{
+                      padding: "4px 10px",
+                      fontSize: 11,
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      color: "rgba(255,255,255,0.36)",
+                      borderRadius: 1,
+                      transform: pressedBtn === "autofill" ? "scale(0.97)" : "scale(1)",
+                      transition: "transform 0.08s ease, filter 0.15s ease",
+                    }}
+                  >
+                    Autofill
+                  </button>
+
                   {/* Reveal / Hide */}
                   <button
                     onClick={() => toggleReveal(e.id)}

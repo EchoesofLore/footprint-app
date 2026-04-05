@@ -208,6 +208,7 @@ export default function VaultPage() {
   const [inputFocused, setInputFocused] = useState(false);
   const [unlockHovered, setUnlockHovered] = useState(false);
   const [unlockPressed, setUnlockPressed] = useState(false);
+  const [unlockFading, setUnlockFading] = useState(false);
   const [key, setKey] = useState<CryptoKey | null>(null);
   const didLoadAfterUnlockRef = useRef(false);
   const [vault, setVault] = useState<VaultData>({ version: 4, entries: [] });
@@ -462,6 +463,13 @@ export default function VaultPage() {
     setSelectedIds(new Set());
     setBulkCategory("");
     setBulkTagsInput("");
+  }
+
+  async function handleUnlockWithFade() {
+    if (unlockFading) return;
+    setUnlockFading(true);
+    await new Promise((r) => setTimeout(r, 220));
+    await handleUnlock();
   }
 
   async function handleUnlock() {
@@ -1594,7 +1602,12 @@ export default function VaultPage() {
           {!unlocked && (
             <div
               className="flex-1 flex flex-col items-center justify-center text-center"
-              style={{ padding: "80px 40px 100px", position: "relative" }}
+              style={{
+                padding: "80px 40px 100px",
+                position: "relative",
+                opacity: unlockFading ? 0 : 1,
+                transition: unlockFading ? "opacity 0.22s ease" : "none",
+              }}
             >
               {/* Ambient spotlight — drifts slowly, barely perceptible */}
               <div
@@ -1670,7 +1683,7 @@ export default function VaultPage() {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       setUnlockClicks((c) => c + 1);
-                      handleUnlock();
+                      handleUnlockWithFade();
                     }
                   }}
                   className="focus:outline-none"
@@ -1695,7 +1708,7 @@ export default function VaultPage() {
                   type="button"
                   onClick={() => {
                     setUnlockClicks((c) => c + 1);
-                    handleUnlock();
+                    handleUnlockWithFade();
                   }}
                   onMouseEnter={() => setUnlockHovered(true)}
                   onMouseLeave={() => { setUnlockHovered(false); setUnlockPressed(false); }}
