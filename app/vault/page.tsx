@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { decryptData, deriveKey, encryptData } from "@/lib/crypto";
 import type { VaultData, VaultEntry } from "@/lib/types";
@@ -205,6 +205,9 @@ export default function VaultPage() {
   const [masterPassword, setMasterPassword] = useState("");
   const [unlockClicks, setUnlockClicks] = useState(0);
   const [unlocked, setUnlocked] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
+  const [unlockHovered, setUnlockHovered] = useState(false);
+  const [unlockPressed, setUnlockPressed] = useState(false);
   const [key, setKey] = useState<CryptoKey | null>(null);
   const didLoadAfterUnlockRef = useRef(false);
   const [vault, setVault] = useState<VaultData>({ version: 4, entries: [] });
@@ -1521,7 +1524,7 @@ export default function VaultPage() {
             <a href="/" style={{ display: "flex", alignItems: "center", gap: "0.55rem", textDecoration: "none" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo.png" alt="Footprint" style={{ height: 26, width: "auto", opacity: 0.82 }} />
-              <span className="font-cinzel" style={{ fontSize: 9, letterSpacing: "0.22em", color: "rgba(200,146,42,0.70)", textTransform: "uppercase" }}>
+              <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: 9, letterSpacing: "0.22em", color: "rgba(255,255,255,0.70)", textTransform: "uppercase" }}>
                 Footprint
               </span>
             </a>
@@ -1589,103 +1592,178 @@ export default function VaultPage() {
               LOCKED — vault door environment
           ══════════════════════════════════════════════════════════════ */}
           {!unlocked && (
-            <div className="flex-1 flex flex-col items-center justify-center text-center" style={{ padding: "80px 40px 100px" }}>
+            <div
+              className="flex-1 flex flex-col items-center justify-center text-center"
+              style={{ padding: "80px 40px 100px", position: "relative" }}
+            >
+              {/* Ambient spotlight — drifts slowly, barely perceptible */}
+              <div
+                aria-hidden
+                className="vault-ambient-glow"
+                style={{
+                  position: "absolute",
+                  top: "30%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 520,
+                  height: 520,
+                  background: "radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 68%)",
+                  pointerEvents: "none",
+                }}
+              />
+              {/* Breathe overlay — slow opacity pulse over the center */}
+              <div aria-hidden className="vault-breathe-overlay" />
 
-                {/* Lock icon */}
-                <div
-                  style={{
-                    width: 68,
-                    height: 68,
-                    border: "1px solid rgba(200,146,42,0.22)",
-                    background: "rgba(200,146,42,0.06)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: "2rem",
-                    boxShadow: "0 0 32px rgba(200,146,42,0.08), inset 0 1px 0 rgba(255,255,255,0.06)",
-                  }}
-                >
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(200,146,42,0.55)" strokeWidth="1.4" strokeLinecap="square">
-                    <rect x="3" y="11" width="18" height="11" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
-                </div>
+              {/* Footprint logo */}
+              <img
+                src="/logo-transparent.png"
+                alt="Footprint"
+                style={{
+                  height: 114,
+                  width: "auto",
+                  opacity: 0.92,
+                  marginBottom: "1.25rem",
+                }}
+              />
 
-                <h1
-                  className="font-cinzel"
-                  style={{ fontSize: "clamp(1.3rem, 3vw, 2rem)", letterSpacing: "0.32em", color: "#e8e0d0", textTransform: "uppercase", marginBottom: "0.75rem" }}
-                >
-                  Vault
-                </h1>
-                <p style={{ fontSize: 13, color: "rgba(232,224,208,0.38)", marginBottom: "2.5rem", maxWidth: 320, lineHeight: 1.7 }}>
-                  Enter your master password to access your encrypted records.
-                </p>
+              {/* Title */}
+              <h1
+                className="font-cinzel"
+                style={{
+                  fontSize: "clamp(1.4rem, 3vw, 2rem)",
+                  letterSpacing: "0.38em",
+                  color: "#e8e0d0",
+                  textTransform: "uppercase",
+                  marginBottom: "0.9rem",
+                  fontWeight: 400,
+                }}
+              >
+                Vault
+              </h1>
 
-                <div style={{ width: "100%", maxWidth: 360 }} className="space-y-3">
-                  <input
-                    type="password"
-                    placeholder="Master password"
-                    autoFocus
-                    value={masterPassword}
-                    onChange={(e) => setMasterPassword(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        setUnlockClicks((c) => c + 1);
-                        handleUnlock();
-                      }
-                    }}
-                    className="focus:outline-none"
-                    style={{
-                      width: "100%",
-                      padding: "12px 16px",
-                      fontSize: 14,
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.10)",
-                      color: "#e8e0d0",
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
+              {/* Accent rule — cool white, matches inset highlights on account cards */}
+              <div
+                aria-hidden
+                style={{
+                  width: 36,
+                  height: 1,
+                  background: "linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent)",
+                  marginBottom: "1.5rem",
+                }}
+              />
+
+              {/* Subtitle */}
+              <p style={{ fontSize: 13, color: "rgba(232,224,208,0.42)", marginBottom: "2.75rem", maxWidth: 300, lineHeight: 1.75, letterSpacing: "0.01em" }}>
+                Enter your master password to access your encrypted records.
+              </p>
+
+              {/* Input + button */}
+              <div style={{ width: "100%", maxWidth: 360, display: "flex", flexDirection: "column", gap: 10 }}>
+                <input
+                  type="password"
+                  placeholder="Master password"
+                  autoFocus
+                  value={masterPassword}
+                  onChange={(e) => setMasterPassword(e.target.value)}
+                  onFocus={() => setInputFocused(true)}
+                  onBlur={() => setInputFocused(false)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
                       setUnlockClicks((c) => c + 1);
                       handleUnlock();
-                    }}
-                    className="font-cinzel hover:brightness-125 transition-[filter]"
-                    style={{
-                      width: "100%",
-                      padding: "13px 0",
-                      fontSize: 11,
-                      letterSpacing: "0.32em",
-                      textTransform: "uppercase",
-                      border: "1px solid rgba(200,146,42,0.50)",
-                      color: "rgba(200,146,42,0.90)",
-                      background: "rgba(200,146,42,0.05)",
-                      boxShadow: "0 0 20px rgba(200,146,42,0.06)",
-                    }}
-                  >
-                    Unlock Vault
-                  </button>
-                  {status && (
-                    <p style={{ fontSize: 12, color: "rgba(232,224,208,0.38)", textAlign: "center" }}>{status}</p>
-                  )}
-                </div>
+                    }
+                  }}
+                  className="focus:outline-none"
+                  style={{
+                    width: "100%",
+                    padding: "13px 18px",
+                    fontSize: 14,
+                    background: inputFocused ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.03)",
+                    border: inputFocused
+                      ? "1px solid rgba(255,255,255,0.22)"
+                      : "1px solid rgba(255,255,255,0.10)",
+                    color: "#e8e0d0",
+                    boxShadow: inputFocused
+                      ? "0 0 16px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.06)"
+                      : "inset 0 1px 0 rgba(255,255,255,0.04)",
+                    transition: "border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease",
+                    letterSpacing: "0.02em",
+                  }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUnlockClicks((c) => c + 1);
+                    handleUnlock();
+                  }}
+                  onMouseEnter={() => setUnlockHovered(true)}
+                  onMouseLeave={() => { setUnlockHovered(false); setUnlockPressed(false); }}
+                  onMouseDown={() => setUnlockPressed(true)}
+                  onMouseUp={() => setUnlockPressed(false)}
+                  className="font-cinzel"
+                  style={{
+                    width: "100%",
+                    padding: "14px 0",
+                    fontSize: 11,
+                    letterSpacing: "0.32em",
+                    textTransform: "uppercase",
+                    border: unlockHovered
+                      ? "1px solid rgba(255,255,255,0.24)"
+                      : "1px solid rgba(255,255,255,0.14)",
+                    color: unlockHovered
+                      ? "rgba(255,255,255,0.88)"
+                      : "rgba(255,255,255,0.68)",
+                    background: unlockPressed
+                      ? "rgba(255,255,255,0.07)"
+                      : unlockHovered
+                      ? "rgba(255,255,255,0.05)"
+                      : "rgba(255,255,255,0.03)",
+                    boxShadow: unlockHovered
+                      ? "0 0 20px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.10)"
+                      : "inset 0 1px 0 rgba(255,255,255,0.06)",
+                    transform: unlockPressed ? "translateY(1px) scale(0.99)" : "translateY(0) scale(1)",
+                    transition: unlockPressed
+                      ? "transform 0.08s ease, background 0.08s ease"
+                      : "border-color 0.18s ease, color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease",
+                    cursor: "pointer",
+                  }}
+                >
+                  Unlock Vault
+                </button>
+
+                {status && (
+                  <p style={{ fontSize: 12, color: "rgba(232,224,208,0.36)", textAlign: "center", marginTop: 2, letterSpacing: "0.02em" }}>{status}</p>
+                )}
+              </div>
 
               {/* Trust badges */}
-              <div className="flex gap-7 flex-wrap justify-center" style={{ marginTop: "3rem" }}>
-                {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag) => (
-                  <span
-                    key={tag}
-                    style={{
-                      fontSize: 9,
-                      letterSpacing: "0.16em",
-                      color: "rgba(232,224,208,0.22)",
-                      textTransform: "uppercase",
-                      borderBottom: "1px solid rgba(255,255,255,0.08)",
-                      paddingBottom: 4,
-                    }}
-                  >
-                    {tag}
-                  </span>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0,
+                  marginTop: "3.5rem",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
+                {["AES-256-GCM", "Zero Knowledge", "PBKDF2"].map((tag, i) => (
+                  <React.Fragment key={tag}>
+                    {i > 0 && (
+                      <span style={{ color: "rgba(255,255,255,0.18)", fontSize: 9, margin: "0 14px" }}>·</span>
+                    )}
+                    <span
+                      style={{
+                        fontSize: 9,
+                        letterSpacing: "0.16em",
+                        color: "rgba(232,224,208,0.24)",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  </React.Fragment>
                 ))}
               </div>
             </div>

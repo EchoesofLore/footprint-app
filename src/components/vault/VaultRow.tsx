@@ -57,6 +57,15 @@ export default function VaultRow({
   const [siteCopied, setSiteCopied] = useState(false);
   const [passVisible, setPassVisible] = useState(true);
 
+  const userKey = `${e.id}:username`;
+  const passKey = `${e.id}:password`;
+  const userCd = copyCountdown[userKey] ?? 0;
+  const passCd = copyCountdown[passKey] ?? 0;
+
+  const entryStrength = passwordStrength(e.password ?? "");
+  const isWeak = entryStrength.score <= 1;
+  const revealed = Boolean(revealMap[e.id]);
+
   // Fade password text on reveal toggle
   useEffect(() => {
     setPassVisible(false);
@@ -77,15 +86,6 @@ export default function VaultRow({
       onMouseLeave: () => setPressedBtn(null),
     };
   }
-
-  const userKey = `${e.id}:username`;
-  const passKey = `${e.id}:password`;
-  const userCd = copyCountdown[userKey] ?? 0;
-  const passCd = copyCountdown[passKey] ?? 0;
-
-  const entryStrength = passwordStrength(e.password ?? "");
-  const isWeak = entryStrength.score <= 1;
-  const revealed = Boolean(revealMap[e.id]);
   const ageLabel = daysAgo(e.updatedAt ?? e.createdAt);
 
   const reuseCount = view === "active" ? (passwordCounts.get(e.password ?? "") ?? 0) : 0;
